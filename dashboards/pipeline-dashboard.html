@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pipeline Graventum</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0f1117;
+    color: #e1e4e8;
+    min-height: 100vh;
+    overflow-x: auto;
+  }
+
+  .header {
+    padding: 20px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #21262d;
+    background: #161b22;
+  }
+  .header h1 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #f0f6fc;
+  }
+  .header h1 span { color: #58a6ff; }
+
+  .stats {
+    display: flex;
+    gap: 24px;
+    font-size: 13px;
+    color: #8b949e;
+  }
+  .stats .value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #f0f6fc;
+    display: block;
+  }
+  .stats .value.money { color: #3fb950; }
+
+  .board {
+    display: flex;
+    gap: 12px;
+    padding: 20px 32px;
+    min-height: calc(100vh - 80px);
+    overflow-x: auto;
+  }
+
+  .column {
+    min-width: 280px;
+    max-width: 280px;
+    flex-shrink: 0;
+    background: #161b22;
+    border-radius: 12px;
+    border: 1px solid #21262d;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 120px);
+  }
+
+  .column-header {
+    padding: 14px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #21262d;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .column-header .count {
+    background: #30363d;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    color: #8b949e;
+  }
+
+  .column.prospectado .column-header { border-top: 3px solid #8b949e; border-radius: 12px 12px 0 0; }
+  .column.contatado .column-header { border-top: 3px solid #58a6ff; border-radius: 12px 12px 0 0; }
+  .column.diagnostico .column-header { border-top: 3px solid #d29922; border-radius: 12px 12px 0 0; }
+  .column.proposta .column-header { border-top: 3px solid #bc8cff; border-radius: 12px 12px 0 0; }
+  .column.negociacao .column-header { border-top: 3px solid #f78166; border-radius: 12px 12px 0 0; }
+  .column.fechado_ganho .column-header { border-top: 3px solid #3fb950; border-radius: 12px 12px 0 0; }
+  .column.fechado_perdido .column-header { border-top: 3px solid #f85149; border-radius: 12px 12px 0 0; }
+
+  .column-body {
+    padding: 8px;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 60px;
+  }
+  .column-body.drag-over {
+    background: #1c2333;
+  }
+
+  .card {
+    background: #0d1117;
+    border: 1px solid #21262d;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 8px;
+    cursor: grab;
+    transition: all 0.15s ease;
+  }
+  .card:hover {
+    border-color: #388bfd;
+    box-shadow: 0 0 0 1px #388bfd33;
+  }
+  .card.dragging {
+    opacity: 0.4;
+    transform: rotate(2deg);
+  }
+  .card .company {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 4px;
+    color: #f0f6fc;
+  }
+  .card .contact {
+    font-size: 12px;
+    color: #8b949e;
+    margin-bottom: 8px;
+  }
+  .card .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+  }
+  .card .niche-tag {
+    background: #21262d;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    color: #8b949e;
+  }
+  .card .value {
+    color: #3fb950;
+    font-weight: 600;
+  }
+  .card .next-action {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #21262d;
+    font-size: 11px;
+    color: #d29922;
+  }
+  .card .stale-badge {
+    display: inline-block;
+    background: #f8514922;
+    color: #f85149;
+    padding: 1px 6px;
+    border-radius: 8px;
+    font-size: 10px;
+    margin-top: 6px;
+  }
+
+  /* Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: #000000aa;
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    padding: 24px;
+    width: 460px;
+    max-width: 95vw;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .modal h2 {
+    font-size: 18px;
+    margin-bottom: 16px;
+    color: #f0f6fc;
+  }
+  .modal label {
+    display: block;
+    font-size: 12px;
+    color: #8b949e;
+    margin-bottom: 4px;
+    margin-top: 12px;
+  }
+  .modal input, .modal select, .modal textarea {
+    width: 100%;
+    padding: 8px 12px;
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    color: #e1e4e8;
+    font-size: 14px;
+    font-family: inherit;
+  }
+  .modal textarea { resize: vertical; min-height: 60px; }
+  .modal input:focus, .modal select:focus, .modal textarea:focus {
+    outline: none;
+    border-color: #58a6ff;
+  }
+  .modal-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+  .btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid #30363d;
+    background: #21262d;
+    color: #e1e4e8;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .btn:hover { background: #30363d; }
+  .btn.primary {
+    background: #238636;
+    border-color: #2ea043;
+    color: #fff;
+  }
+  .btn.primary:hover { background: #2ea043; }
+  .btn.danger {
+    background: transparent;
+    border-color: #f85149;
+    color: #f85149;
+  }
+  .btn.danger:hover { background: #f8514922; }
+
+  .add-btn {
+    width: 100%;
+    padding: 8px;
+    background: transparent;
+    border: 1px dashed #30363d;
+    border-radius: 8px;
+    color: #484f58;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.15s;
+  }
+  .add-btn:hover {
+    border-color: #58a6ff;
+    color: #58a6ff;
+    background: #58a6ff11;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #484f58;
+    font-size: 13px;
+  }
+
+  /* History */
+  .history-item {
+    display: flex;
+    gap: 8px;
+    font-size: 12px;
+    color: #8b949e;
+    padding: 4px 0;
+  }
+  .history-item .stage-name { color: #58a6ff; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📊 Pipeline <span>Graventum</span></h1>
+  <div class="stats">
+    <div><span class="value" id="stat-total">0</span> leads ativos</div>
+    <div><span class="value money" id="stat-value">R$ 0</span> potencial/mês</div>
+    <div><span class="value" id="stat-won">0</span> fechados</div>
+  </div>
+</div>
+
+<div class="board" id="board"></div>
+
+<!-- Add/Edit Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h2 id="modal-title">Novo Lead</h2>
+    <input type="hidden" id="lead-id">
+
+    <label>Empresa *</label>
+    <input type="text" id="lead-company" placeholder="Nome da empresa">
+
+    <label>Nicho *</label>
+    <select id="lead-niche">
+      <option value="contabilidade">Contabilidade</option>
+      <option value="imobiliaria">Imobiliária</option>
+      <option value="clinica">Clínica</option>
+      <option value="turismo">Turismo</option>
+      <option value="outro">Outro</option>
+    </select>
+
+    <label>Contato *</label>
+    <input type="text" id="lead-contact" placeholder="Nome do contato">
+
+    <label>Email</label>
+    <input type="email" id="lead-email" placeholder="email@empresa.com">
+
+    <label>Telefone / WhatsApp</label>
+    <input type="text" id="lead-phone" placeholder="11999999999">
+
+    <label>Valor mensal estimado (R$)</label>
+    <input type="number" id="lead-value" placeholder="2500" min="0">
+
+    <label>Origem</label>
+    <select id="lead-source">
+      <option value="linkedin">LinkedIn</option>
+      <option value="site">Site</option>
+      <option value="indicacao">Indicação</option>
+      <option value="whatsapp">WhatsApp</option>
+      <option value="manual">Manual</option>
+    </select>
+
+    <label>Próxima ação</label>
+    <input type="text" id="lead-next-action" placeholder="Ex: Enviar proposta">
+
+    <label>Data da próxima ação</label>
+    <input type="date" id="lead-next-date">
+
+    <label>Observações</label>
+    <textarea id="lead-notes" placeholder="Notas sobre o lead..."></textarea>
+
+    <div class="modal-actions">
+      <button class="btn danger" id="btn-delete" style="display:none; margin-right:auto;" onclick="deleteLead()">Excluir</button>
+      <button class="btn" onclick="closeModal()">Cancelar</button>
+      <button class="btn primary" onclick="saveLead()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STAGES = [
+  { id: 'prospectado', label: 'Prospectado' },
+  { id: 'contatado', label: 'Contatado' },
+  { id: 'diagnostico', label: 'Diagnóstico' },
+  { id: 'proposta', label: 'Proposta' },
+  { id: 'negociacao', label: 'Negociação' },
+  { id: 'fechado_ganho', label: 'Fechado ✓' },
+  { id: 'fechado_perdido', label: 'Perdido ✗' },
+];
+
+const STORAGE_KEY = 'graventum_pipeline';
+
+// Load data — try localStorage, fallback to embedded
+function loadPipeline() {
+  const stored = localStorage.getItem(STORAGE_KEY);
+  if (stored) return JSON.parse(stored);
+  return { meta: { version: '1.0' }, stages: STAGES.map(s => s.id), leads: [] };
+}
+
+function savePipeline(data) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+// Import from JSON file
+function importFromFile(json) {
+  const data = typeof json === 'string' ? JSON.parse(json) : json;
+  savePipeline(data);
+  render();
+}
+
+let pipeline = loadPipeline();
+let draggedId = null;
+
+function generateId() {
+  return 'lead_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+}
+
+function daysSince(dateStr) {
+  if (!dateStr) return 999;
+  return Math.floor((Date.now() - new Date(dateStr).getTime()) / 86400000);
+}
+
+function formatMoney(val) {
+  return 'R$ ' + (val || 0).toLocaleString('pt-BR');
+}
+
+function render() {
+  const board = document.getElementById('board');
+  board.innerHTML = '';
+
+  // Stats
+  const active = pipeline.leads.filter(l => l.stage !== 'fechado_ganho' && l.stage !== 'fechado_perdido');
+  const won = pipeline.leads.filter(l => l.stage === 'fechado_ganho');
+  const totalValue = active.reduce((s, l) => s + (l.value || 0), 0);
+
+  document.getElementById('stat-total').textContent = active.length;
+  document.getElementById('stat-value').textContent = formatMoney(totalValue);
+  document.getElementById('stat-won').textContent = won.length;
+
+  STAGES.forEach(stage => {
+    const col = document.createElement('div');
+    col.className = `column ${stage.id}`;
+
+    const leads = pipeline.leads.filter(l => l.stage === stage.id);
+
+    col.innerHTML = `
+      <div class="column-header">
+        ${stage.label}
+        <span class="count">${leads.length}</span>
+      </div>
+      <div class="column-body" data-stage="${stage.id}"></div>
+    `;
+
+    const body = col.querySelector('.column-body');
+
+    // Drag & drop events
+    body.addEventListener('dragover', e => {
+      e.preventDefault();
+      body.classList.add('drag-over');
+    });
+    body.addEventListener('dragleave', () => body.classList.remove('drag-over'));
+    body.addEventListener('drop', e => {
+      e.preventDefault();
+      body.classList.remove('drag-over');
+      if (draggedId) {
+        moveLead(draggedId, stage.id);
+        draggedId = null;
+      }
+    });
+
+    leads.forEach(lead => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.draggable = true;
+      card.addEventListener('dragstart', () => { draggedId = lead.id; card.classList.add('dragging'); });
+      card.addEventListener('dragend', () => card.classList.remove('dragging'));
+      card.addEventListener('click', () => openEdit(lead.id));
+
+      const stale = daysSince(lead.updated) > 7 && stage.id !== 'fechado_ganho' && stage.id !== 'fechado_perdido';
+
+      card.innerHTML = `
+        <div class="company">${lead.company || 'Sem nome'}</div>
+        <div class="contact">${lead.contact || ''}${lead.phone ? ' · ' + lead.phone : ''}</div>
+        <div class="meta">
+          <span class="niche-tag">${lead.niche || 'outro'}</span>
+          <span class="value">${formatMoney(lead.value)}/mês</span>
+        </div>
+        ${lead.next_action ? `<div class="next-action">→ ${lead.next_action}${lead.next_action_date ? ' (' + lead.next_action_date + ')' : ''}</div>` : ''}
+        ${stale ? '<span class="stale-badge">⚠ parado há +7 dias</span>' : ''}
+      `;
+
+      body.appendChild(card);
+    });
+
+    // Add button only for first stage
+    if (stage.id === 'prospectado') {
+      const addBtn = document.createElement('button');
+      addBtn.className = 'add-btn';
+      addBtn.textContent = '+ Novo Lead';
+      addBtn.onclick = () => openNew();
+      body.appendChild(addBtn);
+    }
+
+    board.appendChild(col);
+  });
+}
+
+function moveLead(id, newStage) {
+  const lead = pipeline.leads.find(l => l.id === id);
+  if (!lead || lead.stage === newStage) return;
+
+  lead.stage = newStage;
+  lead.updated = new Date().toISOString();
+  if (!lead.history) lead.history = [];
+  lead.history.push({ stage: newStage, date: lead.updated });
+
+  savePipeline(pipeline);
+  render();
+}
+
+function openNew() {
+  document.getElementById('modal-title').textContent = 'Novo Lead';
+  document.getElementById('lead-id').value = '';
+  document.getElementById('lead-company').value = '';
+  document.getElementById('lead-niche').value = 'contabilidade';
+  document.getElementById('lead-contact').value = '';
+  document.getElementById('lead-email').value = '';
+  document.getElementById('lead-phone').value = '';
+  document.getElementById('lead-value').value = '';
+  document.getElementById('lead-source').value = 'linkedin';
+  document.getElementById('lead-next-action').value = '';
+  document.getElementById('lead-next-date').value = '';
+  document.getElementById('lead-notes').value = '';
+  document.getElementById('btn-delete').style.display = 'none';
+  document.getElementById('modal').classList.add('active');
+}
+
+function openEdit(id) {
+  const lead = pipeline.leads.find(l => l.id === id);
+  if (!lead) return;
+
+  document.getElementById('modal-title').textContent = 'Editar Lead';
+  document.getElementById('lead-id').value = lead.id;
+  document.getElementById('lead-company').value = lead.company || '';
+  document.getElementById('lead-niche').value = lead.niche || 'outro';
+  document.getElementById('lead-contact').value = lead.contact || '';
+  document.getElementById('lead-email').value = lead.email || '';
+  document.getElementById('lead-phone').value = lead.phone || '';
+  document.getElementById('lead-value').value = lead.value || '';
+  document.getElementById('lead-source').value = lead.source || 'manual';
+  document.getElementById('lead-next-action').value = lead.next_action || '';
+  document.getElementById('lead-next-date').value = lead.next_action_date || '';
+  document.getElementById('lead-notes').value = lead.notes || '';
+  document.getElementById('btn-delete').style.display = 'block';
+  document.getElementById('modal').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('active');
+}
+
+function saveLead() {
+  const id = document.getElementById('lead-id').value;
+  const now = new Date().toISOString();
+
+  const data = {
+    company: document.getElementById('lead-company').value.trim(),
+    niche: document.getElementById('lead-niche').value,
+    contact: document.getElementById('lead-contact').value.trim(),
+    email: document.getElementById('lead-email').value.trim(),
+    phone: document.getElementById('lead-phone').value.trim(),
+    value: parseFloat(document.getElementById('lead-value').value) || 0,
+    source: document.getElementById('lead-source').value,
+    next_action: document.getElementById('lead-next-action').value.trim(),
+    next_action_date: document.getElementById('lead-next-date').value,
+    notes: document.getElementById('lead-notes').value.trim(),
+    updated: now,
+  };
+
+  if (!data.company) { alert('Empresa é obrigatório'); return; }
+  if (!data.contact) { alert('Contato é obrigatório'); return; }
+
+  if (id) {
+    // Edit existing
+    const lead = pipeline.leads.find(l => l.id === id);
+    if (lead) Object.assign(lead, data);
+  } else {
+    // New lead
+    data.id = generateId();
+    data.stage = 'prospectado';
+    data.created = now;
+    data.history = [{ stage: 'prospectado', date: now }];
+    pipeline.leads.push(data);
+  }
+
+  savePipeline(pipeline);
+  closeModal();
+  render();
+}
+
+function deleteLead() {
+  const id = document.getElementById('lead-id').value;
+  if (!id) return;
+  if (!confirm('Excluir este lead?')) return;
+
+  pipeline.leads = pipeline.leads.filter(l => l.id !== id);
+  savePipeline(pipeline);
+  closeModal();
+  render();
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+  if (e.key === 'n' && !document.querySelector('.modal-overlay.active') && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') openNew();
+});
+
+// Export/Import helpers (for CLI sync)
+window.pipelineExport = () => JSON.stringify(pipeline, null, 2);
+window.pipelineImport = (json) => { importFromFile(json); };
+
+render();
+</script>
+</body>
+</html>

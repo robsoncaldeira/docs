@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>n8n Dashboard — Graventum</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f1117; color: #e1e4e8; padding: 24px; }
+  h1 { font-size: 24px; margin-bottom: 4px; color: #fff; }
+  .subtitle { color: #8b949e; font-size: 14px; margin-bottom: 24px; }
+  
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .card { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 20px; }
+  .card .label { color: #8b949e; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .card .value { font-size: 36px; font-weight: 700; }
+  .card .value.green { color: #3fb950; }
+  .card .value.red { color: #f85149; }
+  .card .value.blue { color: #58a6ff; }
+  .card .value.yellow { color: #d29922; }
+  .card .value.purple { color: #bc8cff; }
+  
+  h2 { font-size: 18px; margin-bottom: 16px; color: #fff; }
+  
+  .section { margin-bottom: 32px; }
+  
+  table { width: 100%; border-collapse: collapse; background: #161b22; border-radius: 12px; overflow: hidden; border: 1px solid #30363d; }
+  th { background: #1c2129; color: #8b949e; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; padding: 12px 16px; text-align: left; }
+  td { padding: 12px 16px; border-top: 1px solid #21262d; font-size: 14px; }
+  tr:hover td { background: #1c2129; }
+  
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+  .badge.active { background: #0d3117; color: #3fb950; }
+  .badge.inactive { background: #2d1b00; color: #d29922; }
+  .badge.obsolete { background: #3d1014; color: #f85149; }
+  
+  .bar-container { display: flex; align-items: center; gap: 8px; }
+  .bar { height: 8px; border-radius: 4px; display: flex; overflow: hidden; width: 120px; background: #21262d; }
+  .bar .success { background: #3fb950; }
+  .bar .error { background: #f85149; }
+  
+  .rate { font-size: 12px; color: #8b949e; min-width: 40px; }
+  
+  .alert-box { background: #3d1014; border: 1px solid #f8514933; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+  .alert-box h3 { color: #f85149; font-size: 14px; margin-bottom: 8px; }
+  .alert-box p { color: #e1e4e8; font-size: 13px; line-height: 1.5; }
+
+  .clean-box { background: #0d2818; border: 1px solid #3fb95033; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+  .clean-box h3 { color: #3fb950; font-size: 14px; margin-bottom: 8px; }
+  .clean-box p { color: #e1e4e8; font-size: 13px; line-height: 1.5; }
+
+  .category-tag { font-size: 11px; color: #8b949e; background: #21262d; padding: 2px 8px; border-radius: 8px; }
+  
+  .footer { margin-top: 32px; color: #484f58; font-size: 12px; text-align: center; }
+</style>
+</head>
+<body>
+
+<h1>📊 n8n Dashboard</h1>
+<p class="subtitle">Graventum · automation.graventum.com · Atualizado em 12/02/2026 18:40 UTC</p>
+
+<div class="cards">
+  <div class="card">
+    <div class="label">Total Workflows</div>
+    <div class="value blue">29</div>
+  </div>
+  <div class="card">
+    <div class="label">Ativos</div>
+    <div class="value green">5</div>
+  </div>
+  <div class="card">
+    <div class="label">Inativos</div>
+    <div class="value yellow">24</div>
+  </div>
+  <div class="card">
+    <div class="label">Total Nós</div>
+    <div class="value purple">208</div>
+  </div>
+  <div class="card">
+    <div class="label">Execuções (últimas 100)</div>
+    <div class="value blue">100</div>
+  </div>
+  <div class="card">
+    <div class="label">Taxa de Sucesso</div>
+    <div class="value green">61%</div>
+  </div>
+  <div class="card">
+    <div class="label">Erros</div>
+    <div class="value red">39</div>
+  </div>
+  <div class="card">
+    <div class="label">Credenciais</div>
+    <div class="value blue">14</div>
+  </div>
+</div>
+
+<!-- ALERTS -->
+<div class="section">
+  <h2>🚨 Alertas</h2>
+  <div class="alert-box">
+    <h3>Helix → OneDrive HTTP — 64% de erro</h3>
+    <p>22 execuções, apenas 8 com sucesso. Workflow inativo, mas é o que mais falhou. Provavelmente substituído pela versão "(COM LINK)" que está ativa com 95% de sucesso.</p>
+  </div>
+  <div class="alert-box">
+    <h3>#10 - Kickoff Automatizado — 75% de erro</h3>
+    <p>8 execuções, apenas 2 com sucesso. Workflow inativo. Substituído pelo #11 (Microsoft 365)?</p>
+  </div>
+  <div class="clean-box">
+    <h3>✅ Helix → OneDrive + Teams (COM LINK) — Saudável</h3>
+    <p>22 execuções, 21 com sucesso (95%). Workflow ativo e rodando a cada 15min. Última execução: 18:30 UTC hoje.</p>
+  </div>
+</div>
+
+<!-- ACTIVE WORKFLOWS -->
+<div class="section">
+  <h2>✅ Workflows Ativos (5)</h2>
+  <table>
+    <tr>
+      <th>Workflow</th>
+      <th>Categoria</th>
+      <th>Nós</th>
+      <th>Execuções</th>
+      <th>Sucesso</th>
+      <th>Última Atualização</th>
+    </tr>
+    <tr>
+      <td><strong>Helix → OneDrive + Teams (COM LINK)</strong></td>
+      <td><span class="category-tag">Integração</span></td>
+      <td>7</td>
+      <td>22</td>
+      <td>
+        <div class="bar-container">
+          <div class="bar"><div class="success" style="width:95%"></div><div class="error" style="width:5%"></div></div>
+          <span class="rate">95%</span>
+        </div>
+      </td>
+      <td>12/02 18:12</td>
+    </tr>
+    <tr>
+      <td><strong>Marketing</strong></td>
+      <td><span class="category-tag">Marketing</span></td>
+      <td>2</td>
+      <td>0</td>
+      <td><span class="rate">—</span></td>
+      <td>12/02 18:36</td>
+    </tr>
+    <tr>
+      <td><strong>#2 — Registro Diário de Reuniões</strong></td>
+      <td><span class="category-tag">Operações</span></td>
+      <td>4</td>
+      <td>7</td>
+      <td>
+        <div class="bar-container">
+          <div class="bar"><div class="success" style="width:71%"></div><div class="error" style="width:29%"></div></div>
+          <span class="rate">71%</span>
+        </div>
+      </td>
+      <td>05/02 02:16</td>
+    </tr>
+    <tr>
+      <td><strong>#7 — Briefing Preparação Reuniões</strong></td>
+      <td><span class="category-tag">Operações</span></td>
+      <td>8</td>
+      <td>7</td>
+      <td>
+        <div class="bar-container">
+          <div class="bar"><div class="success" style="width:57%"></div><div class="error" style="width:43%"></div></div>
+          <span class="rate">57%</span>
+        </div>
+      </td>
+      <td>05/02 16:05</td>
+    </tr>
+    <tr>
+      <td><strong>#9 — Dashboard Saúde do Cliente</strong></td>
+      <td><span class="category-tag">Clientes</span></td>
+      <td>13</td>
+      <td>1</td>
+      <td>
+        <div class="bar-container">
+          <div class="bar"><div class="success" style="width:100%"></div></div>
+          <span class="rate">100%</span>
+        </div>
+      </td>
+      <td>05/02 16:45</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ALL WORKFLOWS -->
+<div class="section">
+  <h2>📋 Todos os Workflows (29)</h2>
+  <table>
+    <tr>
+      <th>Workflow</th>
+      <th>Status</th>
+      <th>Categoria</th>
+      <th>Nós</th>
+      <th>Criado</th>
+    </tr>
+    <tr><td>#1 — Alerta de Novo Lead por Email</td><td><span class="badge inactive">Inativo</span></td><td><span class="category-tag">Leads</span></td><td>2</td><td>04/02</td></tr>
+    <tr><td>#2 — Registro Diário de Reuniões</td><td><span class="badge active">Ativo</span></td><td><span class="category-tag">Operações</span></td><td>4</td><td>04/02</td></tr>
+    <tr><td>#3 — Auto-Organizar Arquivos de Clientes</td><td><span class="badge inactive">Inativo</span></td><td><span class="category-tag">Clientes</span></td><td>6</td><td>04/02</td></tr>
+    <tr><td>#4 — Classificador Inteligente de Emails</td><td><span class="badge inactive">Inativo</span></td><td><span class="category-tag">Email</span></td><td>7</td><td>04/02</td></tr>
+    <tr><td>#5 — Relatório Semanal de Analytics</td><td><span class="badge inactive">Inativo</span></td><td><span class="category-tag">Analytics</span></td><td>7</td><td>04/02</td></tr>
+    <tr><td>#6 — Rastreador de Propostas Comerciais</td><td><span class="badge inactive">Inativo</span></td><td><span class="category-tag">Vendas</span></td><td>7</td><td>04/02</td></tr>
+    <tr><td>#7 — Briefing Preparação Reuniões</td><td><span class="badge active">Ativo</span></td><td><span class="category-tag">Operações</span></td><td>8</td><td>04/02</td></tr>
+    <tr><td>#8 — Gerador Completo de Campanhas</td><td><span class="badge inactive">Inativo</span></td><td><span class="category-tag">Marketing</span></td><td>7</td><td>04/02</td></tr>
+    <tr><td>#9 — Dashboard Saúde do Cliente</td><td><span class="badge active">Ativo</span></td><td><span class="category-tag">Clientes</span></td><td>13</td><td>04/02</td></tr>
+    <tr><td>#10 — Kickoff Automatizado (Diag & Roadmap)</td><td><span class="badge inactive">Inativo</span></td><td><span class="category-tag">Onboarding</span></td><td>12</td><td>04/02</td></tr>
+    <tr><td>#11 — Kickoff Automatizado (Microsoft 365)</td><td><span class="badge inactive">Inativo</span></td><td><span class="category-tag">Onboarding</span></td><td>14</td><td>06/02</td></tr>
+    <tr><td>Marketing</td><td><span class="badge active">Ativo</span></td><td><span class="category-tag">Marketing</span></td><td>2</td><td>03/02</td></tr>
+    <tr><td>Pilot Project</td><td><span class="badge inactive">Inativo</span></td><td><span class="category-tag">Teste</span></td><td>5</td><td>02/02</td></tr>
+    <tr><td>My workflow</td><td><span class="badge inactive">Inativo</span></td><td><span class="category-tag">Teste</span></td><td>5</td><td>03/02</td></tr>
+    <tr><td>Validar Envio Email Exchange</td><td><span class="badge inactive">Inativo</span></td><td><span class="category-tag">Email</span></td><td>5</td><td>04/02</td></tr>
+    <tr><td>Criar Planilhas OneDrive</td><td><span class="badge inactive">Inativo</span></td><td><span class="category-tag">Integração</span></td><td>5</td><td>04/02</td></tr>
+    <tr><td>[OBSOLETO] Criar Planilhas Google</td><td><span class="badge obsolete">Obsoleto</span></td><td><span class="category-tag">Integração</span></td><td>4</td><td>04/02</td></tr>
+    <tr><td>Helix Outputs → OneDrive + Teams</td><td><span class="badge inactive">Inativo</span></td><td><span class="category-tag">Integração</span></td><td>8</td><td>12/02</td></tr>
+    <tr><td>Helix → OneDrive HTTP</td><td><span class="badge inactive">Inativo</span></td><td><span class="category-tag">Integração</span></td><td>6</td><td>12/02</td></tr>
+    <tr><td>Helix → OneDrive [CORRIGIDO]</td><td><span class="badge inactive">Inativo</span></td><td><span class="category-tag">Integração</span></td><td>5</td><td>12/02</td></tr>
+    <tr><td>Helix → OneDrive (LIMPO)</td><td><span class="badge inactive">Inativo</span></td><td><span class="category-tag">Integração</span></td><td>7</td><td>12/02</td></tr>
+    <tr><td>Helix → OneDrive (CONFIGURADO)</td><td><span class="badge inactive">Inativo</span></td><td><span class="category-tag">Integração</span></td><td>7</td><td>12/02</td></tr>
+    <tr><td>Helix → OneDrive (CORRIGIDO)</td><td><span class="badge inactive">Inativo</span></td><td><span class="category-tag">Integração</span></td><td>7</td><td>12/02</td></tr>
+    <tr><td>Helix → OneDrive + Teams ✅</td><td><span class="badge inactive">Inativo</span></td><td><span class="category-tag">Integração</span></td><td>7</td><td>12/02</td></tr>
+    <tr><td>Helix → OneDrive + Excel + Teams</td><td><span class="badge inactive">Inativo</span></td><td><span class="category-tag">Integração</span></td><td>8</td><td>12/02</td></tr>
+    <tr><td>Helix → OneDrive + Excel + Teams ✅</td><td><span class="badge inactive">Inativo</span></td><td><span class="category-tag">Integração</span></td><td>8</td><td>12/02</td></tr>
+    <tr><td>Helix → OneDrive + Planilha</td><td><span class="badge inactive">Inativo</span></td><td><span class="category-tag">Integração</span></td><td>11</td><td>12/02</td></tr>
+    <tr><td>Helix → OneDrive + Teams (COM LINK)</td><td><span class="badge active">Ativo</span></td><td><span class="category-tag">Integração</span></td><td>7</td><td>12/02</td></tr>
+    <tr><td>Automate restaurant orders (Gemini + Telegram)</td><td><span class="badge inactive">Inativo</span></td><td><span class="category-tag">Teste</span></td><td>21</td><td>12/02</td></tr>
+  </table>
+</div>
+
+<!-- RECOMMENDATIONS -->
+<div class="section">
+  <h2>💡 Recomendações</h2>
+  <div class="clean-box">
+    <h3>🧹 Limpeza: 8 workflows Helix duplicados</h3>
+    <p>Você tem 9 variações do "Helix → OneDrive". Só 1 está ativa (COM LINK). Os outros 8 são tentativas anteriores que podem ser arquivados ou deletados pra limpar o workspace.</p>
+  </div>
+  <div class="clean-box">
+    <h3>⚠️ #7 Briefing Reuniões — 57% sucesso</h3>
+    <p>Workflow ativo com taxa de erro alta. Vale investigar os 3 erros recentes e corrigir antes que vire problema.</p>
+  </div>
+  <div class="clean-box">
+    <h3>📦 3 workflows de teste sem uso</h3>
+    <p>"Pilot Project", "My workflow" e "Automate restaurant orders" — candidatos a exclusão.</p>
+  </div>
+  <div class="clean-box">
+    <h3>🔌 11 workflows construídos mas nunca ativados</h3>
+    <p>Workflows #1 a #6, #8, #10, #11 foram construídos mas estão inativos. Alguns são bons (Classificador de Email, Alerta de Lead) — revisar quais valem ativar.</p>
+  </div>
+</div>
+
+<div class="footer">
+  Dashboard gerado automaticamente via n8n API · Graventum © 2026
+</div>
+
+</body>
+</html>

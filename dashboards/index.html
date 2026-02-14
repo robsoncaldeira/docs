@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📊 Dashboard Central - Graventum</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            padding: 40px;
+        }
+        
+        .dashboard-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+        
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .card-icon {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .card-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+        
+        .card-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+        
+        .card-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .status-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-ready {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-automated {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 30px;
+            background: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .last-updated {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: #999;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Dashboard Central - Graventum</h1>
+            <p>Todos os dashboards, relatórios e ferramentas HTML em um só lugar. Acompanhe tudo de forma organizada e eficiente.</p>
+        </div>
+        
+        <div class="dashboard-grid">
+            <!-- Dashboard Principal -->
+            <div class="dashboard-card">
+                <span class="status-badge status-active">✅ ATIVO</span>
+                <div class="card-header">
+                    <div class="card-icon">📈</div>
+                    <h2 class="card-title">Dashboard Principal</h2>
+                </div>
+                <p class="card-description">Visão geral completa da Graventum com métricas, leads, automações e status operacional em tempo real.</p>
+                <a href="graventum-dashboard.html" class="card-link" target="_blank">Abrir Dashboard</a>
+            </div>
+            
+            <!-- Dashboard de Leads -->
+            <div class="dashboard-card">
+                <span class="status-badge status-active">✅ ATIVO</span>
+                <div class="card-header">
+                    <div class="card-icon">🎯</div>
+                    <h2 class="card-title">Dashboard de Leads</h2>
+                </div>
+                <p class="card-description">Monitoramento de leads gerados, qualificação, scoring e status de abordagem. Leads enviados automaticamente para o database.</p>
+                <a href="leads-dashboard.html" class="card-link" target="_blank">Abrir Dashboard de Leads</a>
+            </div>
+            
+            <!-- Pipeline de Automação -->
+            <div class="dashboard-card">
+                <span class="status-badge status-active">✅ ATIVO</span>
+                <div class="card-header">
+                    <div class="card-icon">⚙️</div>
+                    <h2 class="card-title">Pipeline de Automação</h2>
+                </div>
+                <p class="card-description">Fluxo completo de automação desde lead hunting até follow-up. Status de cada etapa e métricas de eficiência.</p>
+                <a href="pipeline-dashboard.html" class="card-link" target="_blank">Abrir Pipeline</a>
+            </div>
+            
+            <!-- Timeline do Projeto -->
+            <div class="dashboard-card">
+                <span class="status-badge status-active">✅ ATIVO</span>
+                <div class="card-header">
+                    <div class="card-icon">📅</div>
+                    <h2 class="card-title">Timeline do Projeto</h2>
+                </div>
+                <p class="card-description">Cronograma visual de todas as atividades, marcos e entregas da Graventum. Inclui calendário de postagens.</p>
+                <a href="project-timeline.html" class="card-link" target="_blank">Abrir Timeline</a>
+            </div>
+            
+            <!-- Dashboard n8n -->
+            <div class="dashboard-card">
+                <span class="status-badge status-automated">🤖 AUTOMATIZADO</span>
+                <div class="card-header">
+                    <div class="card-icon">🔄</div>
+                    <h2 class="card-title">Dashboard n8n</h2>
+                </div>
+                <p class="card-description">Status das automações n8n, workflows ativos, métricas de execução e monitoramento de integrações.</p>
+                <a href="n8n-dashboard.html" class="card-link" target="_blank">Abrir n8n Dashboard</a>
+            </div>
+            
+            <!-- Instagram Automatizado -->
+            <div class="dashboard-card">
+                <span class="status-badge status-automated">🤖 AUTOMATIZADO</span>
+                <div class="card-header">
+                    <div class="card-icon">📱</div>
+                    <h2 class="card-title">Instagram Automatizado</h2>
+                </div>
+                <p class="card-description">Conteúdo pronto para postagem, calendário visual, métricas de engajamento e guia de publicação.</p>
+                <a href="ready-to-post.html" class="card-link" target="_blank">Abrir Instagram</a>
+            </div>
+            
+            <!-- Guia Manual Instagram -->
+            <div class="dashboard-card">
+                <span class="status-badge status-ready">📋 PRONTO</span>
+                <div class="card-header">
+                    <div class="card-icon">📖</div>
+                    <h2 class="card-title">Guia Manual Instagram</h2>
+                </div>
+                <p class="card-description">Instruções passo a passo para postagem manual, dicas de engajamento e melhores práticas.</p>
+                <a href="instagram-manual-guide.html" class="card-link" target="_blank">Abrir Guia</a>
+            </div>
+            
+            <!-- Preview do Site -->
+            <div class="dashboard-card">
+                <span class="status-badge status-active">✅ ATIVO</span>
+                <div class="card-header">
+                    <div class="card-icon">🌐</div>
+                    <h2 class="card-title">Preview do Site</h2>
+                </div>
+                <p class="card-description">Visualização do site Graventum com navegação completa e preview de todas as páginas.</p>
+                <a href="graventum-site-preview.html" class="card-link" target="_blank">Abrir Preview</a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>📌 Notas Importantes:</strong></p>
+            <p>1. <strong>Leads:</strong> Todos os leads são automaticamente enviados para o database</p>
+            <p>2. <strong>Instagram:</strong> Já está automatizado - conteúdo gerado automaticamente</p>
+            <p>3. <strong>LinkedIn:</strong> <span style="color: #e74c3c; font-weight: bold;">PRÓXIMO PASSO</span> - precisa ser automatizado</p>
+            <p>4. <strong>Calendário:</strong> Integrado na Timeline do Projeto</p>
+            <p class="last-updated">Última atualização: 14 Fevereiro 2026 - 01:36 UTC</p>
+        </div>
+    </div>
+</body>
+</html>

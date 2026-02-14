@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Leads - Graventum</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 30px;
+        }
+        
+        .stat-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card.total {
+            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+            color: white;
+        }
+        
+        .stat-card.contabilidade {
+            background: linear-gradient(135deg, #2196F3 0%, #0D47A1 100%);
+            color: white;
+        }
+        
+        .stat-card.imobiliarias {
+            background: linear-gradient(135deg, #FF9800 0%, #EF6C00 100%);
+            color: white;
+        }
+        
+        .stat-card.clinicas {
+            background: linear-gradient(135deg, #E91E63 0%, #AD1457 100%);
+            color: white;
+        }
+        
+        .stat-card.agencias_turismo {
+            background: linear-gradient(135deg, #9C27B0 0%, #6A1B9A 100%);
+            color: white;
+        }
+        
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 0 30px 30px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+        }
+        
+        .section h2 {
+            color: #1a237e;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-bottom: 3px solid #1a237e;
+            padding-bottom: 10px;
+        }
+        
+        .lead-list {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .lead-item {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 5px solid #2196F3;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .lead-title {
+            font-size: 1.3rem;
+            color: #1a237e;
+            margin-bottom: 10px;
+        }
+        
+        .lead-meta {
+            display: flex;
+            gap: 15px;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
+        .lead-description {
+            color: #444;
+            line-height: 1.5;
+        }
+        
+        .domain-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        
+        .domain-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+        }
+        
+        .domain-count {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #1a237e;
+        }
+        
+        .domain-name {
+            color: #666;
+            margin-top: 5px;
+            word-break: break-all;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            border-top: 1px solid #e9ecef;
+            font-size: 0.9rem;
+        }
+        
+        .last-update {
+            background: #1a237e;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Dashboard de Leads</h1>
+            <div class="subtitle">Graventum - Automação IA para PMEs Brasileiras</div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card total">
+                <div class="stat-number">25</div>
+                <div class="stat-label">Total de Leads</div>
+            </div>
+    
+            <div class="stat-card contabilidade">
+                <div class="stat-number">10</div>
+                <div class="stat-label">Contabilidade</div>
+            </div>
+        
+            <div class="stat-card agencias_turismo">
+                <div class="stat-number">5</div>
+                <div class="stat-label">Agencias turismo</div>
+            </div>
+        
+            <div class="stat-card imobiliarias">
+                <div class="stat-number">5</div>
+                <div class="stat-label">Imobiliarias</div>
+            </div>
+        
+            <div class="stat-card clinicas">
+                <div class="stat-number">5</div>
+                <div class="stat-label">Clinicas</div>
+            </div>
+        
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h2>🎯 Leads Recentes</h2>
+                <div class="lead-list">
+    
+                    <div class="lead-item">
+                        <div class="lead-title">TRAVEL AGENCY AND TOUR OPERATOR </div>
+                        <div class="lead-meta">
+                            <span>🏷️ Agencias turismo</span>
+                            <span>🌐 Nattrip|www.nattrip.com.br</span>
+                        </div>
+                        <div class="lead-description">https://www.nattrip.com.br/en/...</div>
+                    </div>
+        
+                    <div class="lead-item">
+                        <div class="lead-title">Queensberry Viagens</div>
+                        <div class="lead-meta">
+                            <span>🏷️ Agencias turismo</span>
+                            <span>🌐 queensberry.com.br</span>
+                        </div>
+                        <div class="lead-description">Viagens elaboradas para quem procura diversão em família ou entre amigos, com experiências de inverno nos principais destinos que oferecem estrutura e...</div>
+                    </div>
+        
+                    <div class="lead-item">
+                        <div class="lead-title">Agaxtur </div>
+                        <div class="lead-meta">
+                            <span>🏷️ Agencias turismo</span>
+                            <span>🌐 Agaxtur|www.agaxtur.com.br</span>
+                        </div>
+                        <div class="lead-description">https://www.agaxtur.com.br/...</div>
+                    </div>
+        
+                    <div class="lead-item">
+                        <div class="lead-title">BRASIL VIAGENS – Fazendo a Viagem dos Seus Sonhos</div>
+                        <div class="lead-meta">
+                            <span>🏷️ Agencias turismo</span>
+                            <span>🌐 brasilviagens.com.br</span>
+                        </div>
+                        <div class="lead-description">A <strong>Brasil Viagens</strong> é uma agência que trabalha com uma proposta diferenciada no mercado e Atendimento personalizado para cada cliente. A...</div>
+                    </div>
+        
+                    <div class="lead-item">
+                        <div class="lead-title">Travel Agency Luxury </div>
+                        <div class="lead-meta">
+                            <span>🏷️ Agencias turismo</span>
+                            <span>🌐 NUBA|nuba.com</span>
+                        </div>
+                        <div class="lead-description">https://nuba.com/us/...</div>
+                    </div>
+        
+                    <div class="lead-item">
+                        <div class="lead-title">Clinica Médica São Paulo - Belo Horizonte - MG </div>
+                        <div class="lead-meta">
+                            <span>🏷️ Clinicas</span>
+                            <span>🌐 Climesp 30 anos|www.clinicamedicasaopaulo.org</span>
+                        </div>
+                        <div class="lead-description">https://www.clinicamedicasaopaulo.org/...</div>
+                    </div>
+        
+                    <div class="lead-item">
+                        <div class="lead-title">Clínica Acor - Atendimento humanizado em São Paulo</div>
+                        <div class="lead-meta">
+                            <span>🏷️ Clinicas</span>
+                            <span>🌐 clinicaacor.com.br</span>
+                        </div>
+                        <div class="lead-description">O cardiologista se ocupa do ... República (saída Rua Sete de Abril); Vire a esquerda na Rua Dom José de Barros; A <strong>Clinica Acor</strong> está d...</div>
+                    </div>
+        
+                    <div class="lead-item">
+                        <div class="lead-title">Clínica Médica </div>
+                        <div class="lead-meta">
+                            <span>🏷️ Clinicas</span>
+                            <span>🌐 Clínica Médica de qualidade é <strong>Clínica São Paulo</strong>. Com consultas de clínica geral, cardiologia, endocrinologia, fisioterapia e exames laboratoriais e cardiológicos. Várias especialidades em um único local, com um horário de atendimento diferenciado. Acesse nosso site e saiba mais!|Clinicasaopaulo|www.clinicasaopaulo.com.br</span>
+                        </div>
+                        <div class="lead-description"> Especialidades...</div>
+                    </div>
+        
+                    <div class="lead-item">
+                        <div class="lead-title">Exames – Clínica São Paulo</div>
+                        <div class="lead-meta">
+                            <span>🏷️ Clinicas</span>
+                            <span>🌐 www.clinicasaopaulo.com.br</span>
+                        </div>
+                        <div class="lead-description">Somos referência médica em Mogi e Região há mais de 35 anos. Realizamos atendimento em consultas online e presencial com clínico geral, cardiologista,...</div>
+                    </div>
+        
+                    <div class="lead-item">
+                        <div class="lead-title">Clínica Soler - Sua vida acolhida com amor.</div>
+                        <div class="lead-meta">
+                            <span>🏷️ Clinicas</span>
+                            <span>🌐 clinicasoler.com.br</span>
+                        </div>
+                        <div class="lead-description">A nossa visão é ser reconhecida como a melhor Clínica Médica de São Paulo, através da excelência em atendimento, tratamentos e resultados....</div>
+                    </div>
+        
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>🏆 Domínios Mais Comuns</h2>
+                <div class="domain-list">
+    
+                    <div class="domain-item">
+                        <div class="domain-count">1</div>
+                        <div class="domain-name">Nattrip|www.nattrip.com.br</div>
+                    </div>
+        
+                    <div class="domain-item">
+                        <div class="domain-count">1</div>
+                        <div class="domain-name">queensberry.com.br</div>
+                    </div>
+        
+                    <div class="domain-item">
+                        <div class="domain-count">1</div>
+                        <div class="domain-name">Agaxtur|www.agaxtur.com.br</div>
+                    </div>
+        
+                    <div class="domain-item">
+                        <div class="domain-count">1</div>
+                        <div class="domain-name">brasilviagens.com.br</div>
+                    </div>
+        
+                    <div class="domain-item">
+                        <div class="domain-count">1</div>
+                        <div class="domain-name">NUBA|nuba.com</div>
+                    </div>
+        
+                    <div class="domain-item">
+                        <div class="domain-count">1</div>
+                        <div class="domain-name">www.ozai.com.br</div>
+                    </div>
+        
+                    <div class="domain-item">
+                        <div class="domain-count">1</div>
+                        <div class="domain-name">www.hopencontabilidade.com.br</div>
+                    </div>
+        
+                    <div class="domain-item">
+                        <div class="domain-count">1</div>
+                        <div class="domain-name">tagcontabilidade.com.br</div>
+                    </div>
+        
+                    <div class="domain-item">
+                        <div class="domain-count">1</div>
+                        <div class="domain-name">CONFIRP|confirp.com.br</div>
+                    </div>
+        
+                    <div class="domain-item">
+                        <div class="domain-count">1</div>
+                        <div class="domain-name">clmcontroller.com.br</div>
+                    </div>
+        
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>📈 Distribuição por Nicho</h2>
+                <div style="height: 300px; background: white; border-radius: 10px; padding: 20px;">
+                    <div style="display: flex; align-items: flex-end; height: 100%; gap: 20px;">
+    
+                        <div style="flex: 1; text-align: center;">
+                            <div style="height: 200.0px; background: #2196F3; border-radius: 5px 5px 0 0; margin-bottom: 10px;"></div>
+                            <div style="font-weight: bold; color: #1a237e;">10</div>
+                            <div style="font-size: 0.9rem; color: #666; margin-top: 5px;">Contabilidade</div>
+                        </div>
+        
+                        <div style="flex: 1; text-align: center;">
+                            <div style="height: 100.0px; background: #9C27B0; border-radius: 5px 5px 0 0; margin-bottom: 10px;"></div>
+                            <div style="font-weight: bold; color: #1a237e;">5</div>
+                            <div style="font-size: 0.9rem; color: #666; margin-top: 5px;">Agencias turismo</div>
+                        </div>
+        
+                        <div style="flex: 1; text-align: center;">
+                            <div style="height: 100.0px; background: #FF9800; border-radius: 5px 5px 0 0; margin-bottom: 10px;"></div>
+                            <div style="font-weight: bold; color: #1a237e;">5</div>
+                            <div style="font-size: 0.9rem; color: #666; margin-top: 5px;">Imobiliarias</div>
+                        </div>
+        
+                        <div style="flex: 1; text-align: center;">
+                            <div style="height: 100.0px; background: #E91E63; border-radius: 5px 5px 0 0; margin-bottom: 10px;"></div>
+                            <div style="font-weight: bold; color: #1a237e;">5</div>
+                            <div style="font-size: 0.9rem; color: #666; margin-top: 5px;">Clinicas</div>
+                        </div>
+        
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Dashboard gerado automaticamente pelo sistema de lead hunting da Graventum</p>
+            <p>Atualização automática a cada execução do cron job</p>
+        </div>
+        
+        <div class="last-update">
+            Última atualização: 13/02/2026 15:00:04 UTC
+        </div>
+    </div>
+</body>
+</html>

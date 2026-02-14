@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timeline & Gestão de Projetos - Graventum</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .header h1 {
+            color: #1a237e;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #1a237e;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .stat-card.success { border-left: 5px solid #4CAF50; }
+        .stat-card.progress { border-left: 5px solid #2196F3; }
+        .stat-card.pending { border-left: 5px solid #FF9800; }
+        
+        .timeline-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .timeline-section h2 {
+            color: #1a237e;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+            border-bottom: 3px solid #1a237e;
+            padding-bottom: 10px;
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 50px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, #4CAF50, #2196F3, #FF9800);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px;
+            padding-left: 30px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -35px;
+            top: 5px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid #4CAF50;
+            box-shadow: 0 0 0 4px white;
+        }
+        
+        .timeline-item.in-progress::before {
+            border-color: #2196F3;
+            animation: pulse 2s infinite;
+        }
+        
+        .timeline-item.pending::before {
+            border-color: #FF9800;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 4px white, 0 0 0 8px rgba(33, 150, 243, 0.3); }
+            50% { box-shadow: 0 0 0 4px white, 0 0 0 12px rgba(33, 150, 243, 0.1); }
+        }
+        
+        .timeline-content {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .timeline-item.in-progress .timeline-content {
+            border-left-color: #2196F3;
+        }
+        
+        .timeline-item.pending .timeline-content {
+            border-left-color: #FF9800;
+        }
+        
+        .timeline-date {
+            color: #1a237e;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-title {
+            font-size: 1.3rem;
+            color: #1a237e;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .timeline-desc {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .timeline-tags {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .tag {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .tag.success {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+        
+        .tag.progress {
+            background: #E3F2FD;
+            color: #1565C0;
+        }
+        
+        .tag.pending {
+            background: #FFF3E0;
+            color: #E65100;
+        }
+        
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .project-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-top: 5px solid #2196F3;
+        }
+        
+        .project-card.completed {
+            border-top-color: #4CAF50;
+        }
+        
+        .project-card.on-hold {
+            border-top-color: #FF9800;
+        }
+        
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+        
+        .project-title {
+            font-size: 1.4rem;
+            color: #1a237e;
+            font-weight: 600;
+        }
+        
+        .project-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .project-status.active {
+            background: #E3F2FD;
+            color: #1565C0;
+        }
+        
+        .project-status.completed {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+        
+        .project-status.on-hold {
+            background: #FFF3E0;
+            color: #E65100;
+        }
+        
+        .project-desc {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .project-progress {
+            margin: 20px 0;
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2196F3, #1565C0);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        
+        .project-card.completed .progress-fill {
+            background: linear-gradient(90deg, #4CAF50, #2E7D32);
+        }
+        
+        .project-tasks {
+            margin-top: 15px;
+        }
+        
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #2196F3;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        
+        .task-item.completed .task-checkbox {
+            background: #4CAF50;
+            border-color: #4CAF50;
+            position: relative;
+        }
+        
+        .task-item.completed .task-checkbox::after {
+            content: '✓';
+            color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 12px;
+        }
+        
+        .task-text {
+            color: #333;
+            font-size: 0.9rem;
+        }
+        
+        .task-item.completed .task-text {
+            color: #999;
+            text-decoration: line-through;
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 30px;
+            padding: 20px;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Timeline & Gestão de Projetos</h1>
+            <div class="subtitle">Graventum - Visão Executiva de Progresso</div>
+        </div>
+        
+        <div class="stats-bar">
+            <div class="stat-card success">
+                <div class="stat-number">5</div>
+                <div class="stat-label">Projetos Concluídos</div>
+            </div>
+            <div class="stat-card progress">
+                <div class="stat-number">3</div>
+                <div class="stat-label">Em Progresso</div>
+            </div>
+            <div class="stat-card pending">
+                <div class="stat-number">4</div>
+                <div class="stat-label">Planejados</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">25</div>
+                <div class="stat-label">Leads Qualificados</div>
+            </div>
+        </div>
+        
+        <div class="timeline-section">
+            <h2>📅 Timeline de Desenvolvimento</h2>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">13 FEV 2026 - 10:00-15:00 UTC</div>
+                        <div class="timeline-title">Pipeline de Lead Hunting Automatizado</div>
+                        <div class="timeline-desc">
+                            Sistema completo implementado: Brave Search API integrada, 3 ferramentas criadas (collector, qualifier, dashboard), 
+                            25 leads reais coletados em 4 nichos. Cron jobs configurados para execução automática 2x/dia. 
+                            Custo operacional: $0 (free tier).
+                        </div>
+                        <div class="timeline-tags">
+                            <span class="tag success">✅ Concluído</span>
+                            <span class="tag success">Lead Generation</span>
+                            <span class="tag success">Automação</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">13 FEV 2026 - 14:30-15:00 UTC</div>
+                        <div class="timeline-title">Templates de Abordagem Completos</div>
+                        <div class="timeline-desc">
+                            3 templates criados (LinkedIn, Email, WhatsApp) com personalização por nicho. 
+                            Top 5 leads com abordagens prontas para envio. Lead tracker implementado para monitorar progresso.
+                        </div>
+                        <div class="timeline-tags">
+                            <span class="tag success">✅ Concluído</span>
+                            <span class="tag success">Sales Enablement</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">13 FEV 2026 - 14:50 UTC</div>
+                        <div class="timeline-title">Content Calendar 30 Dias</div>
+                        <div class="timeline-desc">
+                            Calendário editorial estruturado: LinkedIn 2x/semana, Instagram 2x/semana, Blog/SEO 1x/semana.
+                            Primeiro artigo SEO e carrossel Instagram já gerados pelos cron jobs noturnos.
+                        </div>
+                        <div class="timeline-tags">
+                            <span class="tag success">✅ Concluído</span>
+                            <span class="tag success">Content Marketing</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item in-progress">
+                    <div class="timeline-content">
+                        <div class="timeline-date">14-16 FEV 2026</div>
+                        <div class="timeline-title">Abordagem dos Top 5 Leads</div>
+                        <div class="timeline-desc">
+                            Enviar mensagens LinkedIn personalizadas para Hopen Contabilidade, Tag Contabilidade, Ozai Contábil, 
+                            Contabilizei e Agilize. Objetivo: 2-3 conversas agendadas até domingo.
+                        </div>
+                        <div class="timeline-tags">
+                            <span class="tag progress">🔄 Em Progresso</span>
+                            <span class="tag progress">Sales</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item in-progress">
+                    <div class="timeline-content">
+                        <div class="timeline-date">14-15 FEV 2026</div>
+                        <div class="timeline-title">Integração Supabase + CRM</div>
+                        <div class="timeline-desc">
+                            Conectar pipeline de leads com Supabase. Criar tabelas para tracking de leads, interações e status.
+                            Dashboards em tempo real para análise de funil.
+                        </div>
+                        <div class="timeline-tags">
+                            <span class="tag progress">🔄 Em Progresso</span>
+                            <span class="tag progress">Infrastructure</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item in-progress">
+                    <div class="timeline-content">
+                        <div class="timeline-date">14-20 FEV 2026</div>
+                        <div class="timeline-title">Publicação de Conteúdo (Semana 1)</div>
+                        <div class="timeline-desc">
+                            Publicar artigo "Automação Fiscal com IA" no blog graventum.com. 
+                            2 posts LinkedIn (automação fiscal + ROI). 1 carrossel Instagram (Antes/Depois automação).
+                        </div>
+                        <div class="timeline-tags">
+                            <span class="tag progress">🔄 Agendado</span>
+                            <span class="tag progress">Content</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item pending">
+                    <div class="timeline-content">
+                        <div class="timeline-date">16-18 FEV 2026</div>
+                        <div class="timeline-title">WhatsApp Business Setup</div>
+                        <div class="timeline-desc">
+                            Configurar WhatsApp Business API via Evolution API. Criar fluxos de automação para leads qualificados.
+                            Templates pré-aprovados e integração com n8n.
+                        </div>
+                        <div class="timeline-tags">
+                            <span class="tag pending">⏳ Planejado</span>
+                            <span class="tag pending">Communication</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item pending">
+                    <div class="timeline-content">
+                        <div class="timeline-date">17-20 FEV 2026</div>
+                        <div class="timeline-title">Landing Page ROI Calculator</div>
+                        <div class="timeline-desc">
+                            Criar calculadora interativa de ROI para automação. Usuário insere: horas gastas/semana, custo/hora, processos manuais.
+                            Output: economia anual estimada + tempo recuperado.
+                        </div>
+                        <div class="timeline-tags">
+                            <span class="tag pending">⏳ Planejado</span>
+                            <span class="tag pending">Lead Magnet</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item pending">
+                    <div class="timeline-content">
+                        <div class="timeline-date">21-27 FEV 2026</div>
+                        <div class="timeline-title">Proposta Técnica Template</div>
+                        <div class="timeline-desc">
+                            Criar template de proposta comercial profissional: diagnóstico técnico, escopo de implementação, cronograma, 
+                            pricing tiers, casos de uso, ROI projetado. Formato PDF exportável.
+                        </div>
+                        <div class="timeline-tags">
+                            <span class="tag pending">⏳ Planejado</span>
+                            <span class="tag pending">Sales Ops</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="timeline-section">
+            <h2>📊 Projetos Ativos</h2>
+            
+            <div class="projects-grid">
+                <div class="project-card completed">
+                    <div class="project-header">
+                        <div class="project-title">Lead Hunting System</div>
+                        <div class="project-status completed">Concluído</div>
+                    </div>
+                    <div class="project-desc">
+                        Pipeline automatizado de coleta, qualificação e preparação de leads via Brave Search API.
+                    </div>
+                    <div class="project-progress">
+                        <div class="progress-label">
+                            <span>Progresso</span>
+                            <span>100%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 100%"></div>
+                        </div>
+                    </div>
+                    <div class="project-tasks">
+                        <div class="task-item completed">
+                            <div class="task-checkbox"></div>
+                            <div class="task-text">Integrar Brave Search API</div>
+                        </div>
+                        <div class="task-item completed">
+                            <div class="task-checkbox"></div>
+                            <div class="task-text">Criar script de coleta automática</div>
+                        </div>
+                        <div class="task-item completed">
+                            <div class="task-checkbox"></div>
+                            <div class="task-text">Sistema de scoring e qualificação</div>
+                        </div>
+                        <div class="task-item completed">
+                            <div class="task-checkbox"></div>
+                            <div class="task-text">Dashboard interativo HTML</div>
+                        </div>
+                        <div class="task-item completed">
+                            <div class="task-checkbox"></div>
+                            <div class="task-text">Cron jobs configurados</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-card active">
+                    <div class="project-header">
+                        <div class="project-title">Sales Outreach</div>
+                        <div class="project-status active">Ativo</div>
+                    </div>
+                    <div class="project-desc">
+                        Abordagem sistemática dos top 25 leads qualificados via LinkedIn, Email e WhatsApp.
+                    </div>
+                    <div class="project-progress">
+                        <div class="progress-label">
+                            <span>Progresso</span>
+                            <span>20%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 20%"></div>
+                        </div>
+                    </div>
+                    <div class="project-tasks">
+                        <div class="task-item completed">
+                            <div class="task-checkbox"></div>
+                            <div class="task-text">Templates criados (LinkedIn/Email/WhatsApp)</div>
+                        </div>
+                        <div class="task-item completed">
+                            <div class="task-checkbox"></div>
+                            <div class="task-text">Top 5 leads priorizados</div>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-checkbox"></div>
+                            <div class="task-text">Abordar Hopen Contabilidade</div>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-checkbox"></div>
+                            <div class="task-text">Abordar Ozai Contábil</div>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-checkbox"></div>
+                            <div class="task-text">Agendar 2-3 calls exploratórias</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-card active">
+                    <div class="project-header">
+                        <div class="project-title">Content Marketing</div>
+                        <div class="project-status active">Ativo</div>
+                    </div>
+                    <div class="project-desc">
+                        Construir presença online: LinkedIn, Instagram, Blog SEO. Calendário de 30 dias estruturado.
+                    </div>
+                    <div class="project-progress">
+                        <div class="progress-label">
+                            <span>Progresso</span>
+                            <span>40%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 40%"></div>
+                        </div>
+                    </div>
+                    <div class="project-tasks">
+                        <div class="task-item completed">
+                            <div class="task-checkbox"></div>
+                            <div class="task-text">Content calendar 30 dias</div>
+                        </div>
+                        <div class="task-item completed">
+                            <div class="task-checkbox"></div>
+                            <div class="task-text">Artigo SEO: Automação Fiscal IA</div>
+                        </div>
+                        <div class="task-item completed">
+                            <div class="task-checkbox"></div>
+                            <div class="task-text">Carrossel Instagram pronto</div>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-checkbox"></div>
+                            <div class="task-text">Publicar artigo no blog</div>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-checkbox"></div>
+                            <div class="task-text">2 posts LinkedIn (semana 1)</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-card active">
+                    <div class="project-header">
+                        <div class="project-title">CRM & Infrastructure</div>
+                        <div class="project-status active">Ativo</div>
+                    </div>
+                    <div class="project-desc">
+                        Integração Supabase + n8n para tracking de leads e automação de workflows comerciais.
+                    </div>
+                    <div class="project-progress">
+                        <div class="progress-label">
+                            <span>Progresso</span>
+                            <span>15%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 15%"></div>
+                        </div>
+                    </div>
+                    <div class="project-tasks">
+                        <div class="task-item completed">
+                            <div class="task-checkbox"></div>
+                            <div class="task-text">Lead tracker JSON implementado</div>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-checkbox"></div>
+                            <div class="task-text">Criar tabelas Supabase (leads, interactions)</div>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-checkbox"></div>
+                            <div class="task-text">n8n workflow: lead → Supabase</div>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-checkbox"></div>
+                            <div class="task-text">Dashboard em tempo real</div>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-checkbox"></div>
+                            <div class="task-text">API endpoints para tracking</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-header">
+                        <div class="project-title">WhatsApp Automation</div>
+                        <div class="project-status active">Planejado</div>
+                    </div>
+                    <div class="project-desc">
+                        Configurar WhatsApp Business API via Evolution para automação de follow-ups e qualificação de leads.
+                    </div>
+                    <div class="project-progress">
+                        <div class="progress-label">
+                            <span>Progresso</span>
+                            <span>10%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 10%"></div>
+                        </div>
+                    </div>
+                    <div class="project-tasks">
+                        <div class="task-item completed">
+                            <div class="task-checkbox"></div>
+                            <div class="task-text">Templates WhatsApp criados</div>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-checkbox"></div>
+                            <div class="task-text">Configurar Evolution API</div>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-checkbox"></div>
+                            <div class="task-text">Criar fluxos de automação n8n</div>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-checkbox"></div>
+                            <div class="task-text">Testar com 3 leads</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-header">
+                        <div class="project-title">Sales Assets</div>
+                        <div class="project-status active">Planejado</div>
+                    </div>
+                    <div class="project-desc">
+                        Criar assets de vendas: calculadora ROI, templates de proposta, decks de apresentação, casos de uso.
+                    </div>
+                    <div class="project-progress">
+                        <div class="progress-label">
+                            <span>Progresso</span>
+                            <span>5%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 5%"></div>
+                        </div>
+                    </div>
+                    <div class="project-tasks">
+                        <div class="task-item">
+                            <div class="task-checkbox"></div>
+                            <div class="task-text">Landing page ROI calculator</div>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-checkbox"></div>
+                            <div class="task-text">Template proposta comercial PDF</div>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-checkbox"></div>
+                            <div class="task-text">Deck de apresentação (10 slides)</div>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-checkbox"></div>
+                            <div class="task-text">3 casos de uso detalhados</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>🤖 Atualizado automaticamente pelo sistema de gestão de projetos Graventum</p>
+            <p>Última atualização: 13/02/2026 15:10 UTC</p>
+        </div>
+    </div>
+</body>
+</html>

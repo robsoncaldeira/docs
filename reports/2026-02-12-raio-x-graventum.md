@@ -6,31 +6,34 @@
 ## 1. INFRAESTRUTURA — Estado Atual
 
 ### Servidor Hetzner (46.225.79.76)
-| Item | Status | Nota |
-|------|--------|------|
-| OS | Ubuntu 24.04, kernel 6.8 | ✅ Atualizado |
-| CPU | 4 vCPUs | ✅ Ociosa (load 0.00) |
-| RAM | 8GB (2GB usado, 5.6GB disponível) | ✅ Sobra bastante |
-| Disco | 150GB (9.3GB usado, 93% livre) | ✅ Bem folgado |
-| Uptime | 10 dias | ✅ Estável |
-| Updates automáticos | ✅ Ativo | Bom |
+
+**Item** | **Status** | **Nota**
+--- | --- | ---
+OS | Ubuntu 24.04, kernel 6.8 | ✅ Atualizado
+CPU | 4 vCPUs | ✅ Ociosa (load 0.00)
+RAM | 8GB (2GB usado, 5.6GB disponível) | ✅ Sobra bastante
+Disco | 150GB (9.3GB usado, 93% livre) | ✅ Bem folgado
+Uptime | 10 dias | ✅ Estável
+Updates automáticos | ✅ Ativo | Bom
 
 **Veredicto:** Servidor super subutilizado. Aguenta 10x mais carga tranquilo.
 
 ### Serviços Rodando
-| Serviço | Status | Porta | Observação |
-|---------|--------|-------|------------|
-| **graventum-api** (PM2) | ✅ Online | 3000 (público!) | 6 rotas, 66MB RAM |
-| **n8n** (Docker) | ✅ Online | 5678 (via nginx) | 17MB dados, SSL ok |
-| **nginx** | ✅ Online | 80/443 | Proxy reverso, SSL Certbot |
-| **Evolution API** | ❌ NÃO EXISTE | — | **Não está instalado** |
+
+**Serviço** | **Status** | **Porta** | **Observação**
+--- | --- | --- | ---
+**graventum-api** (PM2) | ✅ Online | 3000 (público!) | 6 rotas, 66MB RAM
+**n8n** (Docker) | ✅ Online | 5678 (via nginx) | 17MB dados, SSL ok
+**nginx** | ✅ Online | 80/443 | Proxy reverso, SSL Certbot
+**Evolution API** | ❌ NÃO EXISTE | — | **Não está instalado**
 
 ### Domínios e SSL
-| Domínio | Destino | SSL |
-|---------|---------|-----|
-| automation.graventum.com | n8n (Docker) | ✅ Certbot |
-| openclaw.graventum.com | OpenClaw Gateway | ✅ Certbot |
-| graventum.com / www | Vercel (Next.js) | ✅ Vercel |
+
+**Domínio** | **Destino** | **SSL**
+--- | --- | ---
+automation.graventum.com | n8n (Docker) | ✅ Certbot
+openclaw.graventum.com | OpenClaw Gateway | ✅ Certbot
+graventum.com / www | Vercel (Next.js) | ✅ Vercel
 
 ---
 

@@ -53,7 +53,6 @@ Monitoramento 24/7 com otimizações mensais baseadas em dados.
 - **Email:** contato@graventum.com
 - **WhatsApp:** +55 (11) 99999-9999
 - **Site:** https://www.graventum.com
-- **Blog:** https://graventum.blogspot.com
 
 ## 🚀 Começar Agora
 

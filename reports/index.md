@@ -2,6 +2,7 @@
 
 Documentos internos, estudos de caso e análises da Graventum.
 
+- [2026-02-14] [📊 Status Geral da Documentação](2026-02-14-status-geral-documentacao.md) - **ANÁLISE COMPLETA**
 - [2026-02-12] [Raio-X Completo da Graventum](2026-02-12-raio-x-graventum.md) - **VERSÃO REFORMATADA**
 - [2026-02-14] [Test Exec 1770908710](test-exec-1770908710.md)
 - [2026-02-13] [🏆 End Of Day Report](2026-02-13-end-of-day-report.md) - **VERSÃO REFORMATADA**

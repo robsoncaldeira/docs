@@ -1,4 +1,4 @@
-# 🔍 Raio-X Completo da Graventum
+# Raio-X Completo da Graventum
 **Data:** 2026-02-12 | **Autor:** Helix (COO Virtual)
 
 ---
@@ -9,12 +9,12 @@
 
 **Item** | **Status** | **Nota**
 --- | --- | ---
-OS | Ubuntu 24.04, kernel 6.8 | ✅ Atualizado
-CPU | 4 vCPUs | ✅ Ociosa (load 0.00)
-RAM | 8GB (2GB usado, 5.6GB disponível) | ✅ Sobra bastante
-Disco | 150GB (9.3GB usado, 93% livre) | ✅ Bem folgado
-Uptime | 10 dias | ✅ Estável
-Updates automáticos | ✅ Ativo | Bom
+OS | Ubuntu 24.04, kernel 6.8 | [OK] Atualizado
+CPU | 4 vCPUs | [OK] Ociosa (load 0.00)
+RAM | 8GB (2GB usado, 5.6GB disponível) | [OK] Sobra bastante
+Disco | 150GB (9.3GB usado, 93% livre) | [OK] Bem folgado
+Uptime | 10 dias | [OK] Estável
+Updates automáticos | [OK] Ativo | Bom
 
 **Veredicto:** Servidor super subutilizado. Aguenta 10x mais carga tranquilo.
 
@@ -22,18 +22,18 @@ Updates automáticos | ✅ Ativo | Bom
 
 **Serviço** | **Status** | **Porta** | **Observação**
 --- | --- | --- | ---
-**graventum-api** (PM2) | ✅ Online | 3000 (público!) | 6 rotas, 66MB RAM
-**n8n** (Docker) | ✅ Online | 5678 (via nginx) | 17MB dados, SSL ok
-**nginx** | ✅ Online | 80/443 | Proxy reverso, SSL Certbot
-**Evolution API** | ❌ NÃO EXISTE | — | **Não está instalado**
+**graventum-api** (PM2) | [OK] Online | 3000 (público!) | 6 rotas, 66MB RAM
+**n8n** (Docker) | [OK] Online | 5678 (via nginx) | 17MB dados, SSL ok
+**nginx** | [OK] Online | 80/443 | Proxy reverso, SSL Certbot
+**Evolution API** | [ERRO] NÃO EXISTE | — | **Não está instalado**
 
 ### Domínios e SSL
 
 **Domínio** | **Destino** | **SSL**
 --- | --- | ---
-automation.graventum.com | n8n (Docker) | ✅ Certbot
-openclaw.graventum.com | OpenClaw Gateway | ✅ Certbot
-graventum.com / www | Vercel (Next.js) | ✅ Vercel
+automation.graventum.com | n8n (Docker) | [OK] Certbot
+openclaw.graventum.com | OpenClaw Gateway | [OK] Certbot
+graventum.com / www | Vercel (Next.js) | [OK] Vercel
 
 ---
 
@@ -78,13 +78,13 @@ O n8n escuta em 127.0.0.1:5678 (correto — só local), mas o firewall tem regra
 ### Técnico
 | Item | Status | Nota |
 |------|--------|------|
-| Hospedagem | Vercel | ✅ |
-| Framework | Next.js 14 | ✅ |
-| TTFB | 310ms | ✅ Bom |
-| SSL | ✅ | Via Vercel |
-| i18n | PT-BR, EN, ES | ✅ |
-| Sitemap | ✅ Existe | Apenas 3 URLs (home em 3 idiomas) |
-| Cache | ❌ `no-cache, no-store` | 🟡 Performance poderia melhorar |
+| Hospedagem | Vercel | [OK] |
+| Framework | Next.js 14 | [OK] |
+| TTFB | 310ms | [OK] Bom |
+| SSL | [OK] | Via Vercel |
+| i18n | PT-BR, EN, ES | [OK] |
+| Sitemap | [OK] Existe | Apenas 3 URLs (home em 3 idiomas) |
+| Cache | [ERRO] `no-cache, no-store` | 🟡 Performance poderia melhorar |
 
 ### Conteúdo — Problemas Sérios
 
@@ -180,23 +180,23 @@ Não consigo listar workflows sem API key do n8n.
 ## 7. DIAGNÓSTICO GERAL
 
 ### O que está BOM
-- ✅ Stack técnica sólida e moderna (n8n + Supabase + Claude + Next.js)
-- ✅ Servidor estável e com muita capacidade ociosa
-- ✅ API funcional com integrações Microsoft e Anthropic
-- ✅ Site profissional com i18n
-- ✅ SSL em tudo, firewall ativo, updates automáticos
-- ✅ Burn rate baixo — pode operar por muito tempo sem receita
-- ✅ Posicionamento claro no site (diagnóstico → implementação → retainer)
+- [OK] Stack técnica sólida e moderna (n8n + Supabase + Claude + Next.js)
+- [OK] Servidor estável e com muita capacidade ociosa
+- [OK] API funcional com integrações Microsoft e Anthropic
+- [OK] Site profissional com i18n
+- [OK] SSL em tudo, firewall ativo, updates automáticos
+- [OK] Burn rate baixo — pode operar por muito tempo sem receita
+- [OK] Posicionamento claro no site (diagnóstico → implementação → retainer)
 
 ### O que está RUIM
-- ❌ **Zero clientes, zero receita** — empresa existe só na infraestrutura
-- ❌ **Evolution API não instalada** — peça central da proposta de valor (WhatsApp) não existe
-- ❌ **API exposta sem auth** — vulnerabilidade ativa que pode gerar prejuízo
-- ❌ **Site em inglês por padrão** — repele o público-alvo
-- ❌ **Cases fictícios** — risco de credibilidade
-- ❌ **Zero conteúdo SEO** — invisível no Google
-- ❌ **Sem backups** — um rm errado ou falha de disco e perde tudo
-- ❌ **Sem Git no servidor** — código da API pode ser perdido
+- [ERRO] **Zero clientes, zero receita** — empresa existe só na infraestrutura
+- [ERRO] **Evolution API não instalada** — peça central da proposta de valor (WhatsApp) não existe
+- [ERRO] **API exposta sem auth** — vulnerabilidade ativa que pode gerar prejuízo
+- [ERRO] **Site em inglês por padrão** — repele o público-alvo
+- [ERRO] **Cases fictícios** — risco de credibilidade
+- [ERRO] **Zero conteúdo SEO** — invisível no Google
+- [ERRO] **Sem backups** — um rm errado ou falha de disco e perde tudo
+- [ERRO] **Sem Git no servidor** — código da API pode ser perdido
 
 ### A verdade nua
 A Graventum tem **infraestrutura de empresa pronta** mas **resultado de projeto pessoal**. A stack é boa, o site é bonito, a API funciona — mas nenhum cliente nunca usou nada disso. O gap não é técnico, é de **go-to-market**.
@@ -207,7 +207,7 @@ A Graventum tem **infraestrutura de empresa pronta** mas **resultado de projeto 
 
 ### Prioridade 1: DESBLOQUEIOS (esta semana)
 
-#### 🔧 1A: Instalar Evolution API (2-3h)
+####  1A: Instalar Evolution API (2-3h)
 Sem isso, toda a proposta de WhatsApp é discurso vazio.
 ```bash
 # Helix pode fazer isso se Robson autorizar
@@ -215,20 +215,20 @@ docker pull atendai/evolution-api
 # + configuração docker-compose + nginx proxy
 ```
 
-#### 🔧 1B: Proteger a API (30min)
+####  1B: Proteger a API (30min)
 Adicionar API key simples no middleware:
 ```javascript
 // Checar header x-api-key em todas as rotas
 ```
 **Helix pode fazer agora.**
 
-#### 🔧 1C: Ativar Fail2ban (5min)
+####  1C: Ativar Fail2ban (5min)
 ```bash
 systemctl enable fail2ban && systemctl start fail2ban
 ```
 **Helix pode fazer agora.**
 
-#### 🔧 1D: Setup de backup automático (30min)
+####  1D: Setup de backup automático (30min)
 Cron backup diário do n8n-data + API code para Google Drive ou local.
 **Helix pode fazer agora.**
 
@@ -248,16 +248,16 @@ Substituir por "Em breve: cases reais de implementação" ou simplesmente tirar 
 
 ### Prioridade 3: GO-TO-MARKET (semanas 2-4)
 
-#### 🚀 3A: Completar Automação Fantasma
+####  3A: Completar Automação Fantasma
 Com Evolution API instalada, os workflows funcionam e temos algo demonstrável.
 
-#### 🚀 3B: 1 post/semana no LinkedIn
+####  3B: 1 post/semana no LinkedIn
 Sobre automação contábil. Helix pode redigir todos.
 
-#### 🚀 3C: Iniciar blog no site
+####  3C: Iniciar blog no site
 1 artigo/semana sobre automação para PMEs. SEO de cauda longa. Helix pode escrever todos.
 
-#### 🚀 3D: Calculadora de Tempo Perdido
+####  3D: Calculadora de Tempo Perdido
 Ideia 2 do relatório anterior. Gera leads sem outreach.
 
 ---
@@ -302,7 +302,7 @@ Uma página em graventum.com que mostra métricas internas das automações (pra
 | **3** | Enviar demo para 3 escritórios contábeis | Robson |
 | **3-4** | Calculadora de Tempo Perdido live no site | Helix |
 | **4-6** | 1 blog post/semana (SEO) | Helix |
-| **4-8** | **Primeiro cliente pagante** | 🎯 |
+| **4-8** | **Primeiro cliente pagante** |  |
 
 ---
 

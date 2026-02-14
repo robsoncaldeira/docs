@@ -4,7 +4,7 @@ Documentos internos, estudos de caso e análises da Graventum.
 
 - [2026-02-12] [Raio-X Completo da Graventum](2026-02-12-raio-x-graventum.md) - **VERSÃO REFORMATADA**
 - [2026-02-14] [Test Exec 1770908710](test-exec-1770908710.md)
-- [2026-02-13] [End Of Day Report](2026-02-13-end-of-day-report.md)
+- [2026-02-13] [🏆 End Of Day Report](2026-02-13-end-of-day-report.md) - **VERSÃO REFORMATADA**
 - [2026-02-13] [Lead Hunting Breakthrough](2026-02-13-lead-hunting-breakthrough.md)
 - [2026-02-12] [Estrategia Primeiro Cliente](2026-02-12-estrategia-primeiro-cliente.md)
 - [2026-02-12] [Identidade Graventum](2026-02-12-identidade-graventum.md)

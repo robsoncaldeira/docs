@@ -27,30 +27,30 @@ Migração bem-sucedida de Google Custom Search API para Brave Search API, resol
 
 | Ferramenta | Tipo | Descrição | Status | Localização |
 |------------|------|-----------|--------|-------------|
-| **simple-lead-hunter.sh** | Shell Script | Busca automatizada via Brave Search API | ✅ Operacional | `tools/` |
-| **lead-dashboard.py** | Python | Dashboard HTML interativo com filtros | ✅ Operacional | `tools/` |
-| **lead-qualifier.py** | Python | Qualificação + scoring automático | ✅ Operacional | `tools/` |
+| **`tools/simple-lead-hunter.sh`** | Shell Script | Busca automatizada via Brave Search API | ✅ **OPERACIONAL** | `tools/` |
+| **`tools/lead-dashboard.py`** | Python | Dashboard HTML interativo com filtros | ✅ **OPERACIONAL** | `tools/` |
+| **`tools/lead-qualifier.py`** | Python | Qualificação + scoring automático | ✅ **OPERACIONAL** | `tools/` |
 
 ### 2. 📝 TEMPLATES DE ABORDAGEM
 
 | Template | Canal | Nichos | Status | Localização |
 |----------|-------|--------|--------|-------------|
-| **abordagem-linkedin.md** | LinkedIn | Contabilidade, Imobiliárias, Clínicas | ✅ Pronto | `templates/` |
-| **abordagem-email.md** | Email Corporativo | Todos os nichos | ✅ Pronto | `templates/` |
-| **abordagem-whatsapp.md** | WhatsApp Business | Clínicas, Agências Turismo | ✅ Pronto | `templates/` |
+| **`templates/abordagem-linkedin.md`** | LinkedIn | Contabilidade, Imobiliárias, Clínicas | ✅ **PRONTO** | `templates/` |
+| **`templates/abordagem-email.md`** | Email Corporativo | Todos os nichos | ✅ **PRONTO** | `templates/` |
+| **`templates/abordagem-whatsapp.md`** | WhatsApp Business | Clínicas, Agências Turismo | ✅ **PRONTO** | `templates/` |
 
 ### 3. ⚙️ AUTOMAÇÕES CONFIGURADAS
 
 | Job | Frequência | Próxima Execução | Status | Output |
 |-----|------------|------------------|--------|--------|
-| **Brave Lead Hunter** | 12h/12h | 14 Fev 02:10 UTC | ✅ Ativo | `outputs/leads/` |
-| **Lead Dashboard Update** | Diário | 14 Fev 15:00 UTC | ✅ Ativo | `outputs/dashboard/` |
+| **Brave Lead Hunter** | 12h/12h | 14 Fev 02:10 UTC | ✅ **ATIVO** | `outputs/leads/` |
+| **Lead Dashboard Update** | Diário | 14 Fev 15:00 UTC | ✅ **ATIVO** | `outputs/dashboard/` |
 
 ### 4. 📅 PLANEJAMENTO ESTRATÉGICO
 
 | Documento | Escopo | Período | Status |
 |-----------|--------|---------|--------|
-| **content-calendar-30-days.md** | LinkedIn + Instagram + Blog | 30 dias | ✅ Estruturado |
+| **`content-calendar-30-days.md`** | LinkedIn + Instagram + Blog | 30 dias | ✅ **ESTRUTURADO** |
 
 ---
 

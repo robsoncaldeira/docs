@@ -9,6 +9,7 @@ Skills define _how_ tools work. This file is for _your_ specifics — what's uni
 - 10 active workflows, 71 nodes
 - 7 Google credentials + 7 Microsoft credentials configured
 - Used for: agent orchestration, triggers, integrations, webhook endpoints
+- **Webhooks (OpenClaw pode acionar):** `lead-hunt` — dispara prospecção de leads. Uso: `./tools/n8n-trigger.sh lead-hunt`
 
 ### Graventum API (Express.js)
 - Server: 46.225.79.76:3000
@@ -22,10 +23,9 @@ Skills define _how_ tools work. This file is for _your_ specifics — what's uni
 - Row Level Security (RLS) for multi-tenant isolation
 - Tables: conversations, leads, automation_metrics, organizations
 
-### Evolution API (WhatsApp)
-- Docker container on Hetzner
-- WhatsApp Business API (open-source, WHATSAPP-BAILEYS)
-- Send/receive messages, webhook integration with n8n
+### Evolution API (WhatsApp) - **NÃO INSTALADA**
+- Não está no docker-compose nem no servidor
+- Sistema usa email, LinkedIn, telefone
 
 ### Microsoft Graph API
 - OAuth2 Client Credentials
@@ -43,7 +43,7 @@ Skills define _how_ tools work. This file is for _your_ specifics — what's uni
 ### Hetzner Cloud Server
 - Ubuntu 24.04, 8GB RAM
 - IP: 46.225.79.76
-- Hosts: n8n, Evolution API, graventum-api
+- Hosts: n8n, graventum-api
 - Access: SSH
 
 ### Vercel

@@ -23,17 +23,17 @@
 
 | Layer | Technology | Role |
 |-------|-----------|------|
-| LLM | Claude Sonnet 4 (Anthropic) | Reasoning, classification, text generation |
+| LLM | Claude, DeepSeek, Gemini, Ollama | Reasoning, classification, text generation (multi-provider) |
 | Orchestration | n8n self-hosted (Hetzner) | Workflow engine, triggers, integrations |
 | Database | Supabase (PostgreSQL + pgvector) | Conversations, profiles, metrics, RAG |
-| WhatsApp | Evolution API (Docker) | Message send/receive |
+| Search | Brave API | Lead discovery, web search |
 | API | Express.js (graventum-api) | Reusable AI service, agent routes |
 | Embeddings | OpenAI text-embedding-3-small | Vectorization for RAG |
 | Frontend | Next.js 14 + Vercel | Website SSG/SSR |
 | Corporate Email | Microsoft Exchange (@graventum.com) | Business communications |
 | Personal Email | Gmail | Personal communications |
 | Files | OneDrive (1TB E5) + Google Drive | Document storage |
-| Server | Hetzner Cloud (Ubuntu 24.04, 8GB) — 46.225.79.76 | n8n, Evolution API, graventum-api |
+| Server | Hetzner Cloud (Ubuntu 24.04, 8GB) — 46.225.79.76 | n8n, graventum-api |
 
 ## What Graventum Delivers Today
 

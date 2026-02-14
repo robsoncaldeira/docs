@@ -70,7 +70,7 @@ Monitoramento 24/7 com otimizações mensais baseadas em dados.
 
 ## 📚 Conteúdo Completo
 
-- [Blog](/blog/) - Artigos sobre automação
+- [Artigos](/articles/) - Blog integrado (graventum.blogspot.com)
 - [Relatórios](/reports/) - Análises e estudos de caso
 - [Instagram](/instagram/) - Conteúdo para redes sociais
 - [Técnico](/tech/) - Documentação técnica

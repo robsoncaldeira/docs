@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog da Graventum - Embed</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .blog-embed {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        .blog-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+        }
+        
+        .blog-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .blog-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border: 2px solid #667eea;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .blog-link:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .iframe-container {
+            position: relative;
+            width: 100%;
+            height: 800px;
+            overflow: hidden;
+        }
+        
+        .iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #666;
+        }
+        
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .info-box {
+            background: #e8f4fd;
+            border-left: 4px solid #2196f3;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+        
+        .info-box h3 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+        
+        .feature {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+        
+        .feature h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .iframe-container {
+                height: 600px;
+            }
+            
+            .blog-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .iframe-container {
+                height: 500px;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 Blog da Graventum</h1>
+            <p>Artigos sobre automação com IA para PMEs brasileiras</p>
+        </div>
+        
+        <div class="blog-embed">
+            <div class="blog-header">
+                <div class="blog-title">graventum.blogspot.com</div>
+                <a href="https://graventum.blogspot.com" target="_blank" class="blog-link">
+                    🔗 Visitar Blog Completo
+                </a>
+            </div>
+            
+            <div class="iframe-container">
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Carregando blog...</p>
+                </div>
+                <iframe 
+                    src="https://graventum.blogspot.com"
+                    title="Blog da Graventum"
+                    onload="document.querySelector('.loading').style.display = 'none';"
+                ></iframe>
+            </div>
+        </div>
+        
+        <div class="info-box">
+            <h3>ℹ️ Como Funciona</h3>
+            <p>Este é um embed direto do Blogger. Todos os artigos são publicados em <strong>https://graventum.blogspot.com</strong> e aparecem automaticamente aqui. A integração mantém todo o conteúdo em um único lugar, otimizando SEO e experiência do usuário.</p>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🚀</div>
+                <h3>SEO Otimizado</h3>
+                <p>Conteúdo indexado no domínio principal, melhorando visibilidade no Google</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">📱</div>
+                <h3>Responsivo</h3>
+                <p>Funciona perfeitamente em desktop, tablet e smartphone</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <h3>Atualização Automática</h3>
+                <p>Novos artigos aparecem automaticamente sem necessidade de sincronização manual</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">🔗</div>
+                <h3>Integração Completa</h3>
+                <p>Comentários, compartilhamento e analytics funcionam normalmente</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Script para melhorar a experiência do embed
+        document.addEventListener('DOMContentLoaded', function() {
+            const iframe = document.querySelector('iframe');
+            const loading = document.querySelector('.loading');
+            
+            // Remove loading após 5 segundos (fallback)
+            setTimeout(() => {
+                loading.style.display = 'none';
+            }, 5000);
+            
+            // Adiciona mensagem se iframe falhar
+            iframe.addEventListener('error', function() {
+                loading.innerHTML = `
+                    <div style="color: #e74c3c; font-size: 2rem;">⚠️</div>
+                    <h3>Não foi possível carregar o blog</h3>
+                    <p>Por favor, <a href="https://graventum.blogspot.com" target="_blank" style="color: #667eea; text-decoration: underline;">clique aqui para acessar diretamente</a></p>
+                `;
+            });
+        });
+    </script>
+</body>
+</html>

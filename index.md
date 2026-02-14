@@ -67,3 +67,13 @@ Monitoramento 24/7 com otimizações mensais baseadas em dados.
 **Última atualização:** 14 de fevereiro de 2026  
 **Versão:** 1.0.0  
 **Status:** Em produção ativa
+
+## 📚 Conteúdo Completo
+
+- [Blog](/blog/) - Artigos sobre automação
+- [Relatórios](/reports/) - Análises e estudos de caso
+- [Instagram](/instagram/) - Conteúdo para redes sociais
+- [Técnico](/tech/) - Documentação técnica
+
+---
+*Site alimentado automaticamente pelo sistema Graventum*

@@ -1,38 +1,52 @@
-# Graventum Documentation
+# Documentação Graventum
 
-Documentação oficial da Graventum - Automação Inteligente para Empresas Brasileiras.
+Repositório central de documentação da Graventum - Automação Inteligente para PMEs Brasileiras.
 
-## 🚀 Acesso
+## 📁 Estrutura
 
-- **URL principal:** https://graventum.github.io/docs/
-- **GitHub:** https://github.com/graventum/docs
+### 📊 Business Cases
+Casos de negócio detalhados por nicho:
+- [Contabilidade](./business-cases/case-1-contabilidade.md)
+- [Imobiliárias](./business-cases/case-2-imobiliarias.md)
+- [Clínicas](./business-cases/case-3-clinicas.md)
+- [Agências de Turismo](./business-cases/case-4-turismo.md)
 
-## 📁 Conteúdo
+### 📝 Blog Posts
+Conteúdo para blog/SEO:
+- [Automação Fiscal com IA para Contabilidade](./blog/2026-02-13-automacao-fiscal-ia-contabilidade.md)
+- [CRM Inteligente para Imobiliárias com IA](./blog/2026-02-14-crm-inteligente-imobiliario-ia.md)
+- [ROI da Automação para PMEs](./blog/2026-02-20-roi-automacao-pmes.md)
 
-1. **[Home](/)** - Visão geral da Graventum
-2. **[Onboarding](/onboarding/)** - Processo de integração de 30 dias
-3. **[Automação](/automation-flow/)** - Como funcionam os fluxos inteligentes
+### 🔍 Analysis
+Análises técnicas e de processos:
+- [Análise de Workflows n8n](./analysis/n8n-workflows-analysis.md)
 
-## 🔧 Tecnologia
+### 📚 Guides
+Guias práticos e manuais:
+- [Guia API Meta/Facebook/WhatsApp 2026](./guides/guia-api-meta-facebook-whatsapp-2026.md)
+- [Resumo Rápido API Meta](./guides/resumo-rapido-api-meta.md)
+- [Template de Proposta](./guides/INSTRUCOES-TEMPLATE-PROPOSTA.md)
 
-- **Framework:** Jekyll (GitHub Pages)
-- **Tema:** Cayman
-- **Markdown:** Kramdown
-- **Hosting:** GitHub Pages
+### 🎯 Cases
+Casos reais e simulações:
+- [Caso Real: Primeiro Cliente](./cases/caso-real-primeiro-cliente.md)
 
-## 📝 Como Atualizar
+### 🔄 Processes
+Processos e fluxos de trabalho:
+- [Ciclo de Vida de Projeto Graventum](./processes/ciclo-vida-projeto-graventum.md)
 
-1. Edite os arquivos `.md` na pasta `docs/`
-2. Commit e push para o GitHub
-3. GitHub Pages atualiza automaticamente
+## 🚀 Como Usar
 
-## 📞 Contato
+1. **Para consulta:** Navegue pelas categorias acima
+2. **Para contribuir:** Faça pull request ou edite diretamente
+3. **Para publicar:** Use GitHub Pages ou integre com site
 
-- **Email:** contato@graventum.com
-- **Site:** https://graventum.com
-- **GitHub:** @graventum
+## 📊 Status
+
+- **Última atualização:** 14/02/2026
+- **Total de documentos:** [AUTO-GERADO]
+- **Categorias:** 6 ativas
 
 ---
 
-**Última atualização:** 14 de fevereiro de 2026  
-**Versão:** 1.0.0
+*Documentação mantida por Helix - COO Virtual da Graventum*

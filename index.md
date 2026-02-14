@@ -70,10 +70,10 @@ Monitoramento 24/7 com otimizações mensais baseadas em dados.
 
 ## 📚 Conteúdo Completo
 
-- [Artigos](/articles/) - Blog integrado (graventum.blogspot.com)
-- [Relatórios](/reports/) - Análises e estudos de caso
-- [Instagram](/instagram/) - Conteúdo para redes sociais
-- [Técnico](/tech/) - Documentação técnica
+- [Artigos](/docs/articles/) - Blog integrado (graventum.blogspot.com)
+- [Relatórios](/docs/reports/) - Análises e estudos de caso
+- [Instagram](/docs/instagram/) - Conteúdo para redes sociais
+- [Técnico](/docs/tech/) - Documentação técnica
 
 ---
 *Site alimentado automaticamente pelo sistema Graventum*

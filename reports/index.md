@@ -15,3 +15,7 @@ Documentos internos, estudos de caso e análises da Graventum.
 - [2026-02-14] [Project Status](project-status.md)
 - [2026-02-14] [Test 2026 02 12 115053](test-2026-02-12-115053.md)
 - [2026-02-14] [Teste Workflow 122230](teste-workflow-122230.md)
+
+---
+
+**Nota:** Esta página lista documentos internos da Graventum. Clique em qualquer link acima para acessar o conteúdo completo.

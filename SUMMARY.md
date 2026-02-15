@@ -33,6 +33,29 @@
 - [Análise Graventum vs Ralph, Clawdbot e n8n](openclaw-ferramentas/analise-graventum-vs-ralph-clawdbot-n8n.plan.md)
 - [Teste Ralph Wiggum, Ollama e DeepSeek](openclaw-ferramentas/teste-ralph-wiggum-ollama-deepseek.plan.md)
 
+## Business cases
+- [Visão geral — Business cases](business-cases/README.md)
+- [Caso real — Primeiro cliente](business-cases/caso-real-primeiro-cliente.md)
+- [Caso 1 — Contabilidade](business-cases/case-1-contabilidade.md)
+- [Caso 2 — Imobiliárias](business-cases/case-2-imobiliarias.md)
+- [Caso 3 — Clínicas](business-cases/case-3-clinicas.md)
+- [Caso 4 — Turismo](business-cases/case-4-turismo.md)
+- [Diagramas executivos](business-cases/diagramas-executivos/README.md)
+- [Roadmap executivo Graventum](business-cases/diagramas-executivos/roadmap-executivo-graventum.md)
+- [Organograma executivo](business-cases/diagramas-executivos/organograma-executivo.md)
+- [Fluxograma processos executivos](business-cases/diagramas-executivos/fluxograma-processos-executivos.md)
+
+## Dashboards
+- [Visão geral — Dashboards](dashboards/README.md)
+- [Graventum Dashboard](dashboards/graventum-dashboard.md)
+- [Leads Dashboard](dashboards/leads-dashboard.md)
+- [Pipeline Dashboard](dashboards/pipeline-dashboard.md)
+- [Project Timeline](dashboards/project-timeline.md)
+
+## Processes
+- [Visão geral — Processes](processes/README.md)
+- [Ciclo de vida do projeto Graventum](processes/ciclo-vida-projeto-graventum.md)
+
 ## Documentação técnica
 - [Ativos e fontes](documentacao-tecnica/ATIVOS_E_FONTES.md)
 - [Limpeza fev/2026](documentacao-tecnica/LIMPEZA_2026-02.md)

@@ -2,6 +2,19 @@
 
 **Localização:** `/root/.openclaw/workspace/html-dashboard/`
 
+## 🌐 Abrir pelo GitBook / site
+
+Os painéis são arquivos HTML. No GitBook, use os links **"Abrir … em nova aba"** em cada página (Graventum Dashboard, Leads, Pipeline, Project Timeline).
+
+**Para os links funcionarem:** ative o **GitHub Pages** no repositório **robsoncaldeira/docs**:  
+**Settings → Pages → Build and deployment → Source: Deploy from a branch** → Branch **main**, folder **/ (root)** → Save.
+
+Depois os dashboards ficam em:
+- **Índice de todos:** [robsoncaldeira.github.io/docs/dashboards/index.html](https://robsoncaldeira.github.io/docs/dashboards/index.html)
+- Graventum Dashboard, Leads, Pipeline, Project Timeline (links nas páginas ao lado).
+
+---
+
 ## 🎯 OBJETIVO
 Centralizar todos os dashboards, relatórios e ferramentas HTML em uma única pasta para fácil acompanhamento.
 

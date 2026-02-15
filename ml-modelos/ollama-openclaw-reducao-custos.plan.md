@@ -52,15 +52,15 @@ O OpenClaw já possui **suporte nativo ao Ollama** via API compatível com OpenA
 
 ```mermaid
 flowchart TB
-    subgraph OpenClaw
-        Agent[Agent OpenClaw]
+    subgraph openclaw ["OpenClaw"]
+        Agent["Agent OpenClaw"]
     end
     
-    subgraph Modelos
-        Ollama[Ollama no Servidor]
-        DeepSeek[DeepSeek API]
-        Gemini[Google Gemini]
-        Claude[Anthropic Claude]
+    subgraph modelos ["Modelos"]
+        Ollama["Ollama no Servidor"]
+        DeepSeek["DeepSeek API"]
+        Gemini["Google Gemini"]
+        Claude["Anthropic Claude"]
     end
     
     Agent -->|primary| Ollama

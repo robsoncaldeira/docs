@@ -2,6 +2,10 @@
 
 Dashboard de leads e qualificação.
 
-<iframe src="leads-dashboard.html" title="Leads Dashboard" style="width:100%; height:900px; border:none;"></iframe>
+O GitBook não exibe arquivos HTML inline. **Abra o painel em nova aba:**
 
-*Se o painel não carregar acima, [abra o dashboard em nova aba](leads-dashboard.html).*
+👉 <a href="https://robsoncaldeira.github.io/docs/dashboards/leads-dashboard.html" target="_blank" rel="noopener">Abrir Leads Dashboard</a> (abre em nova aba)
+
+---
+
+*Para os links funcionarem, ative o **GitHub Pages** no repositório [robsoncaldeira/docs](https://github.com/robsoncaldeira/docs): **Settings → Pages → Source: Deploy from branch → main → / (root)**.*

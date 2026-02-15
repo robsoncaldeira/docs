@@ -19,23 +19,23 @@ Entrada (formulário, WhatsApp, CRM) → n8n → Supabase (dores_solucoes, leads
 
 ```mermaid
 flowchart LR
-  subgraph entrada [Entrada]
+  subgraph entrada ["Entrada"]
     A1[Formulário Landing]
     A2[WhatsApp Telegram]
     A3[Email CRM]
   end
 
-  subgraph orquestracao [Orquestração]
+  subgraph orquestracao ["Orquestração"]
     B[n8n]
   end
 
-  subgraph dados [Dados]
+  subgraph dados ["Dados"]
     C1[(Supabase)]
     C2[dores_solucoes]
     C3[leads]
   end
 
-  subgraph saida [Saída]
+  subgraph saida ["Saída"]
     D1[Email]
     D2[WhatsApp]
     D3[PDF Proposta]
@@ -73,28 +73,28 @@ Diagrama que ilustra como o **n8n** interage com as etapas de **segmentação**,
 
 ```mermaid
 flowchart TB
-  subgraph entrada [Entrada]
+  subgraph entrada ["Entrada"]
     A1[Lead Formulário]
     A2[Mensagem WhatsApp]
     A3[Documento Texto]
   end
 
-  subgraph n8n [n8n]
+  subgraph n8n ["n8n"]
     N[Workflow]
   end
 
-  subgraph ml_servidor [ML no servidor]
+  subgraph ml_servidor ["ML no servidor"]
     M1[Segmentação scikit-learn]
     M2[Embeddings sentence-transformers]
     M3[Classificação Hugging Face]
   end
 
-  subgraph dados [Dados]
+  subgraph dados ["Dados"]
     S[(Supabase)]
     DS[(pgvector)]
   end
 
-  subgraph ia_cara [IA quando precisar]
+  subgraph ia_cara ["IA quando precisar"]
     Claude[Claude OpenAI]
   end
 

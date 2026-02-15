@@ -49,6 +49,19 @@ A sidebar deve mostrar: Visão geral, Planos, API Reference, Estratégia e merca
 
 ---
 
+## 5. Consolidar mudanças (GitHub ↔ GitBook)
+
+**Por que é difícil:** GitBook e GitHub são dois lugares. O que você edita em um **não aparece no outro** até você sincronizar.
+
+| Onde você editou | O que fazer para consolidar |
+|------------------|-----------------------------|
+| **No GitHub** (ex.: tirou "(SUMMARY)" do README) | No GitBook: **Settings → Git Sync** → **Sync** (ou "Pull from GitHub"). Assim o GitBook puxa as alterações do repositório. |
+| **No GitBook** (editou uma página no editor) | O GitBook cria um **Change request** (branch). Para mandar para o GitHub: abra o Change request, **merge/accept** e faça **Push to GitHub**. Até lá, o GitHub não vê a alteração. |
+
+**Recomendação:** Escolha **uma** fonte da verdade. O mais simples é **editar sempre no GitHub** (ou no clone `docs-merge` e dar push). Aí no GitBook você só roda **Sync** de vez em quando e o site fica igual ao repo.
+
+---
+
 ## Resumo
 
 | Passo | Ação |
@@ -57,5 +70,6 @@ A sidebar deve mostrar: Visão geral, Planos, API Reference, Estratégia e merca
 | 2 | Criar um Space novo |
 | 3 | Git Sync: repo `robsoncaldeira/docs`, branch `main`, Project directory **vazio**, direção **GitHub → GitBook** |
 | 4 | No Site, usar o novo Space e publicar |
+| 5 | **Consolidar:** editar no GitHub → no GitBook usar **Sync**; editar no GitBook → **Accept change request** e **Push to GitHub** |
 
 Começando do zero assim, o GitBook lê o `SUMMARY.md` e todos os arquivos do repositório numa única importação.

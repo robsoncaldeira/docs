@@ -60,19 +60,19 @@ O "Ralph Wiggun" da Graventum é uma **personificação da automação total** n
 
 ```mermaid
 flowchart LR
-    subgraph fase1 [Fase 1: Fundação]
+    subgraph fase1 ["Fase 1: Fundação"]
         A1[OpenClaw COO]
         A2[n8n 10 workflows]
         A3[Brave API leads]
         A4[Supabase 32 orgs]
     end
-    subgraph fase2 [Fase 2: Operação]
+    subgraph fase2 ["Fase 2: Operação"]
         B1[Cron jobs 20+]
         B2[Lead pipeline ativo]
         B3[Instagram automação]
         B4[97% automação]
     end
-    subgraph fase3 [Fase 3: Tração]
+    subgraph fase3 ["Fase 3: Tração"]
         C1[Primeiro cliente]
         C2[5-8 clientes 6m]
         C3[Receita recorrente]

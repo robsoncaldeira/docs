@@ -53,7 +53,7 @@ flowchart LR
 
 ```mermaid
 flowchart TB
-  subgraph atracao [Fase 1: Atração]
+  subgraph atracao ["Fase 1: Atração"]
     A1[LinkedIn]
     A2[Indicação]
     A3[Site e SEO]
@@ -64,7 +64,7 @@ flowchart TB
     A4 --> A0
   end
 
-  subgraph diagnostico [Fase 2: Diagnóstico 1-2 sem]
+  subgraph diagnostico ["Fase 2: Diagnóstico 1-2 sem"]
     B1[Reunião inicial]
     B2[Mapeamento processos]
     B3[Gargalos e oportunidades]
@@ -72,21 +72,21 @@ flowchart TB
     B1 --> B2 --> B3 --> B4
   end
 
-  subgraph trial [Fase 3: Trial 14 dias]
+  subgraph trial ["Fase 3: Trial 14 dias"]
     C1[Automação 1 maior impacto]
     C2[Cliente testa]
     C3[Acompanhamento diário]
     C1 --> C2 --> C3
   end
 
-  subgraph impl [Fase 4: Implementação 15-30 dias]
+  subgraph impl ["Fase 4: Implementação 15-30 dias"]
     D1[Deploy automações roadmap]
     D2[Integração ferramentas cliente]
     D3[Treinamento time]
     D1 --> D2 --> D3
   end
 
-  subgraph retainer [Fase 5: Retainer contínuo]
+  subgraph retainer ["Fase 5: Retainer contínuo"]
     E1[Monitoramento]
     E2[Suporte WhatsApp]
     E3[1-2 micro-automações/mês]
@@ -96,7 +96,7 @@ flowchart TB
     E3 --> E4
   end
 
-  subgraph expansao [Fase 6: Expansão]
+  subgraph expansao ["Fase 6: Expansão"]
     F1[Novos departamentos]
     F2[Automações mais complexas]
     F3[Upsell]

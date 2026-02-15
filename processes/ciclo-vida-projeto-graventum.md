@@ -241,18 +241,18 @@ Monitoramento uso → Identificação oportunidades → Proposta valor → Imple
 ## 🎯 **VISÃO MACRO: FLUXO COMPLETO**
 
 ```mermaid
-graph TD
-    A[Lead Capturado] --> B[Qualificação Automática]
-    B --> C[Call Diagnóstica]
-    C --> D[Proposta Personalizada]
-    D --> E[Contrato Assinado]
-    E --> F[Implementação 30 Dias]
-    F --> G[Go-live + Suporte]
-    G --> H[Monitoramento 24/7]
-    H --> I[Expansão + Upsell]
-    I --> J[Feedback + Melhoria]
-    J --> K[Cliente Satisfeito]
-    K --> L[Referências + Novos Leads]
+flowchart TD
+    A["Lead Capturado"] --> B["Qualificação Automática"]
+    B --> C["Call Diagnóstica"]
+    C --> D["Proposta Personalizada"]
+    D --> E["Contrato Assinado"]
+    E --> F["Implementação 30 Dias"]
+    F --> G["Go-live + Suporte"]
+    G --> H["Monitoramento 24/7"]
+    H --> I["Expansão + Upsell"]
+    I --> J["Feedback + Melhoria"]
+    J --> K["Cliente Satisfeito"]
+    K --> L["Referências + Novos Leads"]
     L --> A
 ```
 

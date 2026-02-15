@@ -25,12 +25,20 @@ O conteúdo está no GitHub ([robsoncaldeira/docs](https://github.com/robsoncald
 3. Escolha a direção **GitHub → GitBook** (trazer o conteúdo do repo para o GitBook).
 4. Aguarde o fim do processo (pode levar 1–2 minutos).
 
-## 4. Publicar (se for o caso)
+## 4. Aceitar as alterações vindas do Git (importante)
 
-1. Se o Space tiver **Change requests** ou rascunhos, faça **Merge** das alterações.
-2. Se a documentação publicada for outro ambiente, dê **Publish** ou **Deploy** para atualizar o site.
+1. Depois do Sync, o GitBook muitas vezes **não aplica na hora**: cria um **Change request** (pedido de alteração) com o conteúdo do repositório.
+2. Procure no Space por:
+   - **"Change requests"** ou **"Updates from Git"** no menu ou no topo.
+   - Um aviso do tipo *"You have X updates from your repository"* ou *"Accept changes"*.
+3. **Abra o Change request** e clique em **Merge** / **Accept** / **Aplicar** para que a estrutura (SUMMARY) e as novas páginas (Business cases, Dashboards, Processes) passem a valer no Space.
+4. Sem aceitar esse merge, a sidebar continua com a estrutura antiga mesmo com "Sync complete".
 
-## 5. Se ainda não aparecer
+## 5. Publicar (se for o caso)
+
+1. Se a documentação publicada for outro ambiente, dê **Publish** ou **Deploy** para atualizar o site.
+
+## 6. Se ainda não aparecer
 
 - **Limpe o cache do navegador** ou abra o site em aba anônima.
 - Confirme no GitHub que o arquivo [SUMMARY.md](https://github.com/robsoncaldeira/docs/blob/main/SUMMARY.md) tem as seções **Business cases**, **Dashboards** e **Processes**.

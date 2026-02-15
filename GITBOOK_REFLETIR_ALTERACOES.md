@@ -4,6 +4,17 @@ Quando você altera o repositório **robsoncaldeira/docs** no GitHub (ou dá pus
 
 ---
 
+## ⚠️ Conferir a branch no GitBook
+
+**As alterações estão na branch `main`.** Se o GitBook estiver conectado à branch **`gitbook-export`**, ele nunca vai mostrar o que você subiu.
+
+1. No GitBook: **Settings** do Space → **Git Sync** (ou **GitHub**).
+2. Veja qual **branch** está configurada (ex.: `main` ou `gitbook-export`).
+3. Se estiver **`gitbook-export`**: troque para **`main`** e salve. Depois rode **Sync**.
+4. (Opcional) No GitHub você pode apagar a branch `gitbook-export` se não usar mais, ou manter; o importante é o GitBook usar **`main`**.
+
+---
+
 ## Opção 1: Sync manual no GitBook (recomendado)
 
 1. Acesse **[app.gitbook.com](https://app.gitbook.com)** e abra o Space **Graventum Docs**.

@@ -1,54 +1,25 @@
 # Documentação Graventum
 
-Repositório central de documentação da Graventum - Automação Inteligente para PMEs Brasileiras.
+Repositório da documentação publicada no GitBook — Automação Inteligente para PMEs.
 
-## 📁 Estrutura
+## Estrutura (SUMMARY)
 
-### 📊 Business Cases
-Casos de negócio detalhados por nicho:
-- [Contabilidade](./business-cases/case-1-contabilidade.md)
-- [Imobiliárias](./business-cases/case-2-imobiliarias.md)
-- [Clínicas](./business-cases/case-3-clinicas.md)
-- [Agências de Turismo](./business-cases/case-4-turismo.md)
+O índice completo está em [SUMMARY.md](./SUMMARY.md). Seções:
 
-### 📝 Blog Posts
-Conteúdo para blog/SEO:
-- [Automação Fiscal com IA para Contabilidade](./blog/2026-02-13-automacao-fiscal-ia-contabilidade.md)
-- [CRM Inteligente para Imobiliárias com IA](./blog/2026-02-14-crm-inteligente-imobiliario-ia.md)
-- [ROI da Automação para PMEs](./blog/2026-02-20-roi-automacao-pmes.md)
+- **Planos** — formato, guia, índice de planos
+- **API Reference** — Graventum API
+- **Estratégia e mercado** — jornada, identidade, estudo de mercado, primeira impressão
+- **Produto e operação** — agentes IA/BI, n8n, CSV
+- **ML e modelos** — casos de uso, servidor, Ollama
+- **OpenClaw e ferramentas** — práticas, COO, análises
+- **Business cases** — caso real, casos por nicho, diagramas
+- **Dashboards** — Graventum, Leads, Pipeline, Project Timeline
+- **Processes** — ciclo de vida do projeto
+- **Documentação técnica** — ativos, limpeza, PyTorch/sklearn, scripts
 
-### 🔍 Analysis
-Análises técnicas e de processos:
-- [Análise de Workflows n8n](./analysis/n8n-workflows-analysis.md)
+## Publicar no GitBook
 
-### 📚 Guides
-Guias práticos e manuais:
-- [Guia API Meta/Facebook/WhatsApp 2026](./guides/guia-api-meta-facebook-whatsapp-2026.md)
-- [Resumo Rápido API Meta](./guides/resumo-rapido-api-meta.md)
-- [Template de Proposta](./guides/INSTRUCOES-TEMPLATE-PROPOSTA.md)
-
-### 🎯 Cases
-Casos reais e simulações:
-- [Caso Real: Primeiro Cliente](./business-cases/caso-real-primeiro-cliente.md)
-
-### 🔄 Processes
-Processos e fluxos de trabalho:
-- [Ciclo de Vida de Projeto Graventum](./processes/ciclo-vida-projeto-graventum.md)
-
-### 📋 Planos e docs (workspace)
-Índice em [SUMMARY.md](./SUMMARY.md). Pastas: [planos/](./planos/), [documentacao-tecnica/](./documentacao-tecnica/).
-
-## 🚀 Como Usar
-
-1. **Para consulta:** Navegue pelas categorias acima
-2. **Para contribuir:** Faça pull request ou edite diretamente
-3. **Para publicar:** Use GitHub Pages ou GitBook (Git Sync)
-
-## 📊 Status
-
-- **Última atualização:** 14/02/2026
-- **Total de documentos:** [AUTO-GERADO]
-- **Categorias:** 6 ativas
+Siga [SOLUCAO_GITBOOK.md](./SOLUCAO_GITBOOK.md): novo Space + Import from GitHub (repo `robsoncaldeira/docs`, branch `main`, Project directory vazio).
 
 ---
 

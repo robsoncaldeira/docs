@@ -29,14 +29,14 @@ Guias práticos e manuais:
 
 ### 🎯 Cases
 Casos reais e simulações:
-- [Caso Real: Primeiro Cliente](./cases/caso-real-primeiro-cliente.md)
+- [Caso Real: Primeiro Cliente](./business-cases/caso-real-primeiro-cliente.md)
 
 ### 🔄 Processes
 Processos e fluxos de trabalho:
 - [Ciclo de Vida de Projeto Graventum](./processes/ciclo-vida-projeto-graventum.md)
 
 ### 📋 Planos e docs (workspace)
-Índice em [SUMMARY.md](./SUMMARY.md). Pastas: [planos/](./planos/), [docs/](./docs/).
+Índice em [SUMMARY.md](./SUMMARY.md). Pastas: [planos/](./planos/), [documentacao-tecnica/](./documentacao-tecnica/).
 
 ## 🚀 Como Usar
 

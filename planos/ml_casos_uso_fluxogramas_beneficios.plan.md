@@ -74,9 +74,9 @@ Diagrama que ilustra como o **n8n** interage com as etapas de **segmentação**,
 ```mermaid
 flowchart TB
   subgraph entrada [Entrada]
-    A1[Lead / Formulário]
+    A1[Lead Formulário]
     A2[Mensagem WhatsApp]
-    A3[Documento / Texto]
+    A3[Documento Texto]
   end
 
   subgraph n8n [n8n]
@@ -95,20 +95,20 @@ flowchart TB
   end
 
   subgraph ia_cara [IA quando precisar]
-    Claude[Claude / OpenAI]
+    Claude[Claude OpenAI]
   end
 
   A1 --> N
   A2 --> N
   A3 --> N
-  N -->|"Execute Command ou API"| M1
-  N -->|"Execute Command ou API"| M2
-  N -->|"futuro"| M3
+  N -->|Execute Command ou API| M1
+  N -->|Execute Command ou API| M2
+  N -->|futuro| M3
   M1 -->|CSV com segmento| N
   M2 -->|vetor 384 dim| DS
   M2 -->|JSON| N
   N --> S
-  N -->|só quando necessário| Claude
+  N -->|quando necessário| Claude
 ```
 
 
@@ -139,7 +139,7 @@ Cada caso abaixo é um cenário real: quem faz o quê, em que ordem, e onde o ML
 
 ```mermaid
 sequenceDiagram
-  participant U as Lead (navegador)
+  participant U as Lead
   participant F as Formulário
   participant N as n8n
   participant E as Script Embeddings
@@ -225,7 +225,7 @@ flowchart TB
   Q --> R[Top 3 dores_solucoes]
   R --> T[Montar resposta]
   T --> W[Enviar WhatsApp ou Telegram]
-  R -.->|opcional score baixo| C[Chamar Claude]
+  R -.->|score baixo| C[Chamar Claude]
   C -.-> W
 ```
 

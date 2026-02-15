@@ -2,7 +2,7 @@
 
 Repositório da documentação publicada no GitBook — Automação Inteligente para PMEs.
 
-## Estrutura (SUMMARY)
+## Estrutura
 
 O índice completo está em [SUMMARY.md](./SUMMARY.md). Seções:
 

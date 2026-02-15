@@ -1,6 +1,5 @@
 # Summary
 
-## Índice
 - [Visão geral](README.md)
 
 ## Planos
@@ -11,15 +10,9 @@
 ## API Reference
 - [API Reference](docs/api-reference.md)
 
-## Product Docs
+## Estratégia e mercado
 - [Jornada do cliente — Fluxogramas](planos/jornada-cliente-fluxogramas.plan.md)
 - [Graventum — Identidade e entregas](planos/graventum-identidade-entregas.plan.md)
-- [Agentes de IA e BI — Relatório diário](planos/agentes-ia-bi-relatorio-diario.plan.md)
-- [Workflows n8n — Dores e soluções](planos/workflows-n8n-dores-solucoes.plan.md)
-- [n8n — Agentes, venda e Docker](planos/n8n-agentes-venda-docker.plan.md)
-- [Carregar CSV no banco](planos/carregar-csv-no-banco.plan.md)
-
-## Market Research
 - [Estudo de mercado — Automação PME Brasil](planos/estudo-mercado-automacao-pme-brasil.plan.md)
 - [Primeira impressão Graventum (30h)](planos/primeira-impressao-graventum-30h.plan.md)
 
@@ -46,8 +39,3 @@
 - [ML — PyTorch e scikit-learn (uso)](docs/ML_PYTORCH_SKLEARN_USO.md)
 - [PyTorch e scikit-learn no servidor](docs/PYTORCH_SCIKIT_LEARN_SERVIDOR.md)
 - [Scripts — Dores e Supabase](docs/SCRIPTS_DORES_SUPABASE.md)
-
-## Como usar esta documentação
-- [Formato de planos](planos/formato-plan.plan.md)
-- [Guia de planos](planos/guia-plans.plan.md)
-- [Índice e uso dos planos](planos/indice-e-uso-plans.plan.md)

@@ -1,5 +1,8 @@
 # API Reference
 
-Referência de APIs da Graventum — em construção.
+Referência da **Graventum API** e integrações.
 
-Quando disponível, esta seção trará documentação das APIs (Graventum API, integrações n8n, etc.).
+**Repositório da API:**  
+[https://github.com/robsoncaldeira/graventum-api](https://github.com/robsoncaldeira/graventum-api)
+
+Código-fonte, endpoints e documentação técnica da API estão nesse repositório. Para detalhes de rotas, autenticação e uso, consulte o README e a documentação no repo.

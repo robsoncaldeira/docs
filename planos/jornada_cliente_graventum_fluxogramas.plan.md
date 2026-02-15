@@ -230,7 +230,7 @@ flowchart LR
   subgraph cliente [Lado do cliente]
     P[Planilhas]
     S[Sistema ERP/CRM]
-    Docs[PDFs / FAQ / site]
+    Docs[PDFs FAQ site]
     WA[Número WhatsApp]
   end
 

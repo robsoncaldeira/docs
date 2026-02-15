@@ -35,11 +35,14 @@ Casos reais e simulações:
 Processos e fluxos de trabalho:
 - [Ciclo de Vida de Projeto Graventum](./processes/ciclo-vida-projeto-graventum.md)
 
+### 📋 Planos e docs (workspace)
+Índice em [SUMMARY.md](./SUMMARY.md). Pastas: [planos/](./planos/), [docs/](./docs/).
+
 ## 🚀 Como Usar
 
 1. **Para consulta:** Navegue pelas categorias acima
 2. **Para contribuir:** Faça pull request ou edite diretamente
-3. **Para publicar:** Use GitHub Pages ou integre com site
+3. **Para publicar:** Use GitHub Pages ou GitBook (Git Sync)
 
 ## 📊 Status
 

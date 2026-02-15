@@ -17,9 +17,9 @@ O índice completo está em [SUMMARY.md](./SUMMARY.md). Seções:
 - **Processes** — ciclo de vida do projeto
 - **Documentação técnica** — ativos, limpeza, PyTorch/sklearn, scripts
 
-## Publicar no GitBook
+## Publicar no GitBook (do zero)
 
-Siga [SOLUCAO_GITBOOK.md](./SOLUCAO_GITBOOK.md): novo Space + Import from GitHub (repo `robsoncaldeira/docs`, branch `main`, Project directory vazio).
+Space novo vazio? Siga [PROCESSO_DO_ZERO.md](./PROCESSO_DO_ZERO.md): conectar ao repo `robsoncaldeira/docs`, branch `main`, Project directory vazio, e importar **GitHub → GitBook**. Entram dashboards, business cases, processes e todo o resto.
 
 ---
 

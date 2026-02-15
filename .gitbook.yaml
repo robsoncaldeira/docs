@@ -1,0 +1,4 @@
+# Configuração GitBook — raiz do repositório
+structure:
+  readme: README.md
+  summary: SUMMARY.md

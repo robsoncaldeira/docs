@@ -1,51 +1,79 @@
 # Fazer o GitBook refletir as alterações do GitHub
 
-Quando você altera o repositório **robsoncaldeira/docs** no GitHub (ou dá push do `docs-merge`), o **site do GitBook** (graventum.gitbook.io) pode continuar mostrando a versão antiga. Siga um dos caminhos abaixo.
+Documentação do **caminho que funciona** para a documentação aparecer atualizada no GitBook (graventum.gitbook.io/graventum-docs).
 
 ---
 
-## ⚠️ Conferir a branch no GitBook
+## Fluxo rápido (usar na próxima vez)
 
-**As alterações estão na branch `main`.** Se o GitBook estiver conectado à branch **`gitbook-export`**, ele nunca vai mostrar o que você subiu.
+### Passo 1: Subir as alterações para o GitHub
 
-1. No GitBook: **Settings** do Space → **Git Sync** (ou **GitHub**).
-2. Veja qual **branch** está configurada (ex.: `main` ou `gitbook-export`).
-3. Se estiver **`gitbook-export`**: troque para **`main`** e salve. Depois rode **Sync**.
-4. (Opcional) No GitHub você pode apagar a branch `gitbook-export` se não usar mais, ou manter; o importante é o GitBook usar **`main`**.
+No clone do repositório de documentação (`docs-merge`):
 
----
+```bash
+cd /root/docs-merge
+git add .
+git commit -m "sua mensagem"
+git push origin main
+```
 
-## Opção 1: Sync manual no GitBook (recomendado)
+(Opcional: manter a branch `gitbook-export` igual à `main` para o caso de o GitBook estar nela:  
+`git push origin main:gitbook-export`)
 
-1. Acesse **[app.gitbook.com](https://app.gitbook.com)** e abra o Space **Graventum Docs**.
-2. Vá em **Settings** (engrenagem no menu do Space).
-3. Encontre **Git Sync** ou **Integrations → GitHub**.
-4. Clique em **Sync** / **Pull from GitHub** / **Sync now** (o botão que puxa o conteúdo do repo).
-5. Aguarde terminar. O conteúdo do Space deve atualizar (ex.: "Estrutura" sem "(SUMMARY)", dashboards com links novos).
-6. Se o seu site público estiver em **Docs sites** (ex.: graventum.gitbook.io):
-   - Abra o **Site**, não só o Space.
-   - Vá em **Publish** ou **Sync** no Site, se existir, para publicar a versão mais recente do Space.
+### Passo 2: Atualizar o GitBook (reimport via API)
 
----
-
-## Opção 2: Reimportar o repo via API (força atualização)
-
-Se o Sync manual não aparecer ou não atualizar, você pode disparar um **import** de novo do GitHub:
+O GitBook **não** puxa sozinho a cada push. É preciso disparar um **import** do repositório. Use o script:
 
 ```bash
 export GITBOOK_API_TOKEN="gb_api_..."   # token da API do GitBook
-python3 scripts/gitbook_import_repo.py
+python3 /root/scripts/gitbook_import_repo.py
 ```
 
-(O script está em `/root/scripts/gitbook_import_repo.py` e usa o Space **kt1CEHZkTvzvHzNYVH7N**.)
+- **Onde pegar o token:** [app.gitbook.com](https://app.gitbook.com) → organização → **Settings** → **Integrations** ou **API** → criar/copiar token.
+- **O que o script faz:** chama a API do GitBook para reimportar o repo `robsoncaldeira/docs` (branch `main`) no Space **Graventum Docs** (id `kt1CEHZkTvzvHzNYVH7N`).
+- **Depois:** aguarde 2–5 minutos e recarregue a página no GitBook. O conteúdo do Space passa a ser o do GitHub.
 
-Depois do import, aguarde alguns minutos e confira o Space. Se o Site estiver separado, publique o Site de novo.
+**Um comando só (substitua o token):**
+
+```bash
+export GITBOOK_API_TOKEN="gb_api_SEU_TOKEN"; python3 /root/scripts/gitbook_import_repo.py
+```
 
 ---
 
-## Por que não reflete sozinho?
+## Resumo do caminho
 
-- O GitBook **não** atualiza o conteúdo do Space a cada push no GitHub de forma garantida; em muitos setups é preciso rodar **Sync** (ou import) manualmente.
-- O **Space** é o “livro”; o **Site** é o site público. Às vezes o Space atualiza mas o Site só mostra a nova versão depois de **Publish** no Site.
+| Onde | O quê |
+|------|--------|
+| **Código** | Você edita em `docs-merge` (ou no GitHub). |
+| **GitHub** | `git push origin main` → repo `robsoncaldeira/docs` atualizado. |
+| **GitBook** | Rodar o script com `GITBOOK_API_TOKEN` → reimport do repo → Space atualizado em poucos minutos. |
 
-Resumo: **Settings do Space → Git Sync → Sync** e, se usar Site, **Publish no Site**.
+Sem o Passo 2, o GitBook continua mostrando a versão antiga.
+
+---
+
+## Referência do script
+
+- **Arquivo:** `/root/scripts/gitbook_import_repo.py`
+- **Uso:** `GITBOOK_API_TOKEN` no ambiente + `python3 /root/scripts/gitbook_import_repo.py`
+- **API:** `POST https://api.gitbook.com/v1/spaces/{spaceId}/git/import` com `url` do repo e `ref` (branch `main`).
+- **Space:** Graventum Docs, id `kt1CEHZkTvzvHzNYVH7N`.
+
+---
+
+## Se o Sync na interface do GitBook funcionar
+
+Em alguns setups existe **Settings** do Space → **Git Sync** → botão **Sync** / **Pull from GitHub**. Se aparecer e funcionar, pode usar em vez do script. Se não aparecer ou não atualizar, o **reimport via script** (Passo 2 acima) é o caminho garantido.
+
+---
+
+## Branch: main vs gitbook-export
+
+As alterações estão na **`main`**. O script importa sempre da `main`. Se no GitBook estiver configurada a branch `gitbook-export`, pode trocar para `main` em **Settings → Git Sync**, ou manter as duas iguais com `git push origin main:gitbook-export` depois do push.
+
+---
+
+## Segurança
+
+Não commitar nem colar o `GITBOOK_API_TOKEN` em arquivos ou chats. Depois de usar, revogar o token no GitBook e criar outro se necessário.

@@ -21,6 +21,7 @@
 - [Workflows n8n — Dores e soluções](produto-operacao/workflows-n8n-dores-solucoes.plan.md)
 - [n8n — Agentes, venda e Docker](produto-operacao/n8n-agentes-venda-docker.plan.md)
 - [Carregar CSV no banco](produto-operacao/carregar-csv-no-banco.plan.md)
+- [Busca por novos dados (web scraping)](produto-operacao/busca-novos-dados.plan.md)
 
 ## ML e modelos
 - [ML — Casos de uso e fluxogramas](ml-modelos/ml-casos-uso-fluxogramas.plan.md)
@@ -62,3 +63,4 @@
 - [ML — PyTorch e scikit-learn (uso)](documentacao-tecnica/ML_PYTORCH_SKLEARN_USO.md)
 - [PyTorch e scikit-learn no servidor](documentacao-tecnica/PYTORCH_SCIKIT_LEARN_SERVIDOR.md)
 - [Scripts — Dores e Supabase](documentacao-tecnica/SCRIPTS_DORES_SUPABASE.md)
+- [Scraping para pesquisa e contexto](documentacao-tecnica/SCRAPING_PESQUISA_CONTEXTO.md)

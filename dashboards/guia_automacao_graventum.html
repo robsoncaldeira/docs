@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia Completo de Automação — Graventum</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+<style>
+:root{--bg:#f7f8fc;--card:#fff;--primary:#1a1a2e;--accent:#6C63FF;--accent2:#00D4AA;--accent3:#FF6B6B;--text:#2d2d2d;--muted:#666;--border:#e2e8f0;--tag-bg:#eef2ff;--tag:#4f46e5;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;}
+
+/* NAV */
+.topnav{position:sticky;top:0;z-index:999;background:var(--primary);padding:10px 20px;display:flex;align-items:center;gap:12px;overflow-x:auto;scrollbar-width:thin;}
+.topnav .logo{color:var(--accent2);font-weight:800;font-size:15px;white-space:nowrap;margin-right:6px;}
+.topnav a{color:rgba(255,255,255,.7);text-decoration:none;font-size:12px;white-space:nowrap;padding:4px 10px;border-radius:20px;transition:.2s;}
+.topnav a:hover{background:rgba(255,255,255,.15);color:#fff;}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 60%,#0f3460 100%);color:#fff;padding:60px 32px 48px;text-align:center;}
+.hero h1{font-size:clamp(26px,5vw,46px);font-weight:800;margin-bottom:14px;line-height:1.2;}
+.hero h1 span{color:var(--accent2);}
+.hero p{font-size:17px;color:rgba(255,255,255,.75);max-width:680px;margin:0 auto 22px;}
+.htags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
+.htag{background:rgba(255,255,255,.12);color:rgba(255,255,255,.9);padding:5px 14px;border-radius:20px;font-size:12px;}
+
+/* LAYOUT */
+.container{max-width:1180px;margin:0 auto;padding:0 24px;}
+.section{padding:52px 0;border-bottom:1px solid var(--border);}
+.sec-header{margin-bottom:36px;}
+.sec-num{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;background:var(--accent);color:#fff;border-radius:50%;font-weight:700;font-size:13px;margin-bottom:10px;}
+.sec-title{font-size:26px;font-weight:700;color:var(--primary);margin-bottom:6px;}
+.sec-desc{color:var(--muted);font-size:14.5px;}
+
+/* SCENARIO CARDS */
+.grid-sc{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:18px;}
+.sc-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:.2s;}
+.sc-card:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.07);}
+.sc-head{padding:16px 18px 12px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);}
+.sc-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.sc-head h3{font-size:14px;font-weight:700;color:var(--primary);line-height:1.3;}
+.seg{font-size:10px;color:var(--tag);background:var(--tag-bg);padding:2px 7px;border-radius:8px;display:inline-block;margin-top:2px;}
+.sc-body{padding:14px 18px 18px;}
+.row{margin-bottom:9px;}
+.row strong{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--accent);margin-bottom:2px;}
+.row p{font-size:13px;color:var(--text);}
+
+/* STEPS */
+.flows{display:flex;flex-direction:column;gap:36px;}
+.flow{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.flow-head{background:var(--primary);color:#fff;padding:14px 22px;display:flex;align-items:center;gap:10px;font-size:15px;font-weight:700;}
+.step{display:grid;grid-template-columns:56px 1fr;border-bottom:1px solid var(--border);}
+.step:last-child{border-bottom:none;}
+.sn{background:#f8f9fc;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--accent);border-right:1px solid var(--border);padding:10px;}
+.sc{padding:11px 15px;}
+.sl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
+.st{font-size:13px;color:var(--text);}
+.badges{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px;}
+.b{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:600;}
+.bi{background:#e0f2fe;color:#0369a1;}
+.bp{background:#fef9c3;color:#854d0e;}
+.bd{background:#fce7f3;color:#9d174d;}
+.bo{background:#dcfce7;color:#166534;}
+
+/* MERMAID */
+.diag-wrap{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:32px;}
+@media(max-width:860px){.diag-wrap{grid-template-columns:1fr;}}
+.mbox{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;overflow-x:auto;}
+.mbox-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:14px;}
+
+/* DB CARDS */
+.db-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+.db-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;}
+.db-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.db-icon{font-size:22px;}
+.db-name{font-size:13px;font-weight:700;color:var(--primary);}
+.db-theme{font-size:10px;color:var(--tag);background:var(--tag-bg);padding:2px 7px;border-radius:8px;display:inline-block;margin-top:2px;}
+.db-card p{font-size:12.5px;color:var(--muted);margin-bottom:8px;}
+.db-card a{display:inline-block;font-size:11.5px;color:var(--accent);text-decoration:none;background:var(--tag-bg);padding:3px 9px;border-radius:7px;}
+.db-use{font-size:12px;color:var(--text);margin-top:8px;padding-top:8px;border-top:1px solid var(--border);}
+
+/* WORKFLOW */
+.wf-list{display:flex;flex-direction:column;gap:28px;}
+.wf{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.wf-head{background:#f0f4ff;padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.wf-head h3{font-size:14px;font-weight:700;color:var(--primary);}
+.wf-body{padding:18px;}
+.chain{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-bottom:14px;}
+.np{background:#1e1e2e;color:#a9b1d6;font-size:11px;padding:3px 9px;border-radius:7px;font-family:monospace;}
+.na{color:var(--accent2);font-weight:700;font-size:13px;}
+.wf-body h4{font-size:12px;font-weight:700;color:var(--primary);margin:10px 0 4px;}
+.wf-body p,.wf-body li{font-size:12.5px;color:var(--muted);}
+.wf-body ul{padding-left:16px;}
+.ints{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+.int{font-size:10.5px;background:#fff7ed;color:#c2410c;padding:3px 9px;border-radius:7px;border:1px solid #fed7aa;}
+code{background:#f1f5f9;color:#e11d48;padding:1px 5px;border-radius:4px;font-size:11px;}
+
+/* AUTO */
+.auto-list{display:flex;flex-direction:column;gap:24px;}
+.auto-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;}
+.auto-card h3{font-size:14px;font-weight:700;color:var(--primary);margin-bottom:12px;}
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+@media(max-width:700px){.tiers{grid-template-columns:1fr;}}
+.t1{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;padding:12px;}
+.t2{background:#fffbeb;border:1px solid #fde68a;border-radius:9px;padding:12px;}
+.t3{background:#f5f3ff;border:1px solid #ddd6fe;border-radius:9px;padding:12px;}
+.tlabel{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;}
+.t1 .tlabel{color:#166534;}.t2 .tlabel{color:#854d0e;}.t3 .tlabel{color:#5b21b6;}
+.tbox p{font-size:12px;color:var(--text);}
+.metrics{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
+.met{font-size:11px;background:#f1f5f9;color:var(--primary);padding:3px 9px;border-radius:7px;font-weight:600;}
+
+/* PROC */
+.proc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:28px;}
+@media(max-width:780px){.proc-grid{grid-template-columns:1fr;}}
+.proc-col{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;}
+.proc-col>h3{font-size:13px;font-weight:700;color:var(--primary);margin-bottom:4px;padding-bottom:7px;border-bottom:2px solid var(--accent);}
+.proc-col>.sub{font-size:11px;color:var(--muted);margin-bottom:10px;}
+.pi{font-size:12.5px;color:var(--text);padding:6px 0;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;gap:7px;}
+.pi:last-child{border-bottom:none;}
+.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+
+footer{background:var(--primary);color:rgba(255,255,255,.6);text-align:center;padding:28px;font-size:12.5px;}
+footer strong{color:var(--accent2);}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <span class="logo">⚡ Graventum</span>
+  <a href="#s1">1. Cenários</a>
+  <a href="#s2">2. Fluxos Mock</a>
+  <a href="#s3">3. Fluxogramas</a>
+  <a href="#s4">4. Bases de Dados</a>
+  <a href="#s5">5. Workflows n8n</a>
+  <a href="#s6">6. Automações</a>
+  <a href="#s7">7. Processos Internos</a>
+</nav>
+
+<div class="hero">
+  <h1>Guia de Automação <span>Ponta a Ponta</span></h1>
+  <p>10 cenários reais · fluxos mock detalhados · fluxogramas Mermaid · bases de dados públicas · workflows n8n · soluções de automação · processos internos da Graventum</p>
+  <div class="htags">
+    <span class="htag">🏠 Imobiliária</span><span class="htag">📊 Contabilidade</span>
+    <span class="htag">🏥 Saúde</span><span class="htag">🛒 E-commerce</span>
+    <span class="htag">🎓 Educação</span><span class="htag">✈️ Turismo</span>
+    <span class="htag">⚖️ Jurídico</span><span class="htag">👥 RH</span>
+    <span class="htag">💪 Academia</span><span class="htag">📦 Distribuidora</span>
+  </div>
+</div>
+
+<!-- ===== SEÇÃO 1: CENÁRIOS ===== -->
+<section class="section" id="s1">
+<div class="container">
+  <div class="sec-header">
+    <div class="sec-num">1</div>
+    <h2 class="sec-title">Cenários de Prática</h2>
+    <p class="sec-desc">10 cenários reais de empresas prestadoras de serviço atendendo clientes diferentes. Contexto, problema, demanda e objetivo de cada um.</p>
+  </div>
+  <div class="grid-sc">
+
+    <div class="sc-card">
+      <div class="sc-head">
+        <div class="sc-icon" style="background:#e0f2fe;">🏠</div>
+        <div><h3>Imobiliária Alfa Imóveis</h3><span class="seg">Imobiliário</span></div>
+      </div>
+      <div class="sc-body">
+        <div class="row"><strong>Contexto</strong><p>12 corretores recebem leads do Zap Imóveis, VivaReal e Meta Ads. Cada um gerencia prospects pelo WhatsApp pessoal, sem CRM centralizado.</p></div>
+        <div class="row"><strong>Problema</strong><p>60% dos leads somem por demora de resposta. Sem follow-up estruturado, clientes vão para a concorrência em horas.</p></div>
+        <div class="row"><strong>Demanda</strong><p>Resposta automática em menos de 5 min, qualificação e distribuição para o corretor certo 24/7.</p></div>
+        <div class="row"><strong>Objetivo</strong><p>Capturar, qualificar e distribuir leads automaticamente, com follow-up nos dias 3, 7 e 14.</p></div>
+      </div>
+    </div>
+
+    <div class="sc-card">
+      <div class="sc-head">
+        <div class="sc-icon" style="background:#fef9c3;">📊</div>
+        <div><h3>Escritório Contábil Beta</h3><span class="seg">Contabilidade</span></div>
+      </div>
+      <div class="sc-body">
+        <div class="row"><strong>Contexto</strong><p>80 clientes (Simples Nacional + Lucro Presumido). 3 contadores gastam 40% do tempo cobrando documentos todo início de mês.</p></div>
+        <div class="row"><strong>Problema</strong><p>Clientes atrasam envio de NFs e extratos, gerando risco de multa em DCTF, eSocial e SPED Fiscal.</p></div>
+        <div class="row"><strong>Demanda</strong><p>Portal de upload com lembretes automáticos, checklist por empresa e alertas de prazo para os contadores.</p></div>
+        <div class="row"><strong>Objetivo</strong><p>Reduzir tempo de coleta de 5 dias para 1 dia e eliminar multas por atraso.</p></div>
+      </div>
+    </div>
+
+    <div class="sc-card">
+      <div class="sc-head">
+        <div class="sc-icon" style="background:#f0fdf4;">🏥</div>
+        <div><h3>Clínica Saúde Plena</h3><span class="seg">Saúde</span></div>
+      </div>
+      <div class="sc-body">
+        <div class="row"><strong>Contexto</strong><p>8 médicos, taxa de no-show de 28%. Secretária faz confirmações manuais por ligação toda tarde, consome 3h/dia.</p></div>
+        <div class="row"><strong>Problema</strong><p>Horários vagos = ~R$15.000/mês em perda. Fila de espera de 2 semanas, mesmo com slots ociosos.</p></div>
+        <div class="row"><strong>Demanda</strong><p>Confirmação automática D-1, lista de espera inteligente e preenchimento automático de cancelamentos.</p></div>
+        <div class="row"><strong>Objetivo</strong><p>Reduzir no-show de 28% para &lt;8% e preencher 90% dos horários disponíveis.</p></div>
+      </div>
+    </div>
+
+    <div class="sc-card">
+      <div class="sc-head">
+        <div class="sc-icon" style="background:#fce7f3;">🛒</div>
+        <div><h3>E-commerce Moda Gama</h3><span class="seg">E-commerce</span></div>
+      </div>
+      <div class="sc-body">
+        <div class="row"><strong>Contexto</strong><p>~500 pedidos/mês, taxa de abandono de carrinho de 72%. Usa Nuvemshop + WhatsApp Business. Ticket médio R$220.</p></div>
+        <div class="row"><strong>Problema</strong><p>Perde ~R$40.000/mês em carrinhos abandonados. Único recurso atual: e-mail genérico da plataforma, 2% de recuperação.</p></div>
+        <div class="row"><strong>Demanda</strong><p>Sequência de recuperação via WhatsApp com imagens dos produtos e cupom personalizado na última mensagem.</p></div>
+        <div class="row"><strong>Objetivo</strong><p>Recuperar 15-20% dos carrinhos, gerando +R$6.000-8.000/mês.</p></div>
+      </div>
+    </div>
+
+    <div class="sc-card">
+      <div class="sc-head">
+        <div class="sc-icon" style="background:#f5f3ff;">🎓</div>
+        <div><h3>Escola de Idiomas Delta</h3><span class="seg">Educação</span></div>
+      </div>
+      <div class="sc-body">
+        <div class="row"><strong>Contexto</strong><p>400 alunos, 6 turmas por idioma. Secretaria sobrecarregada com rematrículas manuais, cobranças e comunicação com responsáveis.</p></div>
+        <div class="row"><strong>Problema</strong><p>Evasão de 22%/mês. A escola descobre que o aluno saiu só quando a mensalidade não entra.</p></div>
+        <div class="row"><strong>Demanda</strong><p>Alerta de risco de evasão baseado em frequência, rematrícula digital e comunicação mensal personalizada.</p></div>
+        <div class="row"><strong>Objetivo</strong><p>Reduzir evasão de 22% para 10% e automatizar 80% das rematrículas.</p></div>
+      </div>
+    </div>
+
+    <div class="sc-card">
+      <div class="sc-head">
+        <div class="sc-icon" style="background:#fff7ed;">✈️</div>
+        <div><h3>Agência Viaja Fácil</h3><span class="seg">Turismo</span></div>
+      </div>
+      <div class="sc-body">
+        <div class="row"><strong>Contexto</strong><p>2 consultores de viagem. 70% dos contatos chegam fora do horário. Cotações feitas manualmente em PDF, um a um.</p></div>
+        <div class="row"><strong>Problema</strong><p>3h/dia gastas em tarefas repetitivas: cotar, montar proposta, enviar roteiro. Taxa de conversão de orçamentos: 18%.</p></div>
+        <div class="row"><strong>Demanda</strong><p>Chatbot de pré-atendimento 24/7, geração automática de propostas em PDF e nurturing pós-orçamento.</p></div>
+        <div class="row"><strong>Objetivo</strong><p>Liberar 2h/dia por consultor e elevar conversão de cotações de 18% para 35%.</p></div>
+      </div>
+    </div>
+
+    <div class="sc-card">
+      <div class="sc-head">
+        <div class="sc-icon" style="background:#fef2f2;">⚖️</div>
+        <div><h3>Escritório Advocacia Zeta</h3><span class="seg">Jurídico</span></div>
+      </div>
+      <div class="sc-body">
+        <div class="row"><strong>Contexto</strong><p>5 advogados, 200 processos ativos (trabalhista + cível). Monitoramento de Diário Oficial feito manualmente toda manhã.</p></div>
+        <div class="row"><strong>Problema</strong><p>Risco real de perda de prazo por falha humana. Clientes ligam diariamente pedindo atualização de processo.</p></div>
+        <div class="row"><strong>Demanda</strong><p>Monitoramento automático de publicações, alertas de prazo e painel de status para clientes consultarem sozinhos.</p></div>
+        <div class="row"><strong>Objetivo</strong><p>Eliminar risco de perda de prazo e reduzir 70% das ligações de status de clientes.</p></div>
+      </div>
+    </div>
+
+    <div class="sc-card">
+      <div class="sc-head">
+        <div class="sc-icon" style="background:#ecfdf5;">👥</div>
+        <div><h3>Consultoria RH Ômega</h3><span class="seg">RH / Recrutamento</span></div>
+      </div>
+      <div class="sc-body">
+        <div class="row"><strong>Contexto</strong><p>Presta R&S para 20 empresas-cliente. Média de 50 candidatos por vaga, triagem feita manualmente via planilha Excel.</p></div>
+        <div class="row"><strong>Problema</strong><p>Triagem leva 8h por vaga. Candidatos ficam sem resposta por dias, comprometendo a marca empregadora dos clientes.</p></div>
+        <div class="row"><strong>Demanda</strong><p>Triagem automática por IA, comunicação com candidatos automatizada e painel por vaga para empresas-cliente.</p></div>
+        <div class="row"><strong>Objetivo</strong><p>Reduzir triagem de 8h para 30min e responder 100% dos candidatos em até 24h.</p></div>
+      </div>
+    </div>
+
+    <div class="sc-card">
+      <div class="sc-head">
+        <div class="sc-icon" style="background:#fff1f2;">💪</div>
+        <div><h3>Academia FitZone</h3><span class="seg">Fitness / Bem-estar</span></div>
+      </div>
+      <div class="sc-body">
+        <div class="row"><strong>Contexto</strong><p>800 alunos, 15 modalidades. Churn mensal de 18%. Recepção sobrecarregada com check-in, vendas e renovações simultâneas.</p></div>
+        <div class="row"><strong>Problema</strong><p>Alunos somem sem aviso. Academia percebe só quando a mensalidade não paga. Sem programa de retenção.</p></div>
+        <div class="row"><strong>Demanda</strong><p>Alerta de risco de evasão por frequência baixa, campanha de reativação e renovação automática de planos.</p></div>
+        <div class="row"><strong>Objetivo</strong><p>Reduzir churn de 18% para 8% e automatizar 60% das renovações de plano.</p></div>
+      </div>
+    </div>
+
+    <div class="sc-card">
+      <div class="sc-head">
+        <div class="sc-icon" style="background:#f0f9ff;">📦</div>
+        <div><h3>Distribuidora Sigma</h3><span class="seg">B2B / Atacado</span></div>
+      </div>
+      <div class="sc-body">
+        <div class="row"><strong>Contexto</strong><p>150 clientes B2B (mercados, restaurantes). Representantes tiram pedidos pelo WhatsApp e digitam manualmente no sistema.</p></div>
+        <div class="row"><strong>Problema</strong><p>Erros de digitação em 12% dos pedidos = reentregas caras. Clientes ligam sem parar para saber status da entrega.</p></div>
+        <div class="row"><strong>Demanda</strong><p>Catálogo digital via WhatsApp, pedido automatizado com confirmação e rastreio em tempo real.</p></div>
+        <div class="row"><strong>Objetivo</strong><p>Reduzir erros de pedido de 12% para &lt;2% e eliminar ligações de rastreio.</p></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- ===== SEÇÃO 2: FLUXOS MOCK ===== -->
+<section class="section" id="s2">
+<div class="container">
+  <div class="sec-header">
+    <div class="sec-num">2</div>
+    <h2 class="sec-title">Fluxos Mock — Step by Step</h2>
+    <p class="sec-desc">Cada passo mostra: entrada → processamento → decisão → saída → próximo passo. Como um "walk me through" operacional.</p>
+  </div>
+  <div class="flows">
+
+    <!-- FLUXO 1: IMOBILIÁRIA -->
+    <div class="flow">
+      <div class="flow-head">🏠 Cenário 1 — Imobiliária: Captura, qualificação e distribuição de leads</div>
+      <div class="step"><div class="sn">01</div><div class="sc"><div class="sl">Entrada</div><div class="st">Lead preenche formulário no Zap Imóveis: nome, telefone, tipo de imóvel, faixa de preço e cidade desejada.</div><div class="badges"><span class="b bi">📥 Formulário externo</span></div></div></div>
+      <div class="step"><div class="sn">02</div><div class="sc"><div class="sl">Processamento</div><div class="st">Portal dispara webhook para o n8n com dados em JSON. n8n normaliza telefone (formato E.164: +55119...) e valida campos obrigatórios.</div><div class="badges"><span class="b bp">⚙️ n8n Webhook + normalização</span></div></div></div>
+      <div class="step"><div class="sn">03</div><div class="sc"><div class="sl">Saída</div><div class="st">Lead inserido no Supabase (tabela leads) com status "novo", source "zap_imoveis" e timestamp. Registro único por telefone.</div><div class="badges"><span class="b bo">💾 Supabase INSERT</span></div></div></div>
+      <div class="step"><div class="sn">04</div><div class="sc"><div class="sl">Saída → Próximo</div><div class="st">Evolution API envia WhatsApp em até 30s: "Oi [nome]! Vi seu interesse em imóveis em [cidade]. Para te ajudar melhor: é para morar ou investir?"</div><div class="badges"><span class="b bo">📲 WA ativo &lt;30s</span></div></div></div>
+      <div class="step"><div class="sn">05</div><div class="sc"><div class="sl">Entrada</div><div class="st">Lead responde. Webhook da Evolution API captura a mensagem e envia de volta para o n8n com texto, telefone e ID da conversa.</div><div class="badges"><span class="b bi">💬 Resposta WA → n8n</span></div></div></div>
+      <div class="step"><div class="sn">06</div><div class="sc"><div class="sl">Processamento</div><div class="st">AI Agent (Claude) conduz 3 perguntas de qualificação: (a) tem entrada disponível? (b) já aprovado no banco? (c) prazo para comprar? Respostas salvas no perfil do lead no Supabase.</div><div class="badges"><span class="b bp">🤖 Chatbot IA — 3 perguntas</span></div></div></div>
+      <div class="step"><div class="sn">07</div><div class="sc"><div class="sl">Decisão</div><div class="st">Score calculado: tem entrada + aprovação + prazo ≤60 dias = HOT (≥70pts). Tem entrada sem aprovação = WARM (40-69). Sem entrada ou prazo longo = COLD (&lt;40).</div><div class="badges"><span class="b bd">🔥 HOT / 🌡 WARM / ❄️ COLD</span></div></div></div>
+      <div class="step"><div class="sn">08</div><div class="sc"><div class="sl">Processamento</div><div class="st">IA cruza perfil (tipo, valor, localização, objetivo) com portfólio de imóveis no Supabase e seleciona os 3 imóveis com maior compatibilidade semântica.</div><div class="badges"><span class="b bp">🧠 Matching IA</span></div></div></div>
+      <div class="step"><div class="sn">09</div><div class="sc"><div class="sl">Decisão → Roteamento</div><div class="st">HOT → corretor especialista disponível (busca no Supabase quem tem menos leads ativos). WARM → round-robin entre corretores. COLD → nurturing automático, sem corretor ainda.</div><div class="badges"><span class="b bd">🔀 Roteamento inteligente</span></div></div></div>
+      <div class="step"><div class="sn">10</div><div class="sc"><div class="sl">Saída</div><div class="st">Corretor recebe no WhatsApp: "🔥 Lead HOT — [nome], R$450k, Zona Sul, prazo 60 dias, tem FGTS. Top 3 imóveis: [links]. Contato: [tel]." Status → "atribuído".</div><div class="badges"><span class="b bo">📲 Notif. corretor</span></div></div></div>
+      <div class="step"><div class="sn">11</div><div class="sc"><div class="sl">Saída</div><div class="st">Lead recebe: "Encontrei 3 opções perfeitas para você! Nosso especialista [nome] vai te contatar agora com todos os detalhes." Expectativa gerenciada.</div><div class="badges"><span class="b bo">📲 Mensagem ao lead</span></div></div></div>
+      <div class="step"><div class="sn">12</div><div class="sc"><div class="sl">Decisão — SLA</div><div class="st">Corretor não contatou em 2h → alerta ao gestor. Lead não respondeu ao corretor em 24h → follow-up automático nos dias 3, 7 e 14 com mensagens distintas.</div><div class="badges"><span class="b bd">⏰ SLA monitor + follow-up loop</span></div></div></div>
+    </div>
+
+    <!-- FLUXO 2: CONTABILIDADE -->
+    <div class="flow">
+      <div class="flow-head">📊 Cenário 2 — Contabilidade: Coleta automática de documentos</div>
+      <div class="step"><div class="sn">01</div><div class="sc"><div class="sl">Trigger</div><div class="st">Todo dia 25 do mês, Schedule Trigger no n8n aciona o fluxo. Busca no Supabase a lista de clientes ativos e suas obrigações do mês seguinte.</div><div class="badges"><span class="b bi">⏰ Cron — dia 25</span></div></div></div>
+      <div class="step"><div class="sn">02</div><div class="sc"><div class="sl">Processamento</div><div class="st">Para cada cliente, SplitInBatches itera e Code Node gera checklist personalizado: "Empresa X precisa enviar: NFs de serviços, extrato bancário, folha de pagamento."</div><div class="badges"><span class="b bp">📋 Checklist dinâmico por cliente</span></div></div></div>
+      <div class="step"><div class="sn">03</div><div class="sc"><div class="sl">Saída</div><div class="st">WA enviado ao responsável: "Olá [nome]! Chegou a hora dos documentos de [mês/ano]. Acesse o portal seguro: [link com token único válido por 7 dias]."</div><div class="badges"><span class="b bo">📲 WA + link com token</span></div></div></div>
+      <div class="step"><div class="sn">04</div><div class="sc"><div class="sl">Entrada</div><div class="st">Cliente acessa portal Next.js, loga com token do link, vê checklist visual com ícones ✅/⏳ e faz upload dos arquivos (PDF, imagem, Excel).</div><div class="badges"><span class="b bi">📤 Upload no portal</span></div></div></div>
+      <div class="step"><div class="sn">05</div><div class="sc"><div class="sl">Processamento</div><div class="st">Cada upload dispara webhook para o n8n. IA (Claude) lê o documento via OCR, classifica o tipo ("NF-e", "Extrato", "Folha") e valida se corresponde ao esperado no checklist.</div><div class="badges"><span class="b bp">🔍 OCR + IA classifica + valida</span></div></div></div>
+      <div class="step"><div class="sn">06</div><div class="sc"><div class="sl">Decisão</div><div class="st">Documento correto → ✅ no checklist do Supabase. Documento errado (foto pessoal enviada por engano) → WA automático: "Ops! Esse arquivo não parece ser o extrato bancário. Pode verificar?"</div><div class="badges"><span class="b bd">✅ Correto / ❌ Incorreto → reenvio</span></div></div></div>
+      <div class="step"><div class="sn">07</div><div class="sc"><div class="sl">Loop — Lembretes</div><div class="st">Schedule separado verifica a cada 48h clientes com documentos ainda pendentes. Envia lembrete personalizado nos dias D-5, D-3 e D-1 antes do prazo da obrigação fiscal.</div><div class="badges"><span class="b bp">🔁 Lembretes D-5, D-3, D-1</span></div></div></div>
+      <div class="step"><div class="sn">08</div><div class="sc"><div class="sl">Decisão — Urgência</div><div class="st">D-1 e ainda pendente → alerta de alta prioridade para contador responsável + mensagem urgente ao cliente em tom diferente ("URGENTE: prazo amanhã!").</div><div class="badges"><span class="b bd">🚨 Alta prioridade</span></div></div></div>
+      <div class="step"><div class="sn">09</div><div class="sc"><div class="sl">Processamento</div><div class="st">Todos os documentos recebidos → Google Drive API cria pasta estruturada: /Clientes/[CNPJ]/2025-01/ e nomeia arquivos com padrão [CNPJ]_[tipo]_[AAAA-MM].</div><div class="badges"><span class="b bp">📁 Organização automática no Drive</span></div></div></div>
+      <div class="step"><div class="sn">10</div><div class="sc"><div class="sl">Saída</div><div class="st">Contador recebe: "✅ [nome da empresa] enviou tudo! Pasta: [link]. Prazo DCTF: [data]." Status atualizado para "documentos_completos".</div><div class="badges"><span class="b bo">🔔 Notif. contador + link</span></div></div></div>
+      <div class="step"><div class="sn">11</div><div class="sc"><div class="sl">Saída</div><div class="st">Relatório mensal automático para gestor do escritório: clientes no prazo, atrasados, tempo médio de coleta, número de reenvios. Dashboard atualizado em tempo real no Supabase.</div><div class="badges"><span class="b bo">📊 Relatório gerencial mensal</span></div></div></div>
+    </div>
+
+    <!-- FLUXO 3: CLÍNICA -->
+    <div class="flow">
+      <div class="flow-head">🏥 Cenário 3 — Clínica: Agendamento zero-touch e redução de no-show</div>
+      <div class="step"><div class="sn">01</div><div class="sc"><div class="sl">Entrada</div><div class="st">Paciente manda qualquer variação de "quero marcar consulta" no WhatsApp da clínica. Webhook captura e manda para o n8n com texto e telefone.</div><div class="badges"><span class="b bi">💬 WA → n8n</span></div></div></div>
+      <div class="step"><div class="sn">02</div><div class="sc"><div class="sl">Processamento</div><div class="st">AI Agent detecta intenção "agendar_consulta". Pergunta: "Para qual especialidade? (Clínica Geral / Cardiologia / Dermatologia / Ortopedia)"</div><div class="badges"><span class="b bp">🤖 NLU: detecta intenção</span></div></div></div>
+      <div class="step"><div class="sn">03</div><div class="sc"><div class="sl">Decisão</div><div class="st">Paciente já cadastrado (busca por tel no Supabase)? SIM → "Que bom te ver de volta, [nome]!" NÃO → coleta nome, data nascimento e convênio.</div><div class="badges"><span class="b bd">👤 Cadastrado? S/N</span></div></div></div>
+      <div class="step"><div class="sn">04</div><div class="sc"><div class="sl">Processamento</div><div class="st">Google Calendar API busca os 3 próximos horários disponíveis do médico da especialidade solicitada nas próximas 2 semanas.</div><div class="badges"><span class="b bp">📅 Google Calendar API → 3 slots</span></div></div></div>
+      <div class="step"><div class="sn">05</div><div class="sc"><div class="sl">Saída</div><div class="st">WA: "Horários disponíveis com Dr. [nome]: 1) Qui 19/06 às 10h | 2) Sex 20/06 às 14h | 3) Seg 23/06 às 09h. Qual prefere? Responda 1, 2 ou 3."</div><div class="badges"><span class="b bo">📲 3 opções para escolha</span></div></div></div>
+      <div class="step"><div class="sn">06</div><div class="sc"><div class="sl">Processamento</div><div class="st">Paciente responde o número. Slot bloqueado no Google Calendar + appointment inserido no Supabase (status: "agendado", confirmado: false).</div><div class="badges"><span class="b bp">🔒 Bloqueia slot + INSERT DB</span></div></div></div>
+      <div class="step"><div class="sn">07</div><div class="sc"><div class="sl">Saída</div><div class="st">Confirmação: "✅ Consulta agendada! Dr. [nome] | [data] às [hora] | [endereço]. Traga documento e cartão do convênio. Salve nosso número!"</div><div class="badges"><span class="b bo">📲 Confirmação completa</span></div></div></div>
+      <div class="step"><div class="sn">08</div><div class="sc"><div class="sl">Processamento — D-1</div><div class="st">Schedule às 16h do dia anterior: WA ao paciente: "Lembrete: consulta amanhã [data] às [hora] com Dr. [nome]. Confirma? Responda SIM para confirmar ou NÃO para cancelar."</div><div class="badges"><span class="b bp">⏰ Lembrete D-1</span></div></div></div>
+      <div class="step"><div class="sn">09</div><div class="sc"><div class="sl">Decisão</div><div class="st">SIM → confirma no Supabase (confirmado: true), médico notificado. NÃO → cancela evento no Calendar + busca próximo da lista de espera instantaneamente.</div><div class="badges"><span class="b bd">✅ Confirma / ❌ Cancela → lista espera</span></div></div></div>
+      <div class="step"><div class="sn">10</div><div class="sc"><div class="sl">Saída pós-consulta</div><div class="st">2h após horário da consulta: NPS automático. Score &lt;7 → alerta imediato ao gestor para ligar. Score ≥9 → "Ficou satisfeito? Nos avalie no Google: [link]"</div><div class="badges"><span class="b bo">⭐ NPS + Google Reviews</span></div></div></div>
+    </div>
+
+    <!-- FLUXO 4: E-COMMERCE -->
+    <div class="flow">
+      <div class="flow-head">🛒 Cenário 4 — E-commerce: Recuperação de carrinho abandonado</div>
+      <div class="step"><div class="sn">01</div><div class="sc"><div class="sl">Trigger</div><div class="st">Webhook da Nuvemshop: carrinho abandonado com valor &gt;R$80 e telefone cadastrado. Payload inclui produtos, valores, imagens e dados do cliente.</div><div class="badges"><span class="b bi">🛒 Webhook Nuvemshop</span></div></div></div>
+      <div class="step"><div class="sn">02</div><div class="sc"><div class="sl">Decisão</div><div class="st">Anti-spam: cliente recebeu mensagem de recuperação nos últimos 3 dias? (consulta Supabase). SIM → encerra fluxo. NÃO → prossegue.</div><div class="badges"><span class="b bd">🔇 Anti-spam check</span></div></div></div>
+      <div class="step"><div class="sn">03</div><div class="sc"><div class="sl">Processamento</div><div class="st">Wait Node: aguarda 60 minutos. Depois, verifica via Nuvemshop API se o pedido foi concluído. Se sim → cancela fluxo completamente.</div><div class="badges"><span class="b bp">⏳ Wait 60min → check compra</span></div></div></div>
+      <div class="step"><div class="sn">04</div><div class="sc"><div class="sl">Saída — Mensagem 1</div><div class="st">WA tom de suporte: "Oi [nome]! Vi que você deixou algumas peças no carrinho 👀 Ficou com alguma dúvida sobre tamanho ou entrega? Posso ajudar!"</div><div class="badges"><span class="b bo">📲 M1: suporte, não pressão</span></div></div></div>
+      <div class="step"><div class="sn">05</div><div class="sc"><div class="sl">Decisão</div><div class="st">Respondeu? SIM → humano assume o atendimento no painel. NÃO → wait de 24h verificando compra a cada hora.</div><div class="badges"><span class="b bd">💬 Respondeu → handoff humano</span></div></div></div>
+      <div class="step"><div class="sn">06</div><div class="sc"><div class="sl">Saída — Mensagem 2 (24h)</div><div class="st">WA com imagem dos produtos do carrinho + "Essas peças estão fazendo muito sucesso! ⭐ [produto]: [avaliação média]. Seu carrinho continua salvo por mais 24h 🛍️"</div><div class="badges"><span class="b bo">📲 M2: prova social + imagem</span></div></div></div>
+      <div class="step"><div class="sn">07</div><div class="sc"><div class="sl">Decisão</div><div class="st">Ticket do carrinho &gt;R$300? SIM → oferecer frete grátis. NÃO → gerar cupom de 10% de desconto válido por 2h com código único no banco de dados.</div><div class="badges"><span class="b bd">💰 Ticket &gt;R$300? Frete/Cupom</span></div></div></div>
+      <div class="step"><div class="sn">08</div><div class="sc"><div class="sl">Saída — Mensagem 3 (48h)</div><div class="st">WA com urgência: "⏰ Última chance! Criamos um cupom exclusivo para você: VOLTA10. Válido só por 2 horas. [link direto para o carrinho]" Registra envio no Supabase.</div><div class="badges"><span class="b bo">📲 M3: urgência + cupom único</span></div></div></div>
+      <div class="step"><div class="sn">09</div><div class="sc"><div class="sl">Decisão final</div><div class="st">Comprou em qualquer etapa → cancela mensagens restantes, registra conversão e canal. Não comprou após M3 → segmento "hard_lost" para análise de produto.</div><div class="badges"><span class="b bd">🎉 Converteu / 📊 hard_lost</span></div></div></div>
+    </div>
+
+    <!-- FLUXOS 5-10: formato compacto -->
+    <div class="flow">
+      <div class="flow-head">🎓 Cenário 5 — Educação: Alerta de evasão e rematrícula digital</div>
+      <div class="step"><div class="sn">01</div><div class="sc"><div class="sl">Trigger diário</div><div class="st">Cron às 7h analisa frequência dos últimos 15 dias de cada aluno ativo (dados do app de check-in por QR code na entrada).</div><div class="badges"><span class="b bi">⏰ Cron 7h + DB frequência</span></div></div></div>
+      <div class="step"><div class="sn">02</div><div class="sc"><div class="sl">Decisão — Score de risco</div><div class="st">Frequência &lt;30% em 15 dias = RISCO ALTO. 30-50% = MÉDIO. &gt;50% = OK. Peso adicional: mensalidade atrasada (+20 pts risco) e 1º mês do aluno (peso maior).</div><div class="badges"><span class="b bd">🚨 Alto / 🟡 Médio / ✅ OK</span></div></div></div>
+      <div class="step"><div class="sn">03</div><div class="sc"><div class="sl">Saída — Risco Alto</div><div class="st">WA ao aluno (tom humano, não robótico): "Sentimos sua falta, [nome]! 🤍 Está tudo bem? Tem algo que a gente pode fazer para te ajudar?" + notificação ao coordenador da turma por e-mail.</div><div class="badges"><span class="b bo">📲 WA aluno + email coordenador</span></div></div></div>
+      <div class="step"><div class="sn">04</div><div class="sc"><div class="sl">Decisão</div><div class="st">Aluno respondeu com motivo → CRM registra motivo e agenda call com coordenador. Sem resposta em 48h → ligação manual pelo coordenador com script de retenção.</div><div class="badges"><span class="b bd">💬 Respondeu → CRM / 📞 Ligação manual</span></div></div></div>
+      <div class="step"><div class="sn">05</div><div class="sc"><div class="sl">Processamento — Rematrícula</div><div class="st">D-30 antes do vencimento: link de rematrícula digital via WhatsApp. Aluno vê opções de plano, desconto de fidelidade se ≥6 meses, paga via PIX/cartão direto no link.</div><div class="badges"><span class="b bp">📝 Rematrícula digital WA</span></div></div></div>
+      <div class="step"><div class="sn">06</div><div class="sc"><div class="sl">Saída</div><div class="st">Rematriculou → confirmação automática, acesso renovado no controle de catraca. Não rematriculou em 3 tentativas → status "inativo" + campanha de win-back em 60 dias.</div><div class="badges"><span class="b bo">✅ Renovado / 📤 Win-back 60d</span></div></div></div>
+    </div>
+
+    <div class="flow">
+      <div class="flow-head">✈️ Cenário 6 — Turismo: Pré-atendimento e proposta automática</div>
+      <div class="step"><div class="sn">01</div><div class="sc"><div class="sl">Entrada</div><div class="st">Lead manda WA ou clica em anúncio do Instagram "Quero uma cotação". Webhook captura e aciona o fluxo no n8n.</div><div class="badges"><span class="b bi">📱 WA / Instagram → n8n</span></div></div></div>
+      <div class="step"><div class="sn">02</div><div class="sc"><div class="sl">Processamento — Coleta</div><div class="st">Chatbot faz 5 perguntas: (1) destino, (2) datas ida/volta, (3) nº de passageiros e idades, (4) hospedagem (econômica/standard/luxo), (5) interesses (praia, cultura, aventura).</div><div class="badges"><span class="b bp">🤖 Chatbot 5 perguntas</span></div></div></div>
+      <div class="step"><div class="sn">03</div><div class="sc"><div class="sl">Processamento</div><div class="st">IA monta roteiro com base no destino e interesses. Consulta tabela de pacotes no Supabase. Gera 3 opções (econômica, standard, premium) com inclusões detalhadas.</div><div class="badges"><span class="b bp">🧠 IA roteiro + DB pacotes</span></div></div></div>
+      <div class="step"><div class="sn">04</div><div class="sc"><div class="sl">Saída</div><div class="st">PDF de proposta gerado automaticamente: itinerário dia a dia, fotos dos hotéis, o que está incluído, preço/pessoa, validade de 3 dias. Enviado via WA.</div><div class="badges"><span class="b bo">📄 PDF proposta automática</span></div></div></div>
+      <div class="step"><div class="sn">05</div><div class="sc"><div class="sl">Follow-up</div><div class="st">Não respondeu em 24h → "Posso ajustar algo?" | 48h → "Consigo negociar o hotel" | 72h → "Sua cotação expira hoje." Fechou → consultor humano assume.</div><div class="badges"><span class="b bd">🔁 Follow-up 24h/48h/72h</span></div></div></div>
+      <div class="step"><div class="sn">06</div><div class="sc"><div class="sl">Jornada pós-venda</div><div class="st">Sequência automática: D-30 (dicas de documentos), D-7 (roteiro final), D-1 (check-in online), D+3 pós-retorno (NPS + indicação).</div><div class="badges"><span class="b bo">📅 Jornada completa pré e pós viagem</span></div></div></div>
+    </div>
+
+    <div class="flow">
+      <div class="flow-head">⚖️ Cenário 7 — Jurídico: Monitoramento de prazos e status de processos</div>
+      <div class="step"><div class="sn">01</div><div class="sc"><div class="sl">Trigger</div><div class="st">Cron às 6h30 consulta DataJud/CNJ API e scrapers de Diários Oficiais estaduais para todos os processos cadastrados na tabela do Supabase.</div><div class="badges"><span class="b bi">⏰ Cron 6h30 + DataJud API</span></div></div></div>
+      <div class="step"><div class="sn">02</div><div class="sc"><div class="sl">Processamento</div><div class="st">IA lê publicação e extrai: tipo (citação, intimação, sentença), data, prazo em dias úteis, processo, vara. Classifica urgência: CRÍTICO (≤3d), IMPORTANTE (4-10d), NORMAL (&gt;10d).</div><div class="badges"><span class="b bp">🧠 IA extrai prazo e urgência</span></div></div></div>
+      <div class="step"><div class="sn">03</div><div class="sc"><div class="sl">Decisão</div><div class="st">CRÍTICO → WA + e-mail imediato ao advogado responsável. IMPORTANTE → notificação. NORMAL → agenda lembrete nos dias D-5, D-3, D-1.</div><div class="badges"><span class="b bd">🚨 Crítico / ⚠️ Importante / ℹ️ Normal</span></div></div></div>
+      <div class="step"><div class="sn">04</div><div class="sc"><div class="sl">Processamento</div><div class="st">Tarefa criada automaticamente no CRM jurídico com prazo, responsável e status "pendente". Não pode ser fechada sem confirmação do advogado.</div><div class="badges"><span class="b bp">✅ Task no CRM</span></div></div></div>
+      <div class="step"><div class="sn">05</div><div class="sc"><div class="sl">Saída — Cliente</div><div class="st">WA ao cliente em linguagem simples: "Boa notícia! Seu processo [nº] teve uma movimentação. O juiz [ação em termos simples]. Próximo passo: [o que acontece agora]."</div><div class="badges"><span class="b bo">📲 Update cliente linguagem simples</span></div></div></div>
+      <div class="step"><div class="sn">06</div><div class="sc"><div class="sl">Portal self-service</div><div class="st">Cliente consulta status de todos os processos 24/7 no portal com login seguro. Histórico completo. Sem precisar ligar para o escritório.</div><div class="badges"><span class="b bo">🌐 Portal cliente 24/7</span></div></div></div>
+    </div>
+
+    <div class="flow">
+      <div class="flow-head">👥 Cenário 8 — RH: Triagem de currículos com IA</div>
+      <div class="step"><div class="sn">01</div><div class="sc"><div class="sl">Entrada</div><div class="st">Candidato preenche formulário (Typeform) com dados + upload de currículo PDF. Webhook dispara para o n8n.</div><div class="badges"><span class="b bi">📝 Typeform → n8n</span></div></div></div>
+      <div class="step"><div class="sn">02</div><div class="sc"><div class="sl">Processamento</div><div class="st">Supabase INSERT candidato. HTTP Request baixa o PDF. OCR extrai texto. Claude recebe: descrição da vaga + requisitos + currículo em texto.</div><div class="badges"><span class="b bp">📄 OCR + Claude avalia</span></div></div></div>
+      <div class="step"><div class="sn">03</div><div class="sc"><div class="sl">Processamento — Score</div><div class="st">Claude retorna JSON: score (0-100), aprovado (bool), habilidades_match (lista), gaps, resumo_executivo. Supabase UPDATE com todos esses campos.</div><div class="badges"><span class="b bp">🧠 Score IA → JSON estruturado</span></div></div></div>
+      <div class="step"><div class="sn">04</div><div class="sc"><div class="sl">Decisão + Saída</div><div class="st">Score ≥70 → e-mail de convite para vídeo-entrevista (link Loom/Vidyard). Score &lt;70 → e-mail personalizado de agradecimento dentro de 24h. Nunca deixar sem resposta.</div><div class="badges"><span class="b bd">✅ Avançou / ❌ Feedback (com resposta!)</span></div></div></div>
+      <div class="step"><div class="sn">05</div><div class="sc"><div class="sl">Processamento</div><div class="st">Candidato grava vídeo com 3 perguntas da vaga. IA transcreve + avalia. Recrutador recebe dashboard com top 10 ranqueados + resumo de cada um.</div><div class="badges"><span class="b bp">🎥 IA avalia vídeo-entrevista</span></div></div></div>
+      <div class="step"><div class="sn">06</div><div class="sc"><div class="sl">Saída</div><div class="st">Recrutador seleciona finalistas com 1 clique. Cal.com agenda entrevistas presenciais. Todos os candidatos recebem update de status. Relatório gerado para empresa-cliente.</div><div class="badges"><span class="b bo">📅 Agendamento + relatório empresa</span></div></div></div>
+    </div>
+
+    <div class="flow">
+      <div class="flow-head">💪 Cenário 9 — Academia: Retenção e renovação de planos</div>
+      <div class="step"><div class="sn">01</div><div class="sc"><div class="sl">Trigger</div><div class="st">Cron às 8h: analisa frequência dos últimos 30 dias por aluno. Cruza com data de vencimento e status de pagamento no Supabase.</div><div class="badges"><span class="b bi">⏰ Cron 8h + DB check-in</span></div></div></div>
+      <div class="step"><div class="sn">02</div><div class="sc"><div class="sl">Decisão</div><div class="st">&lt;2 visitas/semana por 21 dias = Risco. Primeiro alerta → mensagem de engajamento. Segundo alerta (próxima semana sem melhora) → escalona para professor da turma.</div><div class="badges"><span class="b bd">📉 Churn detectado → engajamento</span></div></div></div>
+      <div class="step"><div class="sn">03</div><div class="sc"><div class="sl">Saída</div><div class="st">WA motivacional: "Oi [nome]! Sentimos sua falta 💪 Essa semana tem [aula nova/desafio especial] que vai curtir! [link grade de horários]" Tom humano, não comercial.</div><div class="badges"><span class="b bo">📲 WA engajamento motivacional</span></div></div></div>
+      <div class="step"><div class="sn">04</div><div class="sc"><div class="sl">Renovação — D-20</div><div class="st">20 dias antes do vencimento: proposta de renovação via WA. Fidelidade ≥6 meses → desconto automático. Plano anual → parcelamento 12x. Link de pagamento direto (PIX/cartão).</div><div class="badges"><span class="b bp">💳 Proposta renovação + desconto fidelidade</span></div></div></div>
+      <div class="step"><div class="sn">05</div><div class="sc"><div class="sl">Decisão</div><div class="st">Renovou → acesso estendido no sistema de catraca. D-3 sem renovação → oferta final (1 semana grátis). D-0 → recepção aborda pessoalmente.</div><div class="badges"><span class="b bd">✅ Renovou / 🎁 Oferta final / 👋 Presencial</span></div></div></div>
+      <div class="step"><div class="sn">06</div><div class="sc"><div class="sl">Saída — Gestão</div><div class="st">Dashboard semanal ao gestor: alunos em risco (lista), renovações do mês, churn por modalidade, horários mais frequentados. Base para decisão de grade.</div><div class="badges"><span class="b bo">📊 Dashboard gerencial semanal</span></div></div></div>
+    </div>
+
+    <div class="flow">
+      <div class="flow-head">📦 Cenário 10 — Distribuidora B2B: Pedidos via WhatsApp sem erro</div>
+      <div class="step"><div class="sn">01</div><div class="sc"><div class="sl">Entrada</div><div class="st">Cliente B2B (dono de mercado) manda WA: "quero pedir" ou "meu pedido". Webhook Evolution API → n8n.</div><div class="badges"><span class="b bi">📲 WA cliente B2B → n8n</span></div></div></div>
+      <div class="step"><div class="sn">02</div><div class="sc"><div class="sl">Processamento</div><div class="st">Sistema identifica cliente pelo telefone no Supabase. Carrega catálogo personalizado: produtos do segmento do cliente, tabela de preço específica (atacado/mercado/restaurante), estoque em tempo real do ERP.</div><div class="badges"><span class="b bp">🏷️ Catálogo + preço personalizado</span></div></div></div>
+      <div class="step"><div class="sn">03</div><div class="sc"><div class="sl">Saída</div><div class="st">Lista interativa de produtos no WA com imagens e preços. Cliente monta o carrinho respondendo com quantidades. AI Agent gerencia a conversa de múltiplos itens.</div><div class="badges"><span class="b bo">🛍️ Catálogo interativo WA</span></div></div></div>
+      <div class="step"><div class="sn">04</div><div class="sc"><div class="sl">Processamento</div><div class="st">Sistema consolida pedido, calcula total, verifica crédito disponível do cliente e disponibilidade de estoque no ERP. Sugere data de entrega com base na rota do caminhão.</div><div class="badges"><span class="b bp">📋 Consolida + estoque + rota</span></div></div></div>
+      <div class="step"><div class="sn">05</div><div class="sc"><div class="sl">Saída</div><div class="st">Resumo: "Seu pedido: [lista]. Total: R$[valor]. Entrega: [data]. Pagamento: boleto/PIX. Confirma? (SIM / NÃO / EDITAR)"</div><div class="badges"><span class="b bo">✅ Confirmação antes de processar</span></div></div></div>
+      <div class="step"><div class="sn">06</div><div class="sc"><div class="sl">Processamento</div><div class="st">SIM → pedido inserido no ERP via API REST. Nº do pedido gerado. NF-e emitida automaticamente ao sair para entrega. Representante notificado para acompanhamento.</div><div class="badges"><span class="b bp">🔗 ERP API + NF-e automática</span></div></div></div>
+      <div class="step"><div class="sn">07</div><div class="sc"><div class="sl">Rastreio automático</div><div class="st">Updates via WA: "📦 Pedido #X separado!", "🚛 Saiu para entrega! Previsão: 14h-16h", "✅ Entregue! Confirme o recebimento." Zero ligações de rastreio.</div><div class="badges"><span class="b bo">📍 Rastreio em tempo real WA</span></div></div></div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- ===== SEÇÃO 3: FLUXOGRAMAS ===== -->
+<section class="section" id="s3">
+<div class="container">
+  <div class="sec-header">
+    <div class="sec-num">3</div>
+    <h2 class="sec-title">Fluxogramas em Mermaid</h2>
+    <p class="sec-desc">Fluxogramas simples e avançados para cada cenário. Copie o código Mermaid em mermaid.live para editar ou exporte como imagem.</p>
+  </div>
+
+  <div class="diag-wrap">
+    <div class="mbox">
+      <div class="mbox-title">🏠 C1 Imobiliária — Simples</div>
+      <div class="mermaid">
+flowchart TD
+    A([Lead entra no portal]) --> B[Webhook → n8n]
+    B --> C[(Supabase: salvar lead)]
+    C --> D[WA automático em 30s]
+    D --> E{Respondeu?}
+    E -->|Sim| F[Chatbot qualifica]
+    E -->|Não em 3 dias| G[Follow-up automático]
+    F --> H{Score do lead}
+    H -->|HOT ≥70| I[Corretor especialista]
+    H -->|WARM 40-69| J[Round-robin]
+    H -->|COLD &lt;40| K[Nurturing semanal]
+    I --> L[Notif. corretor WA]
+    J --> L
+    K --> M([Conteúdo educativo])
+    L --> N{SLA: contato em 2h?}
+    N -->|Ok| O([Corretor fecha])
+    N -->|Violado| P[Alerta gestor]
+      </div>
+    </div>
+    <div class="mbox">
+      <div class="mbox-title">🏠 C1 Imobiliária — Avançado</div>
+      <div class="mermaid">
+flowchart TD
+    A([Zap/VivaReal/Meta Ads]) --> B[n8n Webhook Receiver]
+    B --> C[(Supabase INSERT leads)]
+    C --> D[Evolution API: WA 30s]
+    D --> E{Morar ou investir?}
+    E -->|morar| F[Sondagem FGTS/entrada]
+    E -->|investir| G[Sondagem rentabilidade]
+    F --> H[Claude AI Scoring]
+    G --> H
+    H --> I{Score}
+    I -->|≥70 HOT| J[Assign: especialista livre]
+    I -->|40-69 WARM| K[Pool round-robin]
+    I -->|&lt;40 COLD| L[Nurturing drip]
+    J --> M[Matching IA: Top 3 imóveis]
+    K --> M
+    M --> N[WA corretor + WA lead]
+    N --> O{Corretor contatou 2h?}
+    O -->|Sim| P([Visita agendada])
+    O -->|Não| Q[Alerta gestor Telegram]
+    L --> R[D3/D7/D14 follow-up]
+      </div>
+    </div>
+  </div>
+
+  <div class="diag-wrap">
+    <div class="mbox">
+      <div class="mbox-title">📊 C2 Contabilidade — Coleta de documentos</div>
+      <div class="mermaid">
+flowchart TD
+    A([Dia 25 do mês]) --> B[Cron Schedule n8n]
+    B --> C[Buscar clientes ativos]
+    C --> D[Gerar checklist por cliente]
+    D --> E[WA + link portal único]
+    E --> F{Documentos enviados?}
+    F -->|Upload feito| G[OCR + IA classifica]
+    F -->|Pendente D-5| H[Lembrete automático]
+    H --> F
+    G --> I{Documento correto?}
+    I -->|Sim| J[✅ Check no Supabase]
+    I -->|Não| K[WA: pedir reenvio]
+    K --> F
+    J --> L{Checklist 100%?}
+    L -->|Não| F
+    L -->|Sim| M[Organiza Google Drive]
+    M --> N[Notifica contador]
+    N --> O([Obrigação no prazo ✅])
+      </div>
+    </div>
+    <div class="mbox">
+      <div class="mbox-title">🏥 C3 Clínica — Agendamento e anti no-show</div>
+      <div class="mermaid">
+flowchart TD
+    A([Paciente manda WA]) --> B[Detecta intenção: agendar]
+    B --> C{Cadastrado?}
+    C -->|Sim| D[Boas-vindas de volta]
+    C -->|Não| E[Coleta dados + convênio]
+    D --> F[Google Calendar: 3 slots]
+    E --> F
+    F --> G[WA: 3 opções de horário]
+    G --> H{Paciente escolhe}
+    H --> I[Bloqueia slot + INSERT DB]
+    I --> J[Confirmação WA completa]
+    J --> K[Lembrete às 16h D-1]
+    K --> L{Resposta}
+    L -->|SIM| M[Confirma DB ✅]
+    L -->|NÃO| N[Cancela Calendar]
+    L -->|Sem resposta| O[Lembrete H-2]
+    N --> P[Lista de espera: próximo]
+    M --> Q([Consulta realizada])
+    Q --> R[NPS 2h depois]
+      </div>
+    </div>
+  </div>
+
+  <div class="diag-wrap">
+    <div class="mbox">
+      <div class="mbox-title">🛒 C4 E-commerce — Carrinho abandonado</div>
+      <div class="mermaid">
+flowchart TD
+    A([Carrinho abandonado]) --> B{Valor &gt;R$80 + tem tel?}
+    B -->|Não| Z([Ignora])
+    B -->|Sim| C{Anti-spam: enviou nos últimos 3d?}
+    C -->|Sim| Z
+    C -->|Não| D[Wait 60 min]
+    D --> E{Comprou?}
+    E -->|Sim| F([Fluxo encerrado ✅])
+    E -->|Não| G[M1: WA suporte]
+    G --> H{Respondeu?}
+    H -->|Sim| I([Humano assume])
+    H -->|Não 24h| J[M2: prova social + imagem]
+    J --> K{Ticket &gt;R$300?}
+    K -->|Sim| L[M3: frete grátis]
+    K -->|Não| M[M3: cupom único 10%]
+    L --> N{Converteu?}
+    M --> N
+    N -->|Sim| O([Venda recuperada 🎉])
+    N -->|Não| P[Segmento hard_lost]
+      </div>
+    </div>
+    <div class="mbox">
+      <div class="mbox-title">⚖️ C7 Jurídico — Monitoramento de prazos</div>
+      <div class="mermaid">
+flowchart TD
+    A([Cron 6h30]) --> B[DataJud API + Diário Oficial]
+    B --> C{Nova publicação?}
+    C -->|Não| Z([Aguarda próximo dia])
+    C -->|Sim| D[IA extrai: prazo, tipo, processo]
+    D --> E{Urgência}
+    E -->|≤3 dias CRÍTICO| F[🚨 WA + Email imediato]
+    E -->|4-10 dias IMPORTANTE| G[⚠️ Notificação]
+    E -->|&gt;10 dias NORMAL| H[ℹ️ Agenda lembrete]
+    F --> I[Cria task CRM: D-5/D-3/D-1]
+    G --> I
+    H --> I
+    I --> J[WA cliente linguagem simples]
+    J --> K[Atualiza portal self-service]
+    K --> L{Advogado confirmou task?}
+    L -->|Sim| M([Prazo cumprido ✅])
+    L -->|Não em D-1| N[Alerta urgente ao sócio]
+      </div>
+    </div>
+  </div>
+
+  <div class="diag-wrap">
+    <div class="mbox">
+      <div class="mbox-title">👥 C8 RH — Triagem com IA</div>
+      <div class="mermaid">
+flowchart TD
+    A([Candidato se inscreve]) --> B[Typeform Webhook → n8n]
+    B --> C[(Supabase INSERT)]
+    C --> D[Download PDF currículo]
+    D --> E[OCR: extrai texto]
+    E --> F[Claude AI: avalia vs. vaga]
+    F --> G[JSON: score, match, gaps]
+    G --> H[(Supabase UPDATE score)]
+    H --> I{Score ≥70?}
+    I -->|Sim| J[Email: convite vídeo-entrevista]
+    I -->|Não| K[Email: feedback personalizado 24h]
+    J --> L[Candidato grava vídeo 3 perguntas]
+    L --> M[IA transcreve e pontua]
+    M --> N[Dashboard: top 10 ranqueados]
+    N --> O[Recrutador seleciona finalistas]
+    O --> P[Cal.com: agenda presencial]
+    P --> Q([Contratação final])
+      </div>
+    </div>
+    <div class="mbox">
+      <div class="mbox-title">📦 C10 Distribuidora B2B — Pedido WA</div>
+      <div class="mermaid">
+flowchart LR
+    A([Cliente WA: quero pedir]) --> B[Identifica por telefone]
+    B --> C[(Supabase: catálogo + preço)]
+    C --> D[AI Agent: gerencia pedido]
+    D --> E{Estoque ok?}
+    E -->|Não| F[Sugere substituto]
+    E -->|Sim| G[Calcula total + data entrega]
+    F --> G
+    G --> H[WA: resumo para confirmar]
+    H --> I{SIM / NÃO / EDITAR}
+    I -->|EDITAR| D
+    I -->|NÃO| J([Cancelado])
+    I -->|SIM| K[POST ERP: criar pedido]
+    K --> L[Emite NF-e automática]
+    L --> M[Updates WA: separado → saiu → entregue]
+    M --> N([Confirmação de recebimento])
+      </div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<!-- ===== SEÇÃO 4: BASES DE DADOS ===== -->
+<section class="section" id="s4">
+<div class="container">
+  <div class="sec-header">
+    <div class="sec-num">4</div>
+    <h2 class="sec-title">Bases de Dados Públicas Brasileiras</h2>
+    <p class="sec-desc">Fontes gratuitas para treinar automações, criar dados de teste realistas e construir demonstrações para clientes.</p>
+  </div>
+  <div class="db-grid">
+    <div class="db-card">
+      <div class="db-head"><div class="db-icon">🇧🇷</div><div><div class="db-name">BrasilAPI</div><div class="db-theme">CEP · CNPJ · Bancos · FIPE</div></div></div>
+      <p>CEP, dados de empresas por CNPJ, lista de bancos, tabela FIPE e feriados nacionais em JSON padronizado.</p>
+      <a href="https://brasilapi.com.br/docs" target="_blank">brasilapi.com.br/docs</a>
+      <div class="db-use">💡 <strong>Aplicação:</strong> Enriquecer cadastros de leads e clientes automaticamente ao digitar CNPJ ou CEP no formulário.</div>
+    </div>
+    <div class="db-card">
+      <div class="db-head"><div class="db-icon">🛒</div><div><div class="db-name">Olist E-commerce Dataset</div><div class="db-theme">Pedidos · Produtos · Reviews</div></div></div>
+      <p>100k pedidos reais de e-commerce brasileiro com 9 tabelas: clientes, produtos, avaliações, localização, pagamentos.</p>
+      <a href="https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce" target="_blank">Kaggle: olistbr/brazilian-ecommerce</a>
+      <div class="db-use">💡 <strong>Aplicação:</strong> Simular fluxo de recuperação de carrinho e análise de churn com dados reais do Cenário 4.</div>
+    </div>
+    <div class="db-card">
+      <div class="db-head"><div class="db-icon">🏥</div><div><div class="db-name">OpenDataSUS</div><div class="db-theme">Saúde · Hospitalizações · CNES</div></div></div>
+      <p>Dados de vacinação, internações, mortalidade, estabelecimentos de saúde (CNES) e produção ambulatorial do SUS.</p>
+      <a href="https://opendatasus.saude.gov.br" target="_blank">opendatasus.saude.gov.br</a>
+      <div class="db-use">💡 <strong>Aplicação:</strong> Treinar IA para relatórios clínicos e demonstrar automação de vigilância epidemiológica.</div>
+    </div>
+    <div class="db-card">
+      <div class="db-head"><div class="db-icon">🏦</div><div><div class="db-name">Banco Central Open Data</div><div class="db-theme">Selic · PTAX · Pix · Expectativas</div></div></div>
+      <p>Taxa Selic diária, cotações de câmbio PTAX, estatísticas do Pix, relatório Focus e expectativas de mercado.</p>
+      <a href="https://dadosabertos.bcb.gov.br" target="_blank">dadosabertos.bcb.gov.br</a>
+      <div class="db-use">💡 <strong>Aplicação:</strong> Gerar resumo financeiro semanal automático para clientes da contabilidade (Cenário 2).</div>
+    </div>
+    <div class="db-card">
+      <div class="db-head"><div class="db-icon">📈</div><div><div class="db-name">CVM — Dados Abertos</div><div class="db-theme">DRE · Balanço · ITR · FII</div></div></div>
+      <p>Demonstrativos financeiros de companhias abertas, ITR, FRE, informações de fundos imobiliários e ações listadas na B3.</p>
+      <a href="https://dados.cvm.gov.br" target="_blank">dados.cvm.gov.br</a>
+      <div class="db-use">💡 <strong>Aplicação:</strong> Treinar IA para análise financeira e benchmarking setorial para escritórios contábeis.</div>
+    </div>
+    <div class="db-card">
+      <div class="db-head"><div class="db-icon">🎓</div><div><div class="db-name">INEP Microdados</div><div class="db-theme">ENEM · Censo Escolar · CPC</div></div></div>
+      <p>ENEM (10M+ inscrições/ano), Censo Escolar com turmas e matrículas, CPC de cursos superiores, indicadores de qualidade.</p>
+      <a href="https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/microdados" target="_blank">gov.br/inep — Microdados</a>
+      <div class="db-use">💡 <strong>Aplicação:</strong> Modelo preditivo de evasão escolar para escolas de idiomas e cursos (Cenário 5).</div>
+    </div>
+    <div class="db-card">
+      <div class="db-head"><div class="db-icon">✈️</div><div><div class="db-name">ANAC — Dados Aeronáuticos</div><div class="db-theme">Passageiros · Rotas · Pontualidade</div></div></div>
+      <p>Passageiros transportados por rota, pontualidade de voos por companhia, preços médios de passagens e dados de aeroportos.</p>
+      <a href="https://www.gov.br/anac/pt-br/assuntos/dados-e-estatisticas" target="_blank">gov.br/anac — Dados e Estatísticas</a>
+      <div class="db-use">💡 <strong>Aplicação:</strong> Treinar chatbot de agência de viagens com sazonalidade real por destino (Cenário 6).</div>
+    </div>
+    <div class="db-card">
+      <div class="db-head"><div class="db-icon">🏛️</div><div><div class="db-name">Portal da Transparência (API)</div><div class="db-theme">Licitações · Contratos · Gastos</div></div></div>
+      <p>API REST com gastos federais, licitações abertas, contratos firmados, servidores e transferências por município.</p>
+      <a href="https://api.portaldatransparencia.gov.br" target="_blank">api.portaldatransparencia.gov.br</a>
+      <div class="db-use">💡 <strong>Aplicação:</strong> Monitorar licitações relevantes e enviar alertas automáticos via WA para empresas licitantes.</div>
+    </div>
+    <div class="db-card">
+      <div class="db-head"><div class="db-icon">📍</div><div><div class="db-name">IBGE API</div><div class="db-theme">Censo · PIB · IDH · Municípios</div></div></div>
+      <p>Dados demográficos por município (censo 2022), PIB municipal, IDH, indicadores socioeconômicos e malha territorial.</p>
+      <a href="https://servicodados.ibge.gov.br/api/docs" target="_blank">servicodados.ibge.gov.br/api/docs</a>
+      <div class="db-use">💡 <strong>Aplicação:</strong> Enriquecer relatórios imobiliários com dados demográficos do bairro/cidade (Cenário 1).</div>
+    </div>
+    <div class="db-card">
+      <div class="db-head"><div class="db-icon">🔍</div><div><div class="db-name">Brasil.IO</div><div class="db-theme">CNPJ · Sócios · Doações Eleitorais</div></div></div>
+      <p>CNPJ completo com sócios, doações eleitorais, gastos municipais, boletins de ocorrência e dados de COVID-19.</p>
+      <a href="https://brasil.io/datasets" target="_blank">brasil.io/datasets</a>
+      <div class="db-use">💡 <strong>Aplicação:</strong> Qualificação de leads B2B: sócios, porte, histórico e situação da empresa antes de abordar.</div>
+    </div>
+    <div class="db-card">
+      <div class="db-head"><div class="db-icon">📊</div><div><div class="db-name">brapi.dev</div><div class="db-theme">Ações B3 · FII · Crypto · IPCA</div></div></div>
+      <p>Cotações em tempo real da B3, dividendos de FIIs, criptomoedas, IPCA histórico, CDI e indicadores econômicos.</p>
+      <a href="https://brapi.dev" target="_blank">brapi.dev</a>
+      <div class="db-use">💡 <strong>Aplicação:</strong> Relatório financeiro automatizado semanal para clientes PJ da contabilidade com variações do CDI e IPCA.</div>
+    </div>
+    <div class="db-card">
+      <div class="db-head"><div class="db-icon">⚖️</div><div><div class="db-name">DataJud CNJ</div><div class="db-theme">Processos · Publicações · Tribunais</div></div></div>
+      <p>Base nacional de dados processuais do CNJ: movimentações, publicações no diário, dados de todos os tribunais do país.</p>
+      <a href="https://datajud-wiki.cnj.jus.br/api-publica" target="_blank">datajud-wiki.cnj.jus.br/api-publica</a>
+      <div class="db-use">💡 <strong>Aplicação:</strong> Implementar monitoramento jurídico automático do Cenário 7 com dados reais dos processos.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ===== SEÇÃO 5: WORKFLOWS N8N ===== -->
+<section class="section" id="s5">
+<div class="container">
+  <div class="sec-header">
+    <div class="sec-num">5</div>
+    <h2 class="sec-title">Workflows n8n Práticos</h2>
+    <p class="sec-desc">Cadeia de nodes, lógica de decisão, pontos de integração e premissas para implementar cada automação no n8n.</p>
+  </div>
+  <div class="wf-list">
+
+    <div class="wf">
+      <div class="wf-head"><span>🏠</span><h3>C1 — Imobiliária: Qualificação e distribuição de leads</h3></div>
+      <div class="wf-body">
+        <h4>Cadeia de Nodes</h4>
+        <div class="chain">
+          <span class="np">Webhook</span><span class="na">→</span><span class="np">Set</span><span class="na">→</span><span class="np">Supabase.insert</span><span class="na">→</span><span class="np">HTTP(EvolutionAPI)</span><span class="na">→</span><span class="np">Wait(30s)</span><span class="na">→</span><span class="np">AI Agent</span><span class="na">→</span><span class="np">Code(score)</span><span class="na">→</span><span class="np">Switch(HOT/WARM/COLD)</span><span class="na">→</span><span class="np">Supabase.update</span><span class="na">→</span><span class="np">HTTP(WA corretor)</span>
+        </div>
+        <h4>Lógica de Decisão</h4>
+        <p>Node <code>Code</code> soma pontos: entrada disponível (+30), banco aprovado (+25), prazo ≤60 dias (+20), comprar para morar (+10), orçamento no range do portfólio (+15). Switch usa <code>{{$json.score >= 70}}</code>, <code>{{$json.score >= 40}}</code> e fallback para COLD. Node <code>Set</code> normaliza telefone: <code>'+55' + phone.replace(/\D/g, '')</code>.</p>
+        <h4>Integrações</h4>
+        <div class="ints"><span class="int">Evolution API (WA)</span><span class="int">Supabase PostgreSQL</span><span class="int">Claude AI (qualificação)</span><span class="int">Telegram (alerta gestor)</span><span class="int">Webhook Zap/VivaReal</span></div>
+        <h4>Premissas</h4>
+        <p>Portais imobiliários suportam webhooks outbound (Zap Imóveis e VivaReal permitem via parceiro API). Alternativa: Schedule Trigger a cada 5 min que scrape os leads via HTTP Request. Supabase precisa de índice no campo <code>telefone</code> para busca rápida. Evolution API rodando no servidor Hetzner (172.17.0.1:8080).</p>
+      </div>
+    </div>
+
+    <div class="wf">
+      <div class="wf-head"><span>📊</span><h3>C2 — Contabilidade: Coleta automatizada de documentos</h3></div>
+      <div class="wf-body">
+        <h4>Cadeia de Nodes</h4>
+        <div class="chain">
+          <span class="np">Schedule(dia 25)</span><span class="na">→</span><span class="np">Supabase.select</span><span class="na">→</span><span class="np">SplitInBatches</span><span class="na">→</span><span class="np">Code(checklist)</span><span class="na">→</span><span class="np">HTTP(WA+link)</span><span class="na">→</span><span class="np">Webhook(upload)</span><span class="na">→</span><span class="np">HTTP(download PDF)</span><span class="na">→</span><span class="np">Claude(OCR+classif)</span><span class="na">→</span><span class="np">IF(correto)</span><span class="na">→</span><span class="np">Supabase.update</span><span class="na">→</span><span class="np">GoogleDrive</span>
+        </div>
+        <h4>Lógica de Decisão</h4>
+        <p>Node <code>Code</code> gera token UUID por cliente válido por 7 dias salvo no Supabase. Webhook do portal de upload usa o token como rota dinâmica <code>/upload/:token</code>. Claude recebe prompt: "Classifique este documento como: NF-e, Extrato Bancário, Folha de Pagamento, CNPJ, Outro. Responda só o tipo." Node <code>IF</code> compara tipo retornado com o esperado no checklist. Schedule separado (cron <code>0 9 * * *</code>) faz loop nos pendentes para lembretes.</p>
+        <h4>Integrações</h4>
+        <div class="ints"><span class="int">Evolution API (WA)</span><span class="int">Supabase (checklist)</span><span class="int">Claude (OCR + classificação)</span><span class="int">Google Drive API</span><span class="int">Portal Next.js (upload)</span></div>
+        <h4>Premissas</h4>
+        <p>Portal de upload hospedado no mesmo servidor Hetzner. Arquivos temporários em <code>/tmp</code> do n8n, movidos para Drive após processamento. CNPJ da empresa como ID único dos clientes no Supabase. Contador recebe notificação via e-mail (SMTP) e WA (Evolution API).</p>
+      </div>
+    </div>
+
+    <div class="wf">
+      <div class="wf-head"><span>🏥</span><h3>C3 — Clínica: Agendamento conversacional e anti no-show</h3></div>
+      <div class="wf-body">
+        <h4>Cadeia de Nodes</h4>
+        <div class="chain">
+          <span class="np">Webhook(WA)</span><span class="na">→</span><span class="np">AI Agent(intenção)</span><span class="na">→</span><span class="np">Supabase(busca paciente)</span><span class="na">→</span><span class="np">GoogleCalendar(slots)</span><span class="na">→</span><span class="np">HTTP(WA opções)</span><span class="na">→</span><span class="np">Webhook(resposta)</span><span class="na">→</span><span class="np">GoogleCalendar.create</span><span class="na">→</span><span class="np">Supabase.insert</span><span class="na">→</span><span class="np">Schedule(D-1)</span><span class="na">→</span><span class="np">IF(confirmou)</span><span class="na">→</span><span class="np">Supabase.update</span>
+        </div>
+        <h4>Lógica de Decisão</h4>
+        <p>AI Agent usa tool <code>buscar_slots</code> que chama Google Calendar API buscando <code>freebusy</code> para o calendário do médico. Retorna próximos 3 slots a partir de agora. Wait Node de 15 min aguarda resposta do paciente com o número escolhido. Schedule <code>0 16 * * *</code> busca consultas do dia seguinte no Supabase e dispara lembretes. Lista de espera: Supabase table <code>waitlist</code> com especialidade + telefone + data_inscricao, consumida FIFO quando há cancelamento.</p>
+        <h4>Integrações</h4>
+        <div class="ints"><span class="int">Evolution API (WA bidirecional)</span><span class="int">Google Calendar API</span><span class="int">Supabase (pacientes + agenda)</span><span class="int">Claude (NLU intenção)</span></div>
+        <h4>Premissas</h4>
+        <p>Cada médico tem um Google Calendar separado. Service Account do Google com permissão de escrita nos calendários compartilhados. Evolution API configurada para receber webhooks de mensagens recebidas. Sistema de prontuário (se houver) integrado via webhook ou scraping.</p>
+      </div>
+    </div>
+
+    <div class="wf">
+      <div class="wf-head"><span>🛒</span><h3>C4 — E-commerce: Recuperação de carrinho com sequência 3 etapas</h3></div>
+      <div class="wf-body">
+        <h4>Cadeia de Nodes</h4>
+        <div class="chain">
+          <span class="np">Webhook(Nuvemshop)</span><span class="na">→</span><span class="np">IF(valor&gt;80)</span><span class="na">→</span><span class="np">Supabase(anti-spam)</span><span class="na">→</span><span class="np">Wait(1h)</span><span class="na">→</span><span class="np">HTTP(check compra)</span><span class="na">→</span><span class="np">HTTP(WA M1)</span><span class="na">→</span><span class="np">Wait(24h)</span><span class="na">→</span><span class="np">HTTP(WA M2+imagem)</span><span class="na">→</span><span class="np">IF(ticket&gt;300)</span><span class="na">→</span><span class="np">Code(gera cupom)</span><span class="na">→</span><span class="np">HTTP(WA M3)</span>
+        </div>
+        <h4>Lógica de Decisão</h4>
+        <p>Anti-spam: <code>SELECT * FROM abandons WHERE telefone = $1 AND created_at > NOW() - INTERVAL '3 days'</code>. Wait Nodes com checagem intermediária: a cada hora durante o aguardo de 24h, n8n verifica via <code>GET /orders?customer_id=X&status=paid&created_at_min=Y</code> na Nuvemshop API. Cupom gerado via <code>POST /discount_coupons</code> com código UUID truncado (<code>VOLTA + random 6 chars</code>) e validade de 2h em timestamp.</p>
+        <h4>Integrações</h4>
+        <div class="ints"><span class="int">Nuvemshop API (pedidos + cupons)</span><span class="int">Evolution API (WA com imagem)</span><span class="int">Supabase (controle anti-spam)</span></div>
+        <h4>Premissas</h4>
+        <p>Nuvemshop suporta app parceiro com webhook de carrinho abandonado (requer app na loja). Imagens dos produtos disponíveis via URL pública da Nuvemshop. Telefone cadastrado obrigatório no checkout.</p>
+      </div>
+    </div>
+
+    <div class="wf">
+      <div class="wf-head"><span>👥</span><h3>C8 — RH: Triagem de currículos com score de IA</h3></div>
+      <div class="wf-body">
+        <h4>Cadeia de Nodes</h4>
+        <div class="chain">
+          <span class="np">Webhook(Typeform)</span><span class="na">→</span><span class="np">Supabase.insert</span><span class="na">→</span><span class="np">HTTP(download PDF)</span><span class="na">→</span><span class="np">Code(base64)</span><span class="na">→</span><span class="np">Claude(score+JSON)</span><span class="na">→</span><span class="np">Supabase.update</span><span class="na">→</span><span class="np">IF(score≥70)</span><span class="na">→</span><span class="np">Gmail(convite)</span><span class="np">||</span><span class="np">Gmail(feedback)</span>
+        </div>
+        <h4>Lógica de Decisão</h4>
+        <p>Prompt do Claude: "Você é recrutador sênior. Vaga: [desc]. Requisitos: [lista]. Currículo: [texto]. Retorne JSON com: score(0-100), aprovado(bool), habilidades_match(array), gaps(array), resumo_executivo(string 2 frases)." Node <code>Code</code> faz <code>JSON.parse($json.text)</code> do retorno. Supabase UPDATE adiciona coluna <code>ia_score</code>, <code>ia_match</code>, <code>ia_gaps</code>. Relatório para empresa-cliente: view Supabase com <code>SELECT * FROM candidatos WHERE vaga_id = X ORDER BY ia_score DESC LIMIT 10</code>.</p>
+        <h4>Integrações</h4>
+        <div class="ints"><span class="int">Typeform (formulário)</span><span class="int">Claude API (score)</span><span class="int">Supabase (candidatos)</span><span class="int">Gmail SMTP (e-mails)</span><span class="int">Cal.com (entrevistas)</span></div>
+        <h4>Premissas</h4>
+        <p>PDFs públicos no Typeform (URL de download direto). Vaga configurada no Supabase com descrição e requisitos em texto para o prompt. Uma instância n8n separada por empresa-cliente ou campo <code>empresa_id</code> na tabela para multitenancy.</p>
+      </div>
+    </div>
+
+    <div class="wf">
+      <div class="wf-head"><span>📦</span><h3>C10 — Distribuidora B2B: Pedidos via WA com integração ERP</h3></div>
+      <div class="wf-body">
+        <h4>Cadeia de Nodes</h4>
+        <div class="chain">
+          <span class="np">Webhook(WA)</span><span class="na">→</span><span class="np">Supabase(cliente+catálogo)</span><span class="na">→</span><span class="np">AI Agent(pedido)</span><span class="na">→</span><span class="np">HTTP(ERP: verif. estoque)</span><span class="na">→</span><span class="np">Code(total+data)</span><span class="na">→</span><span class="np">HTTP(WA confirmação)</span><span class="na">→</span><span class="np">Webhook(SIM)</span><span class="na">→</span><span class="np">HTTP(ERP: criar pedido)</span><span class="na">→</span><span class="np">Supabase.insert</span><span class="na">→</span><span class="np">Schedule(updates entrega)</span>
+        </div>
+        <h4>Lógica de Decisão</h4>
+        <p>AI Agent mantém sessão de conversa no Supabase (tabela <code>sessions</code> com campo JSONB <code>cart</code>). Ferramenta <code>adicionar_item(produto_id, quantidade)</code> atualiza o JSONB. Ferramenta <code>confirmar_pedido()</code> serializa o carrinho e envia para o próximo node. ERP expõe endpoint REST <code>POST /orders</code> com autenticação Bearer. Updates de entrega: Schedule a cada hora verifica status no ERP e envia WA apenas quando status muda.</p>
+        <h4>Integrações</h4>
+        <div class="ints"><span class="int">Evolution API (WA bidirecional)</span><span class="int">ERP REST API</span><span class="int">Supabase (sessões + catálogo)</span><span class="int">Claude AI (conversa do pedido)</span></div>
+        <h4>Premissas</h4>
+        <p>ERP do cliente expõe API REST (se não expuser, usar integração via arquivo CSV + SFTP como fallback). Catálogo de produtos sincronizado no Supabase diariamente via webhook do ERP ou import agendado. Cada cliente B2B tem tabela de preço própria (campo <code>preco_tabela</code> na tabela <code>catalogo_clientes</code>).</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- ===== SEÇÃO 6: AUTOMAÇÕES 3 NÍVEIS ===== -->
+<section class="section" id="s6">
+<div class="container">
+  <div class="sec-header">
+    <div class="sec-num">6</div>
+    <h2 class="sec-title">Soluções de Automação por Nível</h2>
+    <p class="sec-desc">Três níveis de implementação para cada cenário: simples (sem código), intermediário (n8n básico) e avançado (IA + integrações completas).</p>
+  </div>
+  <div class="auto-list">
+
+    <div class="auto-card">
+      <h3>🏠 C1 — Imobiliária Alfa Imóveis</h3>
+      <div class="tiers">
+        <div class="t1"><div class="tlabel">🟢 Simples — 1 dia</div><div class="tbox"><p>Resposta automática no WhatsApp Business com link para Google Forms de qualificação. Sem n8n, sem código. Formulário gera planilha Google para os corretores.</p></div></div>
+        <div class="t2"><div class="tlabel">🟡 Intermediário — 1 semana</div><div class="tbox"><p>n8n recebe leads dos portais, chatbot de qualificação via WA com 3 perguntas, scoring por regras fixas, distribuição round-robin por SMS/WA ao corretor. Supabase como CRM básico.</p></div></div>
+        <div class="t3"><div class="tlabel">🟣 Avançado — 3-4 semanas</div><div class="tbox"><p>IA qualifica e pontua, matching semântico entre perfil do lead e portfólio, follow-up gerado por IA com personalização, painel de analytics de conversão por canal e corretor, SLA monitor automático.</p></div></div>
+      </div>
+      <div class="metrics"><span class="met">📏 Medir: tempo de resposta</span><span class="met">📏 Leads qualificados / total</span><span class="met">🎯 Meta: -60% leads perdidos</span><span class="met">🎯 Resposta &lt;5min</span></div>
+    </div>
+
+    <div class="auto-card">
+      <h3>📊 C2 — Escritório Contábil Beta</h3>
+      <div class="tiers">
+        <div class="t1"><div class="tlabel">🟢 Simples — 1 dia</div><div class="tbox"><p>Grupo no WhatsApp por cliente com lembretes manuais via mensagem programada (WA Business). Google Drive compartilhado por cliente como "portal".</p></div></div>
+        <div class="t2"><div class="tlabel">🟡 Intermediário — 1 semana</div><div class="tbox"><p>n8n envia WA com link de upload simples (form), Schedule com lembretes D-5/D-3/D-1, contador recebe notificação quando checklist completo. Organização automática no Drive por CNPJ.</p></div></div>
+        <div class="t3"><div class="tlabel">🟣 Avançado — 4-5 semanas</div><div class="tbox"><p>Portal web com login seguro, OCR + IA classifica e valida documentos automaticamente, alertas inteligentes por tipo de obrigação (eSocial, SPED, DCTF), dashboard gerencial em tempo real por cliente.</p></div></div>
+      </div>
+      <div class="metrics"><span class="met">📏 Dias médios de coleta</span><span class="met">📏 % clientes no prazo</span><span class="met">🎯 5 dias → 1 dia</span><span class="met">🎯 Zero multas por atraso</span></div>
+    </div>
+
+    <div class="auto-card">
+      <h3>🏥 C3 — Clínica Saúde Plena</h3>
+      <div class="tiers">
+        <div class="t1"><div class="tlabel">🟢 Simples — 1 dia</div><div class="tbox"><p>Mensagem de confirmação programada no WA Business D-1. Link do Google Agenda para o paciente reagendar sozinho. Sem integrações.</p></div></div>
+        <div class="t2"><div class="tlabel">🟡 Intermediário — 1 semana</div><div class="tbox"><p>n8n faz agendamento conversacional por WA, integra Google Calendar, lembrete D-1 com botão SIM/NÃO, lista de espera básica no Supabase, NPS automático pós-consulta.</p></div></div>
+        <div class="t3"><div class="tlabel">🟣 Avançado — 3-4 semanas</div><div class="tbox"><p>IA detecta intenção e especialidade, gerenciamento de lista de espera inteligente por histórico, NPS com análise de sentimento, painel de produtividade por médico, alertas de horários ociosos.</p></div></div>
+      </div>
+      <div class="metrics"><span class="met">📏 Taxa de no-show</span><span class="met">📏 % horários preenchidos</span><span class="met">🎯 28% → &lt;8% no-show</span><span class="met">🎯 R$15k/mês recuperados</span></div>
+    </div>
+
+    <div class="auto-card">
+      <h3>🛒 C4 — E-commerce Moda Gama</h3>
+      <div class="tiers">
+        <div class="t1"><div class="tlabel">🟢 Simples — 2 dias</div><div class="tbox"><p>E-mail nativo da Nuvemshop com template personalizado + cupom fixo de 10%. Simples, mas já melhora os 2% atuais de recuperação.</p></div></div>
+        <div class="t2"><div class="tlabel">🟡 Intermediário — 1 semana</div><div class="tbox"><p>n8n recebe webhook, sequência de 3 WA com espera (1h/24h/48h), anti-spam por Supabase, cupom único gerado por código, verificação se comprou antes de cada mensagem.</p></div></div>
+        <div class="t3"><div class="tlabel">🟣 Avançado — 2-3 semanas</div><div class="tbox"><p>Cupom dinâmico por ticket, imagem do produto no WA, IA personaliza a mensagem com base no histórico do cliente, A/B test de mensagens, analytics de recuperação por produto.</p></div></div>
+      </div>
+      <div class="metrics"><span class="met">📏 % carrinhos recuperados</span><span class="met">📏 Receita recuperada R$</span><span class="met">🎯 2% → 15-20% recuperação</span><span class="met">🎯 +R$6k-8k/mês</span></div>
+    </div>
+
+    <div class="auto-card">
+      <h3>🎓 C5 — Escola de Idiomas Delta</h3>
+      <div class="tiers">
+        <div class="t1"><div class="tlabel">🟢 Simples — 1 dia</div><div class="tbox"><p>Planilha de controle de frequência manual, mensagem semanal de engajamento pelo WA Business. Rematrícula por link de formulário.</p></div></div>
+        <div class="t2"><div class="tlabel">🟡 Intermediário — 1 semana</div><div class="tbox"><p>n8n analisa frequência do app de check-in, alerta de risco automático ao coordenador, WA motivacional ao aluno, link de rematrícula com desconto via WA D-30.</p></div></div>
+        <div class="t3"><div class="tlabel">🟣 Avançado — 3-4 semanas</div><div class="tbox"><p>ML de predição de evasão (frequência + pagamento + engajamento + histórico), script de retenção personalizado por coordenador, rematrícula digital com pagamento embutido, dashboard de evasão por turma.</p></div></div>
+      </div>
+      <div class="metrics"><span class="met">📏 Churn mensal %</span><span class="met">📏 Taxa de rematrícula</span><span class="met">🎯 22% → 10% evasão</span><span class="met">🎯 80% rematrículas automatizadas</span></div>
+    </div>
+
+    <div class="auto-card">
+      <h3>✈️ C6 — Agência Viaja Fácil</h3>
+      <div class="tiers">
+        <div class="t1"><div class="tlabel">🟢 Simples — 1 dia</div><div class="tbox"><p>WA Business com respostas rápidas pré-configuradas e link para formulário de cotação. Respostas fora do horário com previsão de retorno.</p></div></div>
+        <div class="t2"><div class="tlabel">🟡 Intermediário — 1 semana</div><div class="tbox"><p>Chatbot coleta 5 dados da viagem, IA monta roteiro básico, envia via WA. Follow-up em 24h/48h/72h se sem resposta. Consultor assume no fechamento.</p></div></div>
+        <div class="t3"><div class="tlabel">🟣 Avançado — 4-5 semanas</div><div class="tbox"><p>PDF de proposta profissional gerado automaticamente com imagens dos hotéis, 3 opções de preço, jornada pós-venda completa (D-30 a D+3), dashboard de conversão por consultor.</p></div></div>
+      </div>
+      <div class="metrics"><span class="met">📏 Conversão de cotações</span><span class="met">📏 Horas/dia em tarefas manuais</span><span class="met">🎯 18% → 35% conversão</span><span class="met">🎯 -2h/dia por consultor</span></div>
+    </div>
+
+    <div class="auto-card">
+      <h3>⚖️ C7 — Escritório Advocacia Zeta</h3>
+      <div class="tiers">
+        <div class="t1"><div class="tlabel">🟢 Simples — 1 dia</div><div class="tbox"><p>Alerta manual no Google Calendar para prazos. Grupo de WA por cliente para updates. Planilha de controle de processos.</p></div></div>
+        <div class="t2"><div class="tlabel">🟡 Intermediário — 2 semanas</div><div class="tbox"><p>n8n monitora DataJud API diariamente, extrai publicações, alerta advogado por WA/e-mail com prazo calculado. WA simples ao cliente com movimentação.</p></div></div>
+        <div class="t3"><div class="tlabel">🟣 Avançado — 5-6 semanas</div><div class="tbox"><p>IA lê publicação e extrai prazo + urgência, portal do cliente 24/7, task automática no CRM jurídico, dashboard de todos os processos com indicadores de risco, relatório semanal por advogado.</p></div></div>
+      </div>
+      <div class="metrics"><span class="met">📏 Prazos perdidos (meta: zero)</span><span class="met">📏 Ligações de status recebidas</span><span class="met">🎯 Zero perda de prazo</span><span class="met">🎯 -70% ligações de status</span></div>
+    </div>
+
+    <div class="auto-card">
+      <h3>👥 C8 — Consultoria RH Ômega</h3>
+      <div class="tiers">
+        <div class="t1"><div class="tlabel">🟢 Simples — 1 dia</div><div class="tbox"><p>Google Forms para candidatos, planilha automática com dados básicos. E-mail automático de confirmação de recebimento.</p></div></div>
+        <div class="t2"><div class="tlabel">🟡 Intermediário — 1 semana</div><div class="tbox"><p>Typeform + n8n + Claude avalia currículos e gera score. E-mails automáticos segmentados (aprovado/reprovado). Dashboard no Supabase.</p></div></div>
+        <div class="t3"><div class="tlabel">🟣 Avançado — 4-5 semanas</div><div class="tbox"><p>Score IA + vídeo-entrevista automatizada + transcrição, painel por vaga para empresa-cliente, ranking ranqueado, agendamento automático de entrevistas, relatório executivo por processo seletivo.</p></div></div>
+      </div>
+      <div class="metrics"><span class="met">📏 Horas de triagem por vaga</span><span class="met">📏 % candidatos respondidos em 24h</span><span class="met">🎯 8h → 30min triagem</span><span class="met">🎯 100% resposta em 24h</span></div>
+    </div>
+
+    <div class="auto-card">
+      <h3>💪 C9 — Academia FitZone</h3>
+      <div class="tiers">
+        <div class="t1"><div class="tlabel">🟢 Simples — 1 dia</div><div class="tbox"><p>WA manual de boas-vindas e lembrete mensal de renovação. Link de pagamento PIX enviado manualmente D-5.</p></div></div>
+        <div class="t2"><div class="tlabel">🟡 Intermediário — 1 semana</div><div class="tbox"><p>n8n analisa frequência do sistema de acesso, alerta de risco, proposta de renovação automática D-20 com link de pagamento, controle de renovações no Supabase.</p></div></div>
+        <div class="t3"><div class="tlabel">🟣 Avançado — 3-4 semanas</div><div class="tbox"><p>Score de risco multi-variável (frequência + pagamento + modalidade), mensagem motivacional personalizada por objetivo (emagrecimento/hipertrofia), campanha win-back com oferta, dashboard churn por professor e turma.</p></div></div>
+      </div>
+      <div class="metrics"><span class="met">📏 Churn mensal %</span><span class="met">📏 % renovações automáticas</span><span class="met">🎯 18% → 8% churn</span><span class="met">🎯 60% renovações sem intervenção</span></div>
+    </div>
+
+    <div class="auto-card">
+      <h3>📦 C10 — Distribuidora Sigma</h3>
+      <div class="tiers">
+        <div class="t1"><div class="tlabel">🟢 Simples — 2 dias</div><div class="tbox"><p>Catálogo em PDF por segmento enviado via WA. Pedidos via formulário do Google com confirmação automática por e-mail.</p></div></div>
+        <div class="t2"><div class="tlabel">🟡 Intermediário — 2 semanas</div><div class="tbox"><p>Chatbot de pedido por WA com catálogo dinâmico do Supabase, resumo para confirmação antes de processar, integração com ERP via planilha/CSV no Drive.</p></div></div>
+        <div class="t3"><div class="tlabel">🟣 Avançado — 5-6 semanas</div><div class="tbox"><p>IA gerencia conversa de pedido multi-item, integração REST com ERP, verificação de estoque em tempo real, NF-e automática, rastreio de entrega por WA, painel do representante com pedidos do dia.</p></div></div>
+      </div>
+      <div class="metrics"><span class="met">📏 % erros de pedido</span><span class="met">📏 Ligações de rastreio por dia</span><span class="met">🎯 12% → &lt;2% erros</span><span class="met">🎯 Zero ligações de rastreio</span></div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- ===== SEÇÃO 7: PROCESSOS INTERNOS ===== -->
+<section class="section" id="s7">
+<div class="container">
+  <div class="sec-header">
+    <div class="sec-num">7</div>
+    <h2 class="sec-title">Processos Internos da Graventum</h2>
+    <p class="sec-desc">Framework operacional completo: processos principais, de suporte e administrativos para operar uma consultoria de automação de alto desempenho.</p>
+  </div>
+  <div class="proc-grid">
+    <div class="proc-col">
+      <h3>⚡ Processos Principais</h3>
+      <div class="sub">Diretamente ligados à entrega de valor ao cliente</div>
+      <div class="pi"><div class="dot" style="background:#6C63FF"></div>1. Prospecção e qualificação de leads</div>
+      <div class="pi"><div class="dot" style="background:#6C63FF"></div>2. Discovery e diagnóstico de automação</div>
+      <div class="pi"><div class="dot" style="background:#6C63FF"></div>3. Elaboração de proposta e precificação</div>
+      <div class="pi"><div class="dot" style="background:#6C63FF"></div>4. Negociação e fechamento do contrato</div>
+      <div class="pi"><div class="dot" style="background:#6C63FF"></div>5. Onboarding do novo cliente</div>
+      <div class="pi"><div class="dot" style="background:#6C63FF"></div>6. Desenvolvimento das automações</div>
+      <div class="pi"><div class="dot" style="background:#6C63FF"></div>7. Homologação (UAT) com o cliente</div>
+      <div class="pi"><div class="dot" style="background:#6C63FF"></div>8. Go-live e treinamento da equipe</div>
+      <div class="pi"><div class="dot" style="background:#6C63FF"></div>9. Monitoramento contínuo (alertas)</div>
+      <div class="pi"><div class="dot" style="background:#6C63FF"></div>10. Entrega de relatório mensal de ROI</div>
+    </div>
+    <div class="proc-col">
+      <h3>🔧 Processos Secundários</h3>
+      <div class="sub">Suportam os processos principais</div>
+      <div class="pi"><div class="dot" style="background:#00D4AA"></div>Gestão de pipeline (CRM)</div>
+      <div class="pi"><div class="dot" style="background:#00D4AA"></div>Suporte e manutenção (SLA contratual)</div>
+      <div class="pi"><div class="dot" style="background:#00D4AA"></div>Documentação e base de conhecimento</div>
+      <div class="pi"><div class="dot" style="background:#00D4AA"></div>Comunicação e atualizações com cliente</div>
+      <div class="pi"><div class="dot" style="background:#00D4AA"></div>Melhoria contínua das automações</div>
+      <div class="pi"><div class="dot" style="background:#00D4AA"></div>Criação de cases de sucesso</div>
+      <div class="pi"><div class="dot" style="background:#00D4AA"></div>Gestão de satisfação (NPS de clientes)</div>
+      <div class="pi"><div class="dot" style="background:#00D4AA"></div>Upsell e expansão de conta</div>
+      <div class="pi"><div class="dot" style="background:#00D4AA"></div>Controle de versão e deploys (GitHub)</div>
+      <div class="pi"><div class="dot" style="background:#00D4AA"></div>Backup e segurança das instâncias</div>
+    </div>
+    <div class="proc-col">
+      <h3>🏗️ Processos de Suporte</h3>
+      <div class="sub">Viabilizam a operação da empresa</div>
+      <div class="pi"><div class="dot" style="background:#FF6B6B"></div>Contratação e onboarding de equipe</div>
+      <div class="pi"><div class="dot" style="background:#FF6B6B"></div>Gestão financeira e faturamento (retenção)</div>
+      <div class="pi"><div class="dot" style="background:#FF6B6B"></div>Marketing de conteúdo e presença digital</div>
+      <div class="pi"><div class="dot" style="background:#FF6B6B"></div>Gestão de infraestrutura e ferramentas</div>
+      <div class="pi"><div class="dot" style="background:#FF6B6B"></div>Jurídico: contratos e LGPD</div>
+      <div class="pi"><div class="dot" style="background:#FF6B6B"></div>Planejamento estratégico trimestral</div>
+      <div class="pi"><div class="dot" style="background:#FF6B6B"></div>Parcerias e ecossistema (integradores)</div>
+      <div class="pi"><div class="dot" style="background:#FF6B6B"></div>Atualização técnica e capacitação</div>
+      <div class="pi"><div class="dot" style="background:#FF6B6B"></div>Gestão de fornecedores e APIs</div>
+      <div class="pi"><div class="dot" style="background:#FF6B6B"></div>Controle de qualidade interno</div>
+    </div>
+  </div>
+
+  <!-- Detalhamento dos Processos Principais -->
+  <h3 style="font-size:18px;font-weight:700;color:var(--primary);margin:32px 0 20px;">📋 Detalhamento: Processos Principais</h3>
+  <div class="wf-list">
+    <div class="wf">
+      <div class="wf-head"><span>🔍</span><h3>P1 → P4 — Ciclo de Vendas: Prospecção ao Fechamento</h3></div>
+      <div class="wf-body">
+        <h4>P1 — Prospecção</h4>
+        <p>Canais: LinkedIn (outreach segmentado por cargo e setor), conteúdo orgânico (cases e dicas de automação), indicações de clientes ativos. Lead entra no CRM (Supabase ou Notion) com source, setor, porte e dor percebida. SLA: primeiro contato em até 4h.</p>
+        <h4>P2 — Discovery</h4>
+        <p>Reunião de 45-60 min (Google Meet). Roteiro fixo: mapeamento de processos manuais, volume de tarefas por semana, sistemas em uso, tamanho da equipe, principal dor e meta em 90 dias. Ao final: resumo por escrito enviado ao cliente + cálculo interno de ROI potencial.</p>
+        <h4>P3 — Proposta</h4>
+        <p>Proposta em PDF (Canva ou Notion) com: resumo do problema, solução proposta (3 blocos de automação), ROI estimado, escopo, prazo, investimento e retainer mensal. Três opções de plano (Start/Growth/Scale). Validade de 7 dias.</p>
+        <h4>P4 — Fechamento</h4>
+        <p>Contrato digital via DocuSign. Inclui: escopo, SLA de suporte (2h para críticos, 24h para demais), propriedade dos workflows, cláusula de reajuste anual, e política de rescisão com 30 dias. Pagamento: 50% na assinatura + 50% no go-live.</p>
+      </div>
+    </div>
+    <div class="wf">
+      <div class="wf-head"><span>🚀</span><h3>P5 → P8 — Ciclo de Entrega: Onboarding ao Go-live</h3></div>
+      <div class="wf-body">
+        <h4>P5 — Onboarding</h4>
+        <p>Semana 1: acesso aos sistemas do cliente (credenciais em vault), reunião de alinhamento técnico com TI, mapeamento detalhado do fluxo AS-IS em Mermaid, validação com stakeholders. Entregável: documento de escopo técnico assinado.</p>
+        <h4>P6 — Desenvolvimento</h4>
+        <p>Sprints de 1 semana. Cada automação: branch no GitHub → desenvolvimento local → push → deploy em ambiente de staging no servidor Hetzner → demonstração para cliente a cada Sprint. Nomenclatura: <code>client-nome_automacao-v1.0</code>. Documentação inline obrigatória.</p>
+        <h4>P7 — UAT (Homologação)</h4>
+        <p>Cliente testa em ambiente de staging com dados reais por 5 dias úteis. Checklist de UAT enviado no Notion. Bugs reportados via comentários no Notion ou WA. Aprovação por e-mail ou DocuSign antes do go-live. Prazo máximo de revisão: 2 ciclos de 5 dias.</p>
+        <h4>P8 — Go-live e Treinamento</h4>
+        <p>Deploy em produção via n8n Export/Import ou Git pull no servidor. Treinamento gravado em Loom (máx 20 min) + PDF de referência rápida. 72h de monitoramento intensivo pós-go-live com canal dedicado de suporte.</p>
+      </div>
+    </div>
+    <div class="wf">
+      <div class="wf-head"><span>📊</span><h3>P9 → P10 — Ciclo de Retenção: Monitoramento e ROI</h3></div>
+      <div class="wf-body">
+        <h4>P9 — Monitoramento Contínuo</h4>
+        <p>Dashboard no Supabase para cada cliente: total de execuções por workflow, taxa de erro, tempo médio de execução, economia de horas estimada. Alertas automáticos via Telegram quando fluxo falha 3x em 1h. Revisão técnica preventiva mensal.</p>
+        <h4>P10 — Relatório Mensal de ROI</h4>
+        <p>Entregue até dia 5 do mês seguinte. Conteúdo: execuções totais, horas economizadas (baseado no mapeamento de tempo do discovery), incidents e resoluções, sugestão de nova automação para o próximo mês. Formato: PDF + slide executivo. Reunião de 20 min ou async.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<footer>
+  <strong>Graventum</strong> · Guia de Automação Ponta a Ponta · Gerado em 2025<br>
+  10 cenários · Fluxos mock detalhados · Fluxogramas Mermaid · 12 bases de dados · 6 workflows n8n · Soluções em 3 níveis · Processos internos completos
+</footer>
+
+<script>
+  mermaid.initialize({startOnLoad:true, theme:'default', flowchart:{curve:'basis'}});
+</script>
+</body>
+</html>

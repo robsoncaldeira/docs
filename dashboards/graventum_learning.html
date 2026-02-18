@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Graventum — Trilha de Gestão</title>
+<style>
+  :root {
+    --bg: #0f1117; --card: #1a1d27; --card2: #22263a;
+    --accent: #7c6dfa; --accent2: #4fd1c5; --accent3: #f6ad55;
+    --text: #e2e8f0; --muted: #718096; --green: #68d391; --red: #fc8181;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+  header { background: linear-gradient(135deg, #1a1d27, #16213e); border-bottom: 1px solid #2d3748; padding: 28px 32px; display: flex; align-items: center; gap: 16px; }
+  header .logo { font-size: 2rem; }
+  header h1 { font-size: 1.4rem; font-weight: 700; }
+  header p { color: var(--muted); font-size: 0.85rem; margin-top: 2px; }
+
+  .prog-wrap { background: #2d3748; border-radius: 99px; height: 8px; margin: 16px 32px 0; }
+  .prog-bar { background: linear-gradient(90deg, var(--accent), var(--accent2)); height: 8px; border-radius: 99px; width: 0%; transition: width 0.5s; }
+  .prog-label { text-align: right; font-size: 0.75rem; color: var(--muted); padding: 4px 32px 0; }
+
+  .tabs { display: flex; border-bottom: 1px solid #2d3748; padding: 0 32px; margin-top: 20px; }
+  .tab-btn { padding: 12px 18px; cursor: pointer; font-size: 0.88rem; font-weight: 500; color: var(--muted); border: none; background: none; border-bottom: 2px solid transparent; transition: all 0.2s; }
+  .tab-btn.active, .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { border-bottom-color: var(--accent); }
+
+  .tab-pane { display: none; padding: 32px; }
+  .tab-pane.active { display: block; }
+
+  /* STAT ROW */
+  .stat-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 28px; }
+  .stat-card { background: var(--card); border-radius: 12px; padding: 18px; text-align: center; border: 1px solid #2d3748; }
+  .stat-num { font-size: 1.8rem; font-weight: 800; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .stat-label { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+
+  /* MODULE GRID */
+  .module-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 20px; }
+  .module-card { background: var(--card); border-radius: 16px; border: 1px solid #2d3748; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; }
+  .module-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+  .module-card.done { border-color: var(--green); }
+  .mc-head { padding: 20px; display: flex; gap: 14px; align-items: flex-start; }
+  .mc-icon { font-size: 2rem; flex-shrink: 0; }
+  .badge { display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; padding: 2px 10px; border-radius: 99px; margin-bottom: 6px; text-transform: uppercase; }
+  .b1 { background: rgba(124,109,250,0.2); color: var(--accent); }
+  .b2 { background: rgba(79,209,197,0.2); color: var(--accent2); }
+  .b3 { background: rgba(246,173,85,0.2); color: var(--accent3); }
+  .mc-title { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+  .mc-desc { font-size: 0.81rem; color: var(--muted); line-height: 1.5; }
+  .mc-foot { padding: 14px 20px; background: var(--card2); display: flex; justify-content: space-between; align-items: center; }
+  .mc-meta { font-size: 0.76rem; color: var(--muted); }
+  .btn-go { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 8px 16px; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+  .btn-go:hover { background: #6b5ce7; }
+  .btn-done-style { background: var(--green) !important; color: #1a202c !important; }
+
+  /* LESSON */
+  #lessonView { display: none; }
+  .lesson-nav { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+  .back-btn { background: var(--card); border: 1px solid #2d3748; color: var(--text); padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 0.84rem; }
+  .back-btn:hover { background: var(--card2); }
+  .lesson-headline { font-size: 1.25rem; font-weight: 700; }
+
+  .lesson-body { display: grid; grid-template-columns: 1fr; gap: 20px; }
+
+  .ls { background: var(--card); border-radius: 12px; padding: 22px; border: 1px solid #2d3748; }
+  .ls h3 { font-size: 0.85rem; font-weight: 700; color: var(--accent2); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 14px; }
+  .ls p { font-size: 0.86rem; color: #a0aec0; line-height: 1.7; margin-bottom: 10px; }
+  .ls p:last-of-type { margin-bottom: 0; }
+
+  .case-box { background: var(--card2); border-left: 3px solid var(--accent3); border-radius: 8px; padding: 14px; margin: 12px 0; }
+  .case-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent3); margin-bottom: 6px; }
+  .case-box p { font-size: 0.84rem; color: #cbd5e0; margin: 0; }
+
+  .chk-item { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid #2d3748; cursor: pointer; }
+  .chk-item:last-child { border-bottom: none; }
+  .chk-box { width: 20px; height: 20px; border-radius: 6px; border: 2px solid #4a5568; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-top: 1px; transition: all 0.2s; font-size: 0.7rem; }
+  .chk-box.on { background: var(--green); border-color: var(--green); color: #1a202c; font-weight: 900; }
+  .chk-text { font-size: 0.85rem; line-height: 1.5; }
+  .chk-text.done { text-decoration: line-through; color: var(--muted); }
+
+  .qopt { background: var(--card2); border: 1px solid #2d3748; border-radius: 8px; padding: 12px 16px; margin-bottom: 8px; cursor: pointer; font-size: 0.84rem; transition: all 0.2s; }
+  .qopt:hover { border-color: var(--accent); }
+  .qopt.correct { border-color: var(--green); background: rgba(104,211,145,0.1); pointer-events: none; }
+  .qopt.wrong { border-color: var(--red); background: rgba(252,129,129,0.1); pointer-events: none; }
+  .qfb { font-size: 0.82rem; margin-top: 10px; padding: 10px; border-radius: 8px; display: none; }
+  .qfb.show { display: block; }
+  .qfb.ok { background: rgba(104,211,145,0.1); color: var(--green); }
+  .qfb.ko { background: rgba(252,129,129,0.1); color: var(--red); }
+
+  .complete-btn { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; border: none; border-radius: 10px; padding: 14px; font-size: 1rem; font-weight: 700; cursor: pointer; width: 100%; margin-top: 8px; transition: opacity 0.2s; }
+  .complete-btn:hover { opacity: 0.88; }
+
+  /* ROADMAP */
+  .roadmap { display: flex; flex-direction: column; }
+  .road-step { display: flex; gap: 16px; position: relative; }
+  .road-step:not(:last-child)::after { content:''; position:absolute; left:19px; top:44px; width:2px; height:calc(100% - 20px); background:#2d3748; }
+  .rdot { width:40px; height:40px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.88rem; z-index:1; margin-top:2px; }
+  .dot-a { background: var(--accent); color:#fff; }
+  .dot-f { background: #2d3748; color: var(--muted); }
+  .rcont { padding: 0 0 28px; flex:1; }
+  .rcont h4 { font-size:0.93rem; font-weight:700; margin-bottom:4px; }
+  .rcont p { font-size:0.82rem; color:var(--muted); }
+  .rtag { display:inline-block; font-size:0.68rem; padding:2px 8px; border-radius:99px; margin-top:6px; }
+  .tw { background:rgba(124,109,250,0.15); color:var(--accent); }
+  .tm { background:rgba(79,209,197,0.15); color:var(--accent2); }
+  .tq { background:rgba(246,173,85,0.15); color:var(--accent3); }
+
+  /* TEMPLATES */
+  .tpl-box { background: #0d1117; border-radius:10px; padding:16px; font-family:monospace; font-size:0.78rem; color:#a0aec0; border:1px solid #2d3748; white-space:pre-wrap; line-height:1.7; }
+  .copy-btn { background:var(--card2); color:var(--muted); border:1px solid #2d3748; padding:6px 12px; border-radius:6px; font-size:0.76rem; cursor:pointer; margin-top:10px; transition:all 0.2s; }
+  .copy-btn:hover { color:var(--text); border-color:var(--accent); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🚀</div>
+  <div>
+    <h1>Graventum — Trilha de Gestão</h1>
+    <p>Clientes · Projetos · Finanças · Plano personalizado para você</p>
+  </div>
+</header>
+<div class="prog-wrap"><div class="prog-bar" id="progBar"></div></div>
+<div class="prog-label" id="progLabel">0 de 9 lições concluídas</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('modules',this)">📚 Módulos</button>
+  <button class="tab-btn" onclick="showTab('roadmap',this)">🗺️ Roadmap</button>
+  <button class="tab-btn" onclick="showTab('templates',this)">📄 Templates</button>
+</div>
+
+<!-- TAB: MODULES -->
+<div id="tab-modules" class="tab-pane active">
+
+  <!-- OVERVIEW -->
+  <div id="overview">
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-num" id="statDone">0</div><div class="stat-label">Lições concluídas</div></div>
+      <div class="stat-card"><div class="stat-num">9</div><div class="stat-label">Total de lições</div></div>
+      <div class="stat-card"><div class="stat-num">3</div><div class="stat-label">Módulos</div></div>
+    </div>
+    <div class="module-grid">
+
+      <div class="module-card" id="card-m1">
+        <div class="mc-head">
+          <div class="mc-icon">🎯</div>
+          <div>
+            <div class="badge b1">Módulo 1</div>
+            <div class="mc-title">Conseguir & Fechar Clientes</div>
+            <div class="mc-desc">Posicionamento, prospecção ativa e roteiro de fechamento para PMEs brasileiras.</div>
+          </div>
+        </div>
+        <div class="mc-foot">
+          <div class="mc-meta">📖 3 lições · ⏱ ~2h</div>
+          <button class="btn-go" id="btn-m1" onclick="openLesson('m1')">Iniciar →</button>
+        </div>
+      </div>
+
+      <div class="module-card" id="card-m2">
+        <div class="mc-head">
+          <div class="mc-icon">⚙️</div>
+          <div>
+            <div class="badge b2">Módulo 2</div>
+            <div class="mc-title">Gerenciar Projetos & Entregas</div>
+            <div class="mc-desc">Escopo sem scope creep, cronograma e transição para retainer.</div>
+          </div>
+        </div>
+        <div class="mc-foot">
+          <div class="mc-meta">📖 3 lições · ⏱ ~2h</div>
+          <button class="btn-go" id="btn-m2" onclick="openLesson('m2')">Iniciar →</button>
+        </div>
+      </div>
+
+      <div class="module-card" id="card-m3">
+        <div class="mc-head">
+          <div class="mc-icon">💰</div>
+          <div>
+            <div class="badge b3">Módulo 3</div>
+            <div class="mc-title">Finanças & Precificação</div>
+            <div class="mc-desc">Preço por valor, controle MEI e planejamento de crescimento.</div>
+          </div>
+        </div>
+        <div class="mc-foot">
+          <div class="mc-meta">📖 3 lições · ⏱ ~2h</div>
+          <button class="btn-go" id="btn-m3" onclick="openLesson('m3')">Iniciar →</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- LESSON VIEW (single container, swapped by JS) -->
+  <div id="lessonView">
+    <div class="lesson-nav">
+      <button class="back-btn" onclick="closeLesson()">← Voltar aos Módulos</button>
+      <div class="lesson-headline" id="lessonTitle"></div>
+    </div>
+    <div id="lessonContent" class="lesson-body"></div>
+  </div>
+
+</div>
+
+<!-- TAB: ROADMAP -->
+<div id="tab-roadmap" class="tab-pane">
+  <h2 style="margin-bottom:24px;font-size:1.05rem;font-weight:700;">🗺️ Sua Jornada de 90 Dias</h2>
+  <div class="roadmap">
+    <div class="road-step"><div class="rdot dot-a">1</div><div class="rcont"><h4>Semana 1–2 · Fundação</h4><p>Definir ICP, criar tabela de preços interna, mapear o processo atual de vendas.</p><span class="rtag tw">Agora</span></div></div>
+    <div class="road-step"><div class="rdot dot-a">2</div><div class="rcont"><h4>Semana 3–4 · Prospecção</h4><p>LinkedIn com conteúdo de nicho. Pipeline com 10 leads. Template de diagnose pronto.</p><span class="rtag tw">Semana 3</span></div></div>
+    <div class="road-step"><div class="rdot dot-f">3</div><div class="rcont"><h4>Mês 2 · Primeiro Ciclo Completo</h4><p>Fechar 2 diagnoses pagas. Entregar 1 projeto com escopo documentado. Converter 1 em retainer.</p><span class="rtag tm">Mês 2</span></div></div>
+    <div class="road-step"><div class="rdot dot-f">4</div><div class="rcont"><h4>Mês 3 · Receita Recorrente</h4><p>3 retainers ativos (R$3k–6k/mês). Processos documentados. Avaliar teto MEI.</p><span class="rtag tm">Mês 3</span></div></div>
+    <div class="road-step"><div class="rdot dot-f">5</div><div class="rcont"><h4>Mês 4–6 · Escala</h4><p>Contratar freelancer. Focar em vendas/gestão, não só execução.</p><span class="rtag tq">Trimestre 2</span></div></div>
+    <div class="road-step"><div class="rdot dot-f">6</div><div class="rcont"><h4>Mês 7–12 · MEI → ME</h4><p>Se projeção > R$81k/ano, migrar. Contratar contador especializado em tech.</p><span class="rtag tq">Fim do ano</span></div></div>
+  </div>
+</div>
+
+<!-- TAB: TEMPLATES -->
+<div id="tab-templates" class="tab-pane">
+  <h2 style="margin-bottom:24px;font-size:1.05rem;font-weight:700;">📄 Templates Prontos para Usar</h2>
+
+  <div class="ls" style="margin-bottom:20px;">
+    <h3>Mensagem de Prospecção (WhatsApp / LinkedIn)</h3>
+    <div class="tpl-box" id="t1">Olá [Nome], tudo bem?
+
+Vi que você tem [negócio] e lembrei de um caso parecido que resolvemos.
+
+Automatizamos o processo de [dor específica] de uma empresa similar e eles economizaram X horas por semana.
+
+Posso te mandar um resumo de como funcionou? Sem compromisso. 🙂</div>
+    <button class="copy-btn" onclick="copyTpl('t1',this)">📋 Copiar</button>
+  </div>
+
+  <div class="ls" style="margin-bottom:20px;">
+    <h3>Proposta de Diagnose (Email)</h3>
+    <div class="tpl-box" id="t2">Assunto: Diagnóstico Graventum — [Nome da Empresa]
+
+Olá [Nome],
+
+Com base na nossa conversa, preparei a proposta do diagnóstico:
+
+📋 O QUE INCLUI:
+• Mapeamento do processo atual (2h com sua equipe)
+• Identificação dos 3 maiores gargalos operacionais
+• Relatório com soluções de automação viáveis + ROI estimado
+• Apresentação dos resultados (1h)
+
+💰 INVESTIMENTO: R$[valor]
+⏱ PRAZO: 5 dias úteis após kickoff
+
+Posso enviar o contrato para assinarmos?
+
+Att,
+Robson — Graventum</div>
+    <button class="copy-btn" onclick="copyTpl('t2',this)">📋 Copiar</button>
+  </div>
+
+  <div class="ls" style="margin-bottom:20px;">
+    <h3>Update Semanal para Cliente</h3>
+    <div class="tpl-box" id="t3">📊 Update Graventum — Semana [N]
+
+Olá [Nome]!
+
+✅ O que fizemos essa semana:
+• [Entregável 1]
+• [Entregável 2]
+
+🔄 Próximos passos:
+• [Ação] — até [data]
+
+⚠️ Preciso de você:
+• [Pendência do cliente, se houver]
+
+Qualquer dúvida, estou no WhatsApp. 🚀</div>
+    <button class="copy-btn" onclick="copyTpl('t3',this)">📋 Copiar</button>
+  </div>
+
+  <div class="ls">
+    <h3>Proposta de Retainer</h3>
+    <div class="tpl-box" id="t4">Ótimo, [Nome]! Ficamos felizes com os resultados. ✅
+
+Para garantir que tudo continue funcionando e expandir as automações, temos o plano mensal:
+
+🔧 Retainer Graventum — R$[valor]/mês
+• Monitoramento dos fluxos
+• Até [X]h de ajustes e melhorias/mês
+• Suporte via WhatsApp em horário comercial
+• Novas automações com desconto
+
+Quer continuar? Preparo o contrato ainda hoje.</div>
+    <button class="copy-btn" onclick="copyTpl('t4',this)">📋 Copiar</button>
+  </div>
+</div>
+
+<script>
+const lessons = {
+  m1: {
+    title: '🎯 Módulo 1 — Conseguir & Fechar Clientes',
+    html: `
+      <div class="ls">
+        <h3>Lição 1.1 — Posicionamento & ICP (Ideal Customer Profile)</h3>
+        <p>A Graventum atende PMEs brasileiras com automação via n8n + Claude + WhatsApp. Mas nem toda PME é boa cliente. Definir o ICP evita desperdício de tempo e aumenta a taxa de fechamento.</p>
+        <div class="case-box"><div class="case-label">🔍 Caso Real — Graventum</div><p>Uma clínica odontológica com 2 consultórios, agenda manual no WhatsApp e 1 atendente sobrecarregada é um ICP excelente. Uma empresa com TI próprio e ERP customizado, não.</p></div>
+        <p>Seu ICP ideal: negócio com 5–50 funcionários, processo repetitivo manual, dono com WhatsApp ativo, sem TI interno, faturando R$30k–R$1M/mês.</p>
+        <p style="margin-top:14px;font-weight:600;color:var(--accent2);">✅ Checklist de Qualificação do Lead</p>
+        <div class="chk-item" onclick="chk(this)"><div class="chk-box"></div><div class="chk-text">Tem processo manual repetitivo que consome tempo?</div></div>
+        <div class="chk-item" onclick="chk(this)"><div class="chk-box"></div><div class="chk-text">Usa WhatsApp Business ativamente com clientes?</div></div>
+        <div class="chk-item" onclick="chk(this)"><div class="chk-box"></div><div class="chk-text">Dono/gestor toma decisão de compra diretamente?</div></div>
+        <div class="chk-item" onclick="chk(this)"><div class="chk-box"></div><div class="chk-text">Faturamento entre R$30k–R$1M/mês?</div></div>
+        <div class="chk-item" onclick="chk(this)"><div class="chk-box"></div><div class="chk-text">Dor clara e urgente (perde clientes, paga horas extras)?</div></div>
+      </div>
+      <div class="ls">
+        <h3>Lição 1.2 — Prospecção Ativa (sem cold call)</h3>
+        <p>Com a Graventum, prospecção por referência e conteúdo funciona melhor que cold call. Construa autoridade antes de abordar.</p>
+        <div class="case-box"><div class="case-label">🧪 Exercício Prático</div><p>Escolha 1 nicho (ex: clínicas). Escreva 3 posts no LinkedIn mostrando um problema do nicho + como automação resolve. Quem interage = lead quente.</p></div>
+        <p>Canais prioritários para PMEs brasileiras: LinkedIn, Instagram de negócios locais, grupos WhatsApp de associações comerciais, indicação de clientes ativos.</p>
+        <p style="margin-top:14px;font-weight:600;color:var(--accent2);">✅ Checklist de Prospecção Semanal</p>
+        <div class="chk-item" onclick="chk(this)"><div class="chk-box"></div><div class="chk-text">Publicou 2–3 conteúdos relevantes ao nicho esta semana?</div></div>
+        <div class="chk-item" onclick="chk(this)"><div class="chk-box"></div><div class="chk-text">Pediu 1 indicação para cliente ativo?</div></div>
+        <div class="chk-item" onclick="chk(this)"><div class="chk-box"></div><div class="chk-text">Tem 5+ leads qualificados no pipeline?</div></div>
+        <div class="chk-item" onclick="chk(this)"><div class="chk-box"></div><div class="chk-text">Fez follow-up nos leads que não responderam?</div></div>
+      </div>
+      <div class="ls">
+        <h3>Lição 1.3 — Roteiro de Fechamento (Diagnose → Proposta)</h3>
+        <p>O modelo da Graventum é perfeito: diagnose paga → implementação → retainer. A diagnose elimina clientes ruins e cria comprometimento logo no início.</p>
+        <div class="case-box"><div class="case-label">📋 Roteiro da Reunião de Diagnose</div><p>1. Mapeie o processo atual — pergunte, não assuma. 2. Calcule o custo da dor (horas × salário). 3. Mostre o antes/depois. 4. Proponha a diagnose paga como próximo passo — não a solução completa.</p></div>
+        <p style="font-weight:600;color:var(--accent2);margin-top:12px;">🎯 Mini-quiz</p>
+        <p style="font-size:0.84rem;color:var(--muted);margin-bottom:12px;">Um lead pede proposta imediatamente sem reunião de diagnose. O que você faz?</p>
+        <div class="qopt" onclick="quiz(this,'wrong','qm1')">Manda a proposta logo para não perder o lead</div>
+        <div class="qopt" onclick="quiz(this,'correct','qm1')">Insiste na reunião de diagnose primeiro, mesmo que gratuita</div>
+        <div class="qopt" onclick="quiz(this,'wrong','qm1')">Descarta o lead por ser difícil</div>
+        <div class="qfb" id="qm1"></div>
+      </div>
+      <button class="complete-btn" onclick="completeModule('m1')">✅ Concluir Módulo 1</button>
+    `
+  },
+  m2: {
+    title: '⚙️ Módulo 2 — Gerenciar Projetos & Entregas',
+    html: `
+      <div class="ls">
+        <h3>Lição 2.1 — Escopo Fechado (sem scope creep)</h3>
+        <p>O maior risco em automação é o "ah, e também pode fazer isso?". Escopo tem que ser documentado e confirmado por escrito antes de começar.</p>
+        <div class="case-box"><div class="case-label">⚠️ Armadilha Clássica</div><p>Cliente pediu "automatizar agendamento". Na entrega quer relatório + integração com sistema legado. Sem escopo, você trabalha de graça. Com escopo, é change request cobrado à parte.</p></div>
+        <p style="margin-top:14px;font-weight:600;color:var(--accent2);">✅ Checklist do Escopo</p>
+        <div class="chk-item" onclick="chk(this)"><div class="chk-box"></div><div class="chk-text">Processo mapeado em fluxograma (Miro, Notion ou papel)?</div></div>
+        <div class="chk-item" onclick="chk(this)"><div class="chk-box"></div><div class="chk-text">Entregáveis listados com critérios de aceite claros?</div></div>
+        <div class="chk-item" onclick="chk(this)"><div class="chk-box"></div><div class="chk-text">O que está FORA do escopo está explícito no contrato?</div></div>
+        <div class="chk-item" onclick="chk(this)"><div class="chk-box"></div><div class="chk-text">Cliente confirmou por escrito (assinatura ou WhatsApp)?</div></div>
+      </div>
+      <div class="ls">
+        <h3>Lição 2.2 — Cronograma & Comunicação</h3>
+        <p>PME dono quer sentir que o projeto está andando. Check-ins curtos (15 min) toda semana são mais efetivos que reuniões longas mensais.</p>
+        <div class="case-box"><div class="case-label">🗓 Cadência Recomendada</div><p>Semana 1: kick-off + validação do mapa. Semana 2–3: desenvolvimento + demo parcial. Semana 4: homologação + treinamento. Mês 2+: retainer com suporte contínuo.</p></div>
+        <div class="chk-item" onclick="chk(this)"><div class="chk-box"></div><div class="chk-text">Cronograma simples enviado antes de começar?</div></div>
+        <div class="chk-item" onclick="chk(this)"><div class="chk-box"></div><div class="chk-text">Update semanal enviado (3 linhas no WhatsApp já resolvem)?</div></div>
+        <div class="chk-item" onclick="chk(this)"><div class="chk-box"></div><div class="chk-text">Demo parcial feita antes da entrega final?</div></div>
+      </div>
+      <div class="ls">
+        <h3>Lição 2.3 — Entrega & Transição para Retainer</h3>
+        <p>A entrega é o momento ideal para converter em retainer. Mostre dados: horas economizadas, processos automatizados, ROI real. Números vendem mais que qualquer argumento.</p>
+        <p style="font-weight:600;color:var(--accent2);margin-top:12px;">🎯 Mini-quiz</p>
+        <p style="font-size:0.84rem;color:var(--muted);margin-bottom:12px;">Qual o melhor momento para propor o retainer?</p>
+        <div class="qopt" onclick="quiz(this,'wrong','qm2')">Antes de começar o projeto</div>
+        <div class="qopt" onclick="quiz(this,'correct','qm2')">Na reunião de entrega, quando o cliente vê o resultado</div>
+        <div class="qopt" onclick="quiz(this,'wrong','qm2')">Depois de 3 meses sem contato</div>
+        <div class="qfb" id="qm2"></div>
+      </div>
+      <button class="complete-btn" onclick="completeModule('m2')">✅ Concluir Módulo 2</button>
+    `
+  },
+  m3: {
+    title: '💰 Módulo 3 — Finanças & Precificação',
+    html: `
+      <div class="ls">
+        <h3>Lição 3.1 — Precificação: Valor vs. Hora</h3>
+        <p>Nunca venda hora. Venda resultado. "Automatizo seu agendamento, você economiza 40h/mês de atendente = R$1.600/mês. Cobro R$3.000 de implementação." O ROI é claro em 2 meses.</p>
+        <div class="case-box"><div class="case-label">💡 Tabela de Referência Graventum</div><p>Diagnose: R$500–1.500 · Implementação simples (1–2 fluxos): R$2k–5k · Implementação complexa: R$6k–15k · Retainer mensal: R$800–2.500</p></div>
+        <div class="chk-item" onclick="chk(this)"><div class="chk-box"></div><div class="chk-text">Sempre calcula ROI para o cliente antes de propor preço?</div></div>
+        <div class="chk-item" onclick="chk(this)"><div class="chk-box"></div><div class="chk-text">Tem tabela de preços mínimos interna (não compartilhada)?</div></div>
+        <div class="chk-item" onclick="chk(this)"><div class="chk-box"></div><div class="chk-text">Cobra diagnose para filtrar leads sérios?</div></div>
+      </div>
+      <div class="ls">
+        <h3>Lição 3.2 — Controle de Caixa MEI</h3>
+        <p>Como MEI você tem limite de R$81k/ano de faturamento. Com retainers crescendo, esse teto chega rápido — planeje a migração para ME antes de atingi-lo.</p>
+        <div class="case-box"><div class="case-label">📊 Métricas Essenciais para Monitorar</div><p>MRR (receita recorrente mensal), ticket médio por projeto, taxa de conversão diagnose → implementação, churn de retainer. Com 5 retainers de R$1k você já tem R$5k/mês recorrente.</p></div>
+        <div class="chk-item" onclick="chk(this)"><div class="chk-box"></div><div class="chk-text">Tem planilha ou app de controle de entradas/saídas?</div></div>
+        <div class="chk-item" onclick="chk(this)"><div class="chk-box"></div><div class="chk-text">DAS MEI pago em dia todo mês?</div></div>
+        <div class="chk-item" onclick="chk(this)"><div class="chk-box"></div><div class="chk-text">Sabe quanto faturou e quanto falta para o teto anual?</div></div>
+        <div class="chk-item" onclick="chk(this)"><div class="chk-box"></div><div class="chk-text">Tem reserva de emergência (3 meses de custos)?</div></div>
+      </div>
+      <div class="ls">
+        <h3>Lição 3.3 — Crescimento: de MEI para ME</h3>
+        <p>O planejamento de expansão é crítico. O teto MEI (R$81k/ano = ~R$6.750/mês) chega rápido quando os retainers começam a acumular.</p>
+        <p style="font-weight:600;color:var(--accent2);margin-top:12px;">🎯 Mini-quiz</p>
+        <p style="font-size:0.84rem;color:var(--muted);margin-bottom:12px;">Você tem 4 retainers de R$2k/mês + 1 projeto de R$8k fechado. Qual sua situação?</p>
+        <div class="qopt" onclick="quiz(this,'correct','qm3')">Próximo do teto MEI — planejar migração para ME ainda esse ano</div>
+        <div class="qopt" onclick="quiz(this,'wrong','qm3')">Tranquilo, ainda tem muito espaço no teto</div>
+        <div class="qopt" onclick="quiz(this,'wrong','qm3')">Só migro quando ultrapassar o teto</div>
+        <div class="qfb" id="qm3"></div>
+      </div>
+      <button class="complete-btn" onclick="completeModule('m3')">✅ Concluir Módulo 3</button>
+    `
+  }
+};
+
+const completed = {};
+
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-pane').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+function openLesson(id) {
+  document.getElementById('overview').style.display = 'none';
+  const lv = document.getElementById('lessonView');
+  lv.style.display = 'block';
+  document.getElementById('lessonTitle').textContent = lessons[id].title;
+  document.getElementById('lessonContent').innerHTML = lessons[id].html;
+  lv.dataset.current = id;
+}
+
+function closeLesson() {
+  document.getElementById('lessonView').style.display = 'none';
+  document.getElementById('overview').style.display = 'block';
+}
+
+function chk(el) {
+  const box = el.querySelector('.chk-box');
+  const txt = el.querySelector('.chk-text');
+  const on = box.classList.toggle('on');
+  box.textContent = on ? '✓' : '';
+  txt.classList.toggle('done', on);
+}
+
+const qExplain = {
+  qm1: { ok: 'A reunião de diagnose protege você de escopo vago e filtra clientes sérios.', ko: 'Sem diagnose, você corre risco de proposta errada e cliente difícil de gerenciar.' },
+  qm2: { ok: 'O cliente está no pico de satisfação ao ver os resultados — esse é o momento certo.', ko: 'O timing certo é na entrega, quando o valor está visível e a confiança está alta.' },
+  qm3: { ok: '4×R$2k×12 = R$96k + R$8k projeto = R$104k/ano, bem acima do teto MEI de R$81k.', ko: 'Calcule: 4 retainers × 12 meses + projetos eventuais. Você ultrapassa o teto facilmente.' }
+};
+
+function quiz(el, type, qid) {
+  el.parentElement.querySelectorAll('.qopt').forEach(o => { o.style.pointerEvents = 'none'; o.classList.remove('correct','wrong'); });
+  el.classList.add(type === 'correct' ? 'correct' : 'wrong');
+  const fb = document.getElementById(qid);
+  fb.classList.add('show', type === 'correct' ? 'ok' : 'ko');
+  const ex = qExplain[qid];
+  fb.textContent = type === 'correct' ? '✅ Correto! ' + ex.ok : '❌ Não exatamente. ' + ex.ko;
+}
+
+function completeModule(id) {
+  if (!completed[id]) {
+    completed[id] = true;
+    document.getElementById('card-' + id).classList.add('done');
+    const btn = document.getElementById('btn-' + id);
+    btn.textContent = '✅ Concluído';
+    btn.classList.add('btn-done-style');
+    const total = Object.keys(completed).length * 3;
+    document.getElementById('statDone').textContent = total;
+    document.getElementById('progLabel').textContent = total + ' de 9 lições concluídas';
+    document.getElementById('progBar').style.width = (total / 9 * 100) + '%';
+  }
+  closeLesson();
+}
+
+function copyTpl(id, btn) {
+  navigator.clipboard.writeText(document.getElementById(id).textContent).then(() => {
+    btn.textContent = '✅ Copiado!';
+    setTimeout(() => btn.textContent = '📋 Copiar', 2000);
+  });
+}
+</script>
+</body>
+</html>

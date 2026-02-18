@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Graventum Server — Mapa de Organização</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c10;
+    --bg2: #0f1218;
+    --bg3: #141820;
+    --border: #1c2230;
+    --border2: #253040;
+    --text: #b8c8dc;
+    --text2: #6a7f96;
+    --text3: #3a4f62;
+    --accent: #00d4ff;
+    --green: #00e676;
+    --yellow: #ffca28;
+    --red: #ff5252;
+    --orange: #ff9800;
+    --purple: #b388ff;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* grid bg */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.025) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .header h1 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .header p {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .server-badge {
+    background: rgba(0,212,255,0.08);
+    border: 1px solid rgba(0,212,255,0.25);
+    padding: 8px 16px;
+    font-size: 12px;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .online-dot {
+    width: 7px; height: 7px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: blink 2s ease-in-out infinite;
+  }
+
+  @keyframes blink { 0%,100%{opacity:1}50%{opacity:.3} }
+
+  /* ── LEGEND ── */
+  .legend {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+    padding: 14px 20px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+  }
+
+  .leg-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--text2);
+  }
+
+  .leg-dot {
+    width: 10px; height: 10px;
+    border-radius: 2px;
+  }
+
+  .ld-keep    { background: var(--green); }
+  .ld-move    { background: var(--accent); }
+  .ld-archive { background: var(--yellow); }
+  .ld-delete  { background: var(--red); }
+  .ld-create  { background: var(--purple); opacity: 0.7; border: 1px dashed var(--purple); }
+  .ld-system  { background: var(--text3); }
+
+  /* ── MAIN GRID ── */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 60px 1fr;
+    gap: 0;
+    align-items: start;
+  }
+
+  @media (max-width: 900px) {
+    .main-grid {
+      grid-template-columns: 1fr;
+    }
+    .arrow-col { display: none; }
+  }
+
+  /* ── COLUMN HEADERS ── */
+  .col-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-bottom: 2px solid;
+    margin-bottom: 0;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .col-header.current { border-color: var(--red); color: var(--red); background: rgba(255,82,82,0.05); }
+  .col-header.target  { border-color: var(--green); color: var(--green); background: rgba(0,230,118,0.05); }
+
+  /* ── TREE PANEL ── */
+  .tree-panel {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-top: none;
+    min-height: 600px;
+  }
+
+  /* ── TREE ITEMS ── */
+  .tree-section {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tree-section-label {
+    padding: 8px 16px;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text3);
+    background: var(--bg3);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tree-item {
+    display: grid;
+    grid-template-columns: 20px 20px 1fr auto;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px 5px 16px;
+    font-size: 12px;
+    cursor: default;
+    transition: background 0.15s;
+    border-bottom: 1px solid rgba(28,34,48,0.5);
+  }
+
+  .tree-item:hover { background: rgba(0,212,255,0.03); }
+
+  .tree-item .icon { font-size: 13px; line-height: 1; }
+
+  .tree-item .name {
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .tree-item .name.dim { color: var(--text3); }
+
+  .badge {
+    font-size: 9px;
+    padding: 1px 7px;
+    border-radius: 2px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .b-keep    { background: rgba(0,230,118,0.12); color: var(--green); border: 1px solid rgba(0,230,118,0.3); }
+  .b-move    { background: rgba(0,212,255,0.12); color: var(--accent); border: 1px solid rgba(0,212,255,0.3); }
+  .b-archive { background: rgba(255,202,40,0.12); color: var(--yellow); border: 1px solid rgba(255,202,40,0.3); }
+  .b-delete  { background: rgba(255,82,82,0.12); color: var(--red); border: 1px solid rgba(255,82,82,0.3); }
+  .b-system  { background: rgba(58,79,98,0.3); color: var(--text3); border: 1px solid var(--border2); }
+  .b-new     { background: rgba(179,136,255,0.12); color: var(--purple); border: 1px dashed rgba(179,136,255,0.4); }
+
+  /* ── ARROW COL ── */
+  .arrow-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 80px;
+    gap: 4px;
+  }
+
+  .arrow-line {
+    width: 2px;
+    height: 24px;
+    background: var(--border2);
+  }
+
+  .arrow-head {
+    font-size: 20px;
+    color: var(--accent);
+  }
+
+  .arrow-label {
+    font-size: 9px;
+    color: var(--text3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    writing-mode: vertical-rl;
+    margin-top: 8px;
+  }
+
+  /* ── TARGET TREE — structured ── */
+  .dir-group {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dir-row {
+    display: grid;
+    grid-template-columns: 20px 20px 1fr auto;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 12px 7px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.15s;
+    background: rgba(0,212,255,0.03);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dir-row:hover { background: rgba(0,212,255,0.06); }
+
+  .dir-row .purpose {
+    font-size: 10px;
+    color: var(--text3);
+    font-weight: 400;
+    margin-left: 4px;
+  }
+
+  .dir-children {
+    padding-left: 20px;
+  }
+
+  .dir-children .tree-item {
+    padding-left: 12px;
+  }
+
+  .indent2 { padding-left: 40px; }
+
+  /* ── COMMANDS ── */
+  .commands-section {
+    margin-top: 40px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+  }
+
+  .cmd-header {
+    padding: 12px 20px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg3);
+  }
+
+  .cmd-block {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .cmd-block + .cmd-block {
+    border-top: 1px solid var(--border);
+  }
+
+  .cmd-comment {
+    font-size: 11px;
+    color: var(--text3);
+  }
+
+  .cmd-line {
+    font-size: 12px;
+    color: var(--green);
+    padding: 2px 0;
+  }
+
+  .cmd-line::before {
+    content: '$ ';
+    color: var(--text3);
+  }
+
+  .cmd-section-title {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--yellow);
+    padding: 12px 20px 4px;
+    border-top: 1px solid var(--border);
+    background: rgba(255,202,40,0.03);
+  }
+
+  /* ── SUMMARY BOXES ── */
+  .summary-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 40px;
+  }
+
+  @media (max-width: 800px) { .summary-row { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 500px) { .summary-row { grid-template-columns: 1fr; } }
+
+  .sum-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 20px;
+    text-align: center;
+  }
+
+  .sum-box .num {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .sum-box .lbl {
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .sum-box.keep   { border-top: 2px solid var(--green); }
+  .sum-box.keep .num { color: var(--green); }
+  .sum-box.move   { border-top: 2px solid var(--accent); }
+  .sum-box.move .num { color: var(--accent); }
+  .sum-box.archive{ border-top: 2px solid var(--yellow); }
+  .sum-box.archive .num { color: var(--yellow); }
+  .sum-box.del    { border-top: 2px solid var(--red); }
+  .sum-box.del .num { color: var(--red); }
+
+  /* inline note */
+  .note {
+    font-size: 10px;
+    color: var(--text3);
+    font-style: italic;
+    padding-left: 40px;
+    margin: 2px 0 4px;
+  }
+
+  .chevron { color: var(--text3); font-size: 10px; }
+
+  .tree-item .indent { display: inline-block; width: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div>
+      <h1>Graventum — Server Organization Map</h1>
+      <p>46.225.79.76 · Ubuntu 24.04 · Estado atual vs. estrutura proposta</p>
+    </div>
+    <div class="server-badge">
+      <div class="online-dot"></div>
+      SSH: 46.225.79.76
+    </div>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <div class="leg-item"><div class="leg-dot ld-keep"></div>Manter no lugar</div>
+    <div class="leg-item"><div class="leg-dot ld-move"></div>Mover / reorganizar</div>
+    <div class="leg-item"><div class="leg-dot ld-archive"></div>Arquivar (zip + mover)</div>
+    <div class="leg-item"><div class="leg-dot ld-delete"></div>Deletar (lixo / duplicata)</div>
+    <div class="leg-item"><div class="leg-dot ld-create"></div>Criar (não existe ainda)</div>
+    <div class="leg-item"><div class="leg-dot ld-system"></div>Sistema (não mexer)</div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="summary-row">
+    <div class="sum-box keep"><div class="num">9</div><div class="lbl">manter</div></div>
+    <div class="sum-box move"><div class="num">6</div><div class="lbl">mover / renomear</div></div>
+    <div class="sum-box archive"><div class="num">4</div><div class="lbl">arquivar</div></div>
+    <div class="sum-box del"><div class="num">8</div><div class="lbl">deletar / limpar</div></div>
+  </div>
+
+  <div style="height:32px"></div>
+
+  <!-- MAIN 3-COL -->
+  <div class="main-grid">
+
+    <!-- ══ COLUNA ESQUERDA — ESTADO ATUAL ══ -->
+    <div>
+      <div class="col-header current">
+        <span>✗</span> Estado Atual — /root/
+      </div>
+      <div class="tree-panel">
+
+        <!-- Sistema -->
+        <div class="tree-section">
+          <div class="tree-section-label">🔒 Diretórios do Sistema (não mexer)</div>
+          <div class="tree-item"><span class="icon">📁</span><span></span><span class="name dim">.bun</span><span class="badge b-system">sistema</span></div>
+          <div class="tree-item"><span class="icon">📁</span><span></span><span class="name dim">.cache</span><span class="badge b-system">sistema</span></div>
+          <div class="tree-item"><span class="icon">📁</span><span></span><span class="name dim">.config</span><span class="badge b-system">sistema</span></div>
+          <div class="tree-item"><span class="icon">📁</span><span></span><span class="name dim">.cursor / .cursor-server</span><span class="badge b-system">sistema</span></div>
+          <div class="tree-item"><span class="icon">📁</span><span></span><span class="name dim">.dotnet / .keras</span><span class="badge b-system">sistema</span></div>
+          <div class="tree-item"><span class="icon">📁</span><span></span><span class="name dim">.gnupg / .pki / .ssh</span><span class="badge b-system">sistema</span></div>
+          <div class="tree-item"><span class="icon">📁</span><span></span><span class="name dim">.local / .npm / .nvm</span><span class="badge b-system">sistema</span></div>
+          <div class="tree-item"><span class="icon">📁</span><span></span><span class="name dim">.vscode-server</span><span class="badge b-system">sistema</span></div>
+          <div class="tree-item"><span class="icon">📄</span><span></span><span class="name dim">.bashrc / .profile / etc</span><span class="badge b-system">sistema</span></div>
+        </div>
+
+        <!-- Ferramentas runtime -->
+        <div class="tree-section">
+          <div class="tree-section-label">⚙️ Ferramentas de Runtime (manter)</div>
+          <div class="tree-item"><span class="icon">📁</span><span></span><span class="name">.openclaw</span><span class="badge b-keep">manter</span></div>
+          <div class="note">Gateway OpenClaw — mantém no lugar</div>
+          <div class="tree-item"><span class="icon">📁</span><span></span><span class="name">.pm2</span><span class="badge b-keep">manter</span></div>
+          <div class="note">PM2 process manager — não mexer</div>
+          <div class="tree-item"><span class="icon">📁</span><span></span><span class="name">n8n-data</span><span class="badge b-keep">manter</span></div>
+          <div class="note">Volume de dados do n8n Docker</div>
+          <div class="tree-item"><span class="icon">📁</span><span></span><span class="name">backups</span><span class="badge b-keep">manter</span></div>
+          <div class="note">Manter aqui, organizar internamente</div>
+          <div class="tree-item"><span class="icon">📁</span><span></span><span class="name">scripts</span><span class="badge b-keep">manter</span></div>
+          <div class="note">Scripts utilitários de manutenção</div>
+          <div class="tree-item"><span class="icon">🐋</span><span></span><span class="name">docker-compose.yml</span><span class="badge b-keep">manter</span></div>
+          <div class="tree-item"><span class="icon">📄</span><span></span><span class="name">.env</span><span class="badge b-keep">manter</span></div>
+        </div>
+
+        <!-- Projetos duplicados / confusos -->
+        <div class="tree-section">
+          <div class="tree-section-label">⚠️ Projetos — Duplicados e Desorganizados</div>
+          <div class="tree-item"><span class="icon">📁</span><span></span><span class="name">graventum-api</span><span class="badge b-keep">manter</span></div>
+          <div class="note">API principal — é a versão canônica</div>
+          <div class="tree-item"><span class="icon">📁</span><span></span><span class="name" style="color:var(--yellow)">graventum-api-push</span><span class="badge b-archive">arquivar</span></div>
+          <div class="note">Versão experimental de push — arquivar</div>
+          <div class="tree-item"><span class="icon">📁</span><span></span><span class="name" style="color:var(--yellow)">graventum_api_briefing</span><span class="badge b-archive">arquivar</span></div>
+          <div class="note">Experimento de briefing — mesclar ou arquivar</div>
+          <div class="tree-item"><span class="icon">📁</span><span></span><span class="name">briefing-api</span><span class="badge b-move">mover</span></div>
+          <div class="note">→ mover para /projects/briefing-api/</div>
+          <div class="tree-item"><span class="icon">📦</span><span></span><span class="name" style="color:var(--red)">briefing-api.zip</span><span class="badge b-delete">deletar</span></div>
+          <div class="note">Zip solto na raiz — lixo</div>
+          <div class="tree-item"><span class="icon">📁</span><span></span><span class="name">docs-merge</span><span class="badge b-move">mover</span></div>
+          <div class="note">→ /archive/docs-merge/</div>
+          <div class="tree-item"><span class="icon">📁</span><span></span><span class="name">gitbook-export</span><span class="badge b-move">mover</span></div>
+          <div class="note">→ /archive/gitbook-export/</div>
+          <div class="tree-item"><span class="icon">📁</span><span></span><span class="name dim">wf</span><span class="badge b-archive">arquivar</span></div>
+          <div class="note">Pasta ambígua — identificar e arquivar</div>
+        </div>
+
+        <!-- Lixo na raiz -->
+        <div class="tree-section">
+          <div class="tree-section-label">🗑️ Lixo na Raiz — Remover</div>
+          <div class="tree-item"><span class="icon">📄</span><span></span><span class="name" style="color:var(--red)">helix-config.json</span><span class="badge b-delete">deletar</span></div>
+          <div class="tree-item"><span class="icon">📄</span><span></span><span class="name" style="color:var(--red)">helix-final.json</span><span class="badge b-delete">deletar</span></div>
+          <div class="tree-item"><span class="icon">📄</span><span></span><span class="name" style="color:var(--red)">helix-http.json</span><span class="badge b-delete">deletar</span></div>
+          <div class="tree-item"><span class="icon">📄</span><span></span><span class="name" style="color:var(--red)">helix-limpo.json</span><span class="badge b-delete">deletar</span></div>
+          <div class="tree-item"><span class="icon">📄</span><span></span><span class="name" style="color:var(--red)">helix-link.json</span><span class="badge b-delete">deletar</span></div>
+          <div class="tree-item"><span class="icon">📄</span><span></span><span class="name" style="color:var(--red)">helix-ok.json</span><span class="badge b-delete">deletar</span></div>
+          <div class="tree-item"><span class="icon">📄</span><span></span><span class="name" style="color:var(--red)">helix-simple.json</span><span class="badge b-delete">deletar</span></div>
+          <div class="tree-item"><span class="icon">📄</span><span></span><span class="name" style="color:var(--red)">helix-v2.json</span><span class="badge b-delete">deletar</span></div>
+          <div class="note">8 arquivos helix-*.json — versões de teste do OpenClaw → mover para .openclaw/ ou deletar</div>
+          <div class="tree-item"><span class="icon">📄</span><span></span><span class="name" style="color:var(--yellow)">MIGRACAO_GITBOOK.md</span><span class="badge b-archive">arquivar</span></div>
+          <div class="tree-item"><span class="icon">📄</span><span></span><span class="name" style="color:var(--yellow)">README-PROJETO.md</span><span class="badge b-move">mover</span></div>
+          <div class="note">→ /root/README.md (renomear como visão geral do servidor)</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══ CENTRO — SETA ══ -->
+    <div class="arrow-col">
+      <div class="arrow-line" style="height:60px"></div>
+      <div class="arrow-head">→</div>
+      <div class="arrow-label">REORGANIZAR</div>
+    </div>
+
+    <!-- ══ COLUNA DIREITA — ESTRUTURA PROPOSTA ══ -->
+    <div>
+      <div class="col-header target">
+        <span>✓</span> Estrutura Proposta — /root/
+      </div>
+      <div class="tree-panel">
+
+        <!-- Sistema (mantido) -->
+        <div class="tree-section">
+          <div class="tree-section-label">🔒 Sistema — Inalterado</div>
+          <div class="tree-item"><span class="icon">📁</span><span></span><span class="name dim">.bun .cache .config .cursor* .dotnet .gnupg .keras .local .npm .nvm .pki .ssh .vscode-server</span><span class="badge b-system">intocável</span></div>
+          <div class="tree-item"><span class="icon">📄</span><span></span><span class="name dim">.bashrc .profile .bash_history .env .wget-hsts</span><span class="badge b-system">intocável</span></div>
+        </div>
+
+        <!-- Runtime -->
+        <div class="tree-section">
+          <div class="tree-section-label">⚡ Runtime — Graventum Core</div>
+          <div class="tree-item"><span class="icon">📁</span><span></span><span class="name">.openclaw</span><span class="badge b-keep">ok</span></div>
+          <div class="note">← helix-ok.json movido para cá como referência</div>
+          <div class="tree-item"><span class="icon">📁</span><span></span><span class="name">.pm2</span><span class="badge b-keep">ok</span></div>
+          <div class="tree-item"><span class="icon">📁</span><span></span><span class="name">n8n-data</span><span class="badge b-keep">ok</span></div>
+          <div class="tree-item"><span class="icon">🐋</span><span></span><span class="name">docker-compose.yml</span><span class="badge b-keep">ok</span></div>
+          <div class="tree-item"><span class="icon">📄</span><span></span><span class="name">.env</span><span class="badge b-keep">ok</span></div>
+          <div class="tree-item"><span class="icon">📄</span><span></span><span class="name">README.md</span><span class="badge b-new">criar</span></div>
+          <div class="note">Visão geral do servidor: o que roda, portas, domínios</div>
+        </div>
+
+        <!-- /projects -->
+        <div class="tree-section">
+          <div class="tree-section-label">🚀 /projects — Código Ativo</div>
+
+          <div class="dir-group">
+            <div class="dir-row">
+              <span class="icon">📁</span><span></span>
+              <span>projects/ <span class="purpose">→ todo código ativo aqui</span></span>
+              <span class="badge b-new">criar pasta</span>
+            </div>
+            <div class="dir-children">
+              <div class="tree-item"><span class="icon">📁</span><span></span><span class="name">graventum-api/</span><span class="badge b-keep">manter</span></div>
+              <div class="note">API principal — mover de /root/graventum-api/</div>
+              <div class="tree-item"><span class="icon">📁</span><span></span><span class="name">briefing-api/</span><span class="badge b-move">mover</span></div>
+              <div class="note">De /root/briefing-api/</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- /clients -->
+        <div class="tree-section">
+          <div class="tree-section-label">👥 /clients — Configurações por Cliente</div>
+
+          <div class="dir-group">
+            <div class="dir-row">
+              <span class="icon">📁</span><span></span>
+              <span>clients/ <span class="purpose">→ configs e dados por tenant</span></span>
+              <span class="badge b-new">criar pasta</span>
+            </div>
+            <div class="dir-children">
+              <div class="tree-item"><span class="icon">📁</span><span></span><span class="name">imobiliaria-abc/</span><span class="badge b-new">criar</span></div>
+              <div class="tree-item"><span class="icon">📁</span><span></span><span class="name">clinica-saude/</span><span class="badge b-new">criar</span></div>
+              <div class="tree-item"><span class="icon">📁</span><span></span><span class="name">turismo-xyz/</span><span class="badge b-new">criar</span></div>
+              <div class="tree-item"><span class="icon">📁</span><span></span><span class="name">contabil-prime/</span><span class="badge b-new">criar</span></div>
+              <div class="note">Cada pasta: .env.client, config.json, cron-jobs</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- /scripts -->
+        <div class="tree-section">
+          <div class="tree-section-label">🔧 /scripts — Manutenção</div>
+          <div class="tree-item"><span class="icon">📁</span><span></span><span class="name">scripts/</span><span class="badge b-keep">manter</span></div>
+          <div class="dir-children" style="padding-left:20px">
+            <div class="tree-item"><span class="icon">📄</span><span></span><span class="name">backup.sh</span><span class="badge b-keep">ok</span></div>
+            <div class="tree-item"><span class="icon">📄</span><span></span><span class="name">deploy.sh</span><span class="badge b-new">criar</span></div>
+            <div class="tree-item"><span class="icon">📄</span><span></span><span class="name">health-check.sh</span><span class="badge b-new">criar</span></div>
+            <div class="tree-item"><span class="icon">📄</span><span></span><span class="name">new-client.sh</span><span class="badge b-new">criar</span></div>
+            <div class="note">Script de onboarding de novo cliente</div>
+          </div>
+        </div>
+
+        <!-- /backups -->
+        <div class="tree-section">
+          <div class="tree-section-label">💾 /backups — Organizado</div>
+          <div class="tree-item"><span class="icon">📁</span><span></span><span class="name">backups/</span><span class="badge b-keep">manter</span></div>
+          <div class="dir-children" style="padding-left:20px">
+            <div class="tree-item"><span class="icon">📁</span><span></span><span class="name">daily/</span><span class="badge b-keep">ok</span></div>
+            <div class="tree-item"><span class="icon">📁</span><span></span><span class="name">n8n/</span><span class="badge b-new">criar</span></div>
+            <div class="tree-item"><span class="icon">📁</span><span></span><span class="name">db/</span><span class="badge b-new">criar</span></div>
+          </div>
+        </div>
+
+        <!-- /archive -->
+        <div class="tree-section">
+          <div class="tree-section-label">📦 /archive — Histórico (não excluir)</div>
+
+          <div class="dir-group">
+            <div class="dir-row">
+              <span class="icon">📁</span><span></span>
+              <span>archive/ <span class="purpose">→ projetos encerrados</span></span>
+              <span class="badge b-new">criar pasta</span>
+            </div>
+            <div class="dir-children">
+              <div class="tree-item"><span class="icon">📁</span><span></span><span class="name">graventum-api-push/</span><span class="badge b-archive">mover</span></div>
+              <div class="tree-item"><span class="icon">📁</span><span></span><span class="name">graventum_api_briefing/</span><span class="badge b-archive">mover</span></div>
+              <div class="tree-item"><span class="icon">📁</span><span></span><span class="name">docs-merge/</span><span class="badge b-archive">mover</span></div>
+              <div class="tree-item"><span class="icon">📁</span><span></span><span class="name">gitbook-export/</span><span class="badge b-archive">mover</span></div>
+              <div class="tree-item"><span class="icon">📁</span><span></span><span class="name">wf/</span><span class="badge b-archive">mover</span></div>
+              <div class="tree-item"><span class="icon">📄</span><span></span><span class="name">MIGRACAO_GITBOOK.md</span><span class="badge b-archive">mover</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- COMANDOS -->
+  <div class="commands-section">
+    <div class="cmd-header">// COMANDOS PARA EXECUTAR — copie e rode em ordem via SSH</div>
+
+    <div class="cmd-section-title">FASE 1 — Criar estrutura de pastas</div>
+    <div class="cmd-block">
+      <div class="cmd-comment"># Criar pastas principais</div>
+      <div class="cmd-line">mkdir -p /root/projects /root/clients /root/archive</div>
+      <div class="cmd-comment"># Criar subpastas de clientes</div>
+      <div class="cmd-line">mkdir -p /root/clients/{imobiliaria-abc,clinica-saude,turismo-xyz,contabil-prime}</div>
+      <div class="cmd-comment"># Organizar backups</div>
+      <div class="cmd-line">mkdir -p /root/backups/{daily,n8n,db}</div>
+      <div class="cmd-comment"># Organizar scripts</div>
+      <div class="cmd-line">touch /root/scripts/{deploy.sh,health-check.sh,new-client.sh}</div>
+    </div>
+
+    <div class="cmd-section-title">FASE 2 — Mover projetos ativos</div>
+    <div class="cmd-block">
+      <div class="cmd-comment"># Mover APIs ativas para /projects/</div>
+      <div class="cmd-line">mv /root/graventum-api /root/projects/graventum-api</div>
+      <div class="cmd-line">mv /root/briefing-api /root/projects/briefing-api</div>
+    </div>
+
+    <div class="cmd-section-title">FASE 3 — Arquivar projetos antigos</div>
+    <div class="cmd-block">
+      <div class="cmd-comment"># Mover projetos encerrados para /archive/</div>
+      <div class="cmd-line">mv /root/graventum-api-push /root/archive/</div>
+      <div class="cmd-line">mv /root/graventum_api_briefing /root/archive/</div>
+      <div class="cmd-line">mv /root/docs-merge /root/archive/</div>
+      <div class="cmd-line">mv /root/gitbook-export /root/archive/</div>
+      <div class="cmd-line">mv /root/wf /root/archive/</div>
+      <div class="cmd-line">mv /root/MIGRACAO_GITBOOK.md /root/archive/</div>
+      <div class="cmd-line">mv /root/README-PROJETO.md /root/README.md</div>
+    </div>
+
+    <div class="cmd-section-title">FASE 4 — Limpar lixo da raiz</div>
+    <div class="cmd-block">
+      <div class="cmd-comment"># Mover helix JSONs para .openclaw como referência (não deletar ainda)</div>
+      <div class="cmd-line">mkdir -p /root/.openclaw/configs-history</div>
+      <div class="cmd-line">mv /root/helix-*.json /root/.openclaw/configs-history/</div>
+      <div class="cmd-comment"># Deletar zip solto</div>
+      <div class="cmd-line">rm /root/briefing-api.zip</div>
+    </div>
+
+    <div class="cmd-section-title">FASE 5 — Atualizar PM2 se API foi movida</div>
+    <div class="cmd-block">
+      <div class="cmd-comment"># Se o PM2 referencia o path antigo, atualizar ecosystem</div>
+      <div class="cmd-line">pm2 list</div>
+      <div class="cmd-comment"># Se necessário, editar o path em ecosystem.config.js e restartar</div>
+      <div class="cmd-line">pm2 restart all</div>
+      <div class="cmd-line">pm2 save</div>
+    </div>
+
+    <div class="cmd-section-title">VERIFICAÇÃO FINAL</div>
+    <div class="cmd-block">
+      <div class="cmd-comment"># Ver estrutura final (2 níveis)</div>
+      <div class="cmd-line">find /root -maxdepth 2 -not -path '*/\.*' -type d | sort</div>
+      <div class="cmd-comment"># Confirmar PM2 rodando</div>
+      <div class="cmd-line">pm2 status</div>
+      <div class="cmd-comment"># Confirmar n8n respondendo</div>
+      <div class="cmd-line">curl -s http://localhost:5678/healthz | head -c 100</div>
+    </div>
+  </div>
+
+  <!-- FOOTER NOTE -->
+  <div style="margin-top:32px;padding:16px 20px;background:rgba(255,202,40,0.05);border:1px solid rgba(255,202,40,0.2);font-size:12px;color:var(--yellow)">
+    ⚠️ ATENÇÃO — Antes de executar a Fase 2 (mover projetos ativos): verifique o ecosystem.config.js do PM2 e o docker-compose.yml para confirmar os paths referenciados. Mover pastas sem atualizar paths quebra os serviços.
+  </div>
+
+</div>
+</body>
+</html>

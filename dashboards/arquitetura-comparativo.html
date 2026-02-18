@@ -1,0 +1,2161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Graventum — Comparativo de Arquiteturas</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0d12;
+    --bg2: #0f1319;
+    --bg3: #141920;
+    --border: #1e2530;
+    --border2: #2a3444;
+    --text: #c8d4e8;
+    --text2: #7a8fa8;
+    --text3: #4a5a6e;
+    --accent: #00d4ff;
+    --accent2: #0099cc;
+    --green: #00e676;
+    --green2: #00c853;
+    --yellow: #ffca28;
+    --red: #ff5252;
+    --orange: #ff9800;
+    --purple: #b388ff;
+    --c1: #7c4dff;
+    --c2: #00bcd4;
+    --c3: #ff6d00;
+    --chybrid: #00e676;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* Scanline overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,212,255,0.015) 2px,
+      rgba(0,212,255,0.015) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* Grid background */
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── HEADER ── */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 32px 0 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .logo-box {
+    width: 48px; height: 48px;
+    border: 2px solid var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--accent);
+    position: relative;
+    animation: pulse-border 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse-border {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0,212,255,0.3); }
+    50% { box-shadow: 0 0 0 8px rgba(0,212,255,0); }
+  }
+
+  .logo-text h1 {
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.5px;
+  }
+
+  .logo-text p {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .header-meta {
+    text-align: right;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    line-height: 1.8;
+  }
+
+  .header-meta span {
+    color: var(--accent);
+  }
+
+  /* ── NAV TABS ── */
+  .nav-tabs {
+    display: flex;
+    gap: 2px;
+    padding: 24px 0 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav-tabs::-webkit-scrollbar { display: none; }
+
+  .tab-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-bottom: none;
+    color: var(--text2);
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 10px 18px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .tab-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+  .tab-btn.active {
+    background: var(--bg2);
+    border-color: var(--accent);
+    color: var(--accent);
+    position: relative;
+  }
+
+  .tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0; right: 0;
+    height: 1px;
+    background: var(--bg2);
+  }
+
+  /* ── SECTION ── */
+  .section {
+    display: none;
+    padding: 32px 0 64px;
+    border-top: 1px solid var(--border);
+  }
+
+  .section.active { display: block; animation: fadein 0.3s ease; }
+
+  @keyframes fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── SECTION TITLE ── */
+  .section-title {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text3);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .section-heading {
+    font-family: var(--mono);
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 32px;
+    line-height: 1.2;
+  }
+
+  /* ── 2 COL COMPARE ── */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .compare-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+
+  @media (max-width: 900px) {
+    .compare-grid, .compare-grid.three { grid-template-columns: 1fr; }
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+
+  .card.opt1::before { background: var(--c1); }
+  .card.opt2::before { background: var(--c2); }
+  .card.hybrid::before { background: var(--chybrid); }
+  .card.neutral::before { background: var(--border2); }
+
+  .card-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-label .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .opt1 .dot { background: var(--c1); }
+  .opt2 .dot { background: var(--c2); }
+  .hybrid .dot { background: var(--chybrid); }
+
+  .card h3 {
+    font-family: var(--mono);
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+
+  .card p, .card li {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  .card ul { list-style: none; padding: 0; }
+  .card ul li { padding: 4px 0; display: flex; gap: 8px; align-items: flex-start; }
+  .card ul li::before { content: '→'; color: var(--text3); flex-shrink: 0; font-family: var(--mono); }
+
+  /* ── ARCHITECTURE DIAGRAMS ── */
+  .arch-diagram {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 32px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .arch-diagram::before {
+    content: attr(data-label);
+    position: absolute;
+    top: 12px; right: 16px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .arch-title {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .arch-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* VPS boxes */
+  .vps-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  @media (max-width: 900px) { .vps-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 500px) { .vps-grid { grid-template-columns: 1fr; } }
+
+  .vps-box {
+    border: 1px solid;
+    padding: 16px;
+    position: relative;
+  }
+
+  .vps-box.c1 { border-color: var(--c1); background: rgba(124,77,255,0.06); }
+  .vps-box.c2 { border-color: var(--c2); background: rgba(0,188,212,0.06); }
+  .vps-box.c3 { border-color: var(--c3); background: rgba(255,109,0,0.06); }
+  .vps-box.c4 { border-color: var(--chybrid); background: rgba(0,230,118,0.06); }
+
+  .vps-header {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .vps-box.c1 .vps-header { color: var(--c1); }
+  .vps-box.c2 .vps-header { color: var(--c2); }
+  .vps-box.c3 .vps-header { color: var(--c3); }
+  .vps-box.c4 .vps-header { color: var(--chybrid); }
+
+  .service-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text2);
+  }
+
+  .service-icon { font-size: 13px; }
+
+  .cost-badge {
+    display: inline-block;
+    background: rgba(255,202,40,0.1);
+    border: 1px solid rgba(255,202,40,0.3);
+    color: var(--yellow);
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    margin-top: 12px;
+  }
+
+  /* Single server */
+  .single-server {
+    border: 2px solid var(--accent);
+    padding: 24px;
+    position: relative;
+    background: rgba(0,212,255,0.03);
+  }
+
+  .single-server-label {
+    position: absolute;
+    top: -10px; left: 16px;
+    background: var(--bg3);
+    padding: 0 8px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .tenant-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  @media (max-width: 900px) { .tenant-row { grid-template-columns: 1fr 1fr; } }
+
+  .tenant-folder {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 12px;
+    position: relative;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+
+  .tenant-folder:hover { border-color: var(--accent); }
+
+  .tenant-folder.c1 { border-left: 3px solid var(--c1); }
+  .tenant-folder.c2 { border-left: 3px solid var(--c2); }
+  .tenant-folder.c3 { border-left: 3px solid var(--c3); }
+  .tenant-folder.c4 { border-left: 3px solid var(--chybrid); }
+
+  .folder-name {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .tenant-folder.c1 .folder-name { color: var(--c1); }
+  .tenant-folder.c2 .folder-name { color: var(--c2); }
+  .tenant-folder.c3 .folder-name { color: var(--c3); }
+  .tenant-folder.c4 .folder-name { color: var(--chybrid); }
+
+  .folder-services {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    line-height: 1.8;
+  }
+
+  .shared-layer {
+    background: rgba(0,212,255,0.04);
+    border: 1px dashed var(--border2);
+    padding: 16px;
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  @media (max-width: 700px) { .shared-layer { grid-template-columns: 1fr; } }
+
+  .shared-item {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .shared-item .si-icon {
+    width: 28px; height: 28px;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  /* ── FLOW ── */
+  .flow-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .flow-step {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 0;
+    position: relative;
+  }
+
+  .flow-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 23px;
+    top: 48px;
+    bottom: 0;
+    width: 2px;
+    background: var(--border);
+  }
+
+  .step-num {
+    width: 48px; height: 48px;
+    border: 2px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text3);
+    background: var(--bg3);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    transition: all 0.2s;
+  }
+
+  .flow-step:hover .step-num {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .step-content {
+    padding: 12px 0 24px 20px;
+  }
+
+  .step-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .step-title {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+
+  .step-desc {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+
+  .step-code {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    margin-top: 8px;
+    display: inline-block;
+  }
+
+  /* ── MATRIX ── */
+  .matrix-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+
+  .matrix-table th {
+    background: var(--bg3);
+    color: var(--text2);
+    font-weight: 500;
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 2px solid var(--border);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 11px;
+  }
+
+  .matrix-table th:nth-child(2) { color: var(--c1); }
+  .matrix-table th:nth-child(3) { color: var(--c2); }
+  .matrix-table th:nth-child(4) { color: var(--chybrid); }
+
+  .matrix-table td {
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: top;
+  }
+
+  .matrix-table tr:hover td { background: rgba(0,212,255,0.03); }
+
+  .matrix-table td:first-child {
+    color: var(--text2);
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 2px;
+  }
+
+  .badge.good { background: rgba(0,230,118,0.1); color: var(--green); border: 1px solid rgba(0,230,118,0.25); }
+  .badge.warn { background: rgba(255,202,40,0.1); color: var(--yellow); border: 1px solid rgba(255,202,40,0.25); }
+  .badge.bad  { background: rgba(255,82,82,0.1);  color: var(--red);   border: 1px solid rgba(255,82,82,0.25); }
+  .badge.mid  { background: rgba(255,152,0,0.1);  color: var(--orange); border: 1px solid rgba(255,152,0,0.25); }
+
+  /* ── COST CALCULATOR ── */
+  .cost-section {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+
+  .cost-header {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .cost-slider-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+
+  .cost-slider-row label {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text2);
+    white-space: nowrap;
+  }
+
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 200px;
+    height: 4px;
+    background: var(--border2);
+    outline: none;
+    cursor: pointer;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px; height: 16px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+
+  .cost-display {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 40px;
+  }
+
+  .cost-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 700px) { .cost-compare { grid-template-columns: 1fr; } }
+
+  .cost-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 20px;
+    text-align: center;
+  }
+
+  .cost-box.opt1 { border-top: 2px solid var(--c1); }
+  .cost-box.opt2 { border-top: 2px solid var(--c2); }
+  .cost-box.hybrid { border-top: 2px solid var(--chybrid); }
+
+  .cost-value {
+    font-family: var(--mono);
+    font-size: 28px;
+    font-weight: 700;
+    margin: 12px 0 4px;
+  }
+
+  .cost-box.opt1 .cost-value { color: var(--c1); }
+  .cost-box.opt2 .cost-value { color: var(--c2); }
+  .cost-box.hybrid .cost-value { color: var(--chybrid); }
+
+  .cost-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .cost-breakdown {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    line-height: 2;
+    text-align: left;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+    margin-top: 12px;
+  }
+
+  .cost-margin {
+    font-family: var(--mono);
+    font-size: 11px;
+    margin-top: 8px;
+    padding: 4px 8px;
+    background: rgba(0,0,0,0.3);
+  }
+
+  /* ── SIMULTANEOUS EXECUTION ── */
+  .exec-container {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 32px;
+    position: relative;
+  }
+
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .timeline-row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .timeline-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .timeline-bar-container {
+    height: 32px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: visible;
+  }
+
+  .timeline-bar {
+    position: absolute;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    font-family: var(--mono);
+    font-size: 9px;
+    white-space: nowrap;
+    opacity: 0;
+    animation: barslide 0.6s ease forwards;
+  }
+
+  @keyframes barslide {
+    from { opacity: 0; transform: scaleX(0); transform-origin: left; }
+    to   { opacity: 1; transform: scaleX(1); transform-origin: left; }
+  }
+
+  .tb1 { background: rgba(124,77,255,0.5); color: #fff; left: 0%; width: 35%; animation-delay: 0.1s; }
+  .tb1b { background: rgba(124,77,255,0.2); color: var(--c1); left: 35%; width: 45%; animation-delay: 0.3s; font-style: italic; }
+  .tb1c { background: rgba(124,77,255,0.5); color: #fff; left: 80%; width: 20%; animation-delay: 0.7s; }
+
+  .tb2 { background: rgba(0,188,212,0.5); color: #fff; left: 10%; width: 25%; animation-delay: 0.2s; }
+  .tb2b { background: rgba(0,188,212,0.2); color: var(--c2); left: 35%; width: 30%; animation-delay: 0.4s; font-style: italic; }
+  .tb2c { background: rgba(0,188,212,0.5); color: #fff; left: 65%; width: 25%; animation-delay: 0.8s; }
+
+  .tb3 { background: rgba(255,109,0,0.5); color: #fff; left: 5%; width: 20%; animation-delay: 0.15s; }
+  .tb3b { background: rgba(255,109,0,0.2); color: var(--c3); left: 25%; width: 55%; animation-delay: 0.5s; font-style: italic; }
+  .tb3c { background: rgba(255,109,0,0.5); color: #fff; left: 80%; width: 18%; animation-delay: 0.9s; }
+
+  .tb4 { background: rgba(0,230,118,0.5); color: #fff; left: 15%; width: 30%; animation-delay: 0.25s; }
+  .tb4b { background: rgba(0,230,118,0.2); color: var(--chybrid); left: 45%; width: 25%; animation-delay: 0.6s; font-style: italic; }
+  .tb4c { background: rgba(0,230,118,0.5); color: #fff; left: 70%; width: 22%; animation-delay: 1s; }
+
+  .timeline-time {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text3);
+    margin-left: 156px;
+  }
+
+  /* ── ISOLATION VISUAL ── */
+  .isolation-visual {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-top: 24px;
+  }
+
+  @media (max-width: 700px) { .isolation-visual { grid-template-columns: 1fr; } }
+
+  .isolation-box {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 24px;
+  }
+
+  .isolation-title {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text2);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .layer-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .layer-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    background: var(--bg2);
+    font-family: var(--mono);
+    font-size: 11px;
+    transition: all 0.2s;
+  }
+
+  .layer-item:hover { border-color: var(--accent); transform: translateX(4px); }
+
+  .layer-type {
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    min-width: 80px;
+  }
+
+  .layer-desc { color: var(--text2); }
+
+  .layer-status {
+    margin-left: auto;
+    font-size: 10px;
+  }
+
+  .layer-status.physical { color: var(--green); }
+  .layer-status.logical  { color: var(--yellow); }
+  .layer-status.none     { color: var(--red); }
+
+  /* ── RECOMMENDATION ── */
+  .rec-box {
+    background: linear-gradient(135deg, rgba(0,230,118,0.05), rgba(0,212,255,0.05));
+    border: 1px solid rgba(0,230,118,0.3);
+    padding: 32px;
+    position: relative;
+    margin-top: 24px;
+  }
+
+  .rec-box::before {
+    content: '// RECOMENDAÇÃO TÉCNICA';
+    position: absolute;
+    top: -10px; left: 20px;
+    background: var(--bg);
+    padding: 0 10px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--chybrid);
+    letter-spacing: 2px;
+  }
+
+  .rec-title {
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+
+  .rec-title span { color: var(--chybrid); }
+
+  .decision-tree {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .decision-node {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 16px;
+    align-items: center;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 14px 18px;
+  }
+
+  .decision-q {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text2);
+  }
+
+  .decision-a {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border: 1px solid;
+    white-space: nowrap;
+  }
+
+  .decision-a.tier1 { color: var(--c2); border-color: rgba(0,188,212,0.5); background: rgba(0,188,212,0.08); }
+  .decision-a.tier2 { color: var(--c1); border-color: rgba(124,77,255,0.5); background: rgba(124,77,255,0.08); }
+
+  .q-icon {
+    width: 28px; height: 28px;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  footer p {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 1px;
+  }
+
+  footer span { color: var(--accent); }
+
+  /* ── INLINE CODE ── */
+  code {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    color: var(--accent);
+  }
+
+  /* ── HIGHLIGHT BLOCK ── */
+  .highlight {
+    background: rgba(0,212,255,0.05);
+    border-left: 3px solid var(--accent);
+    padding: 12px 16px;
+    margin: 16px 0;
+    font-size: 14px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  .highlight.green { border-color: var(--green); background: rgba(0,230,118,0.05); }
+  .highlight.yellow { border-color: var(--yellow); background: rgba(255,202,40,0.05); }
+  .highlight.red { border-color: var(--red); background: rgba(255,82,82,0.05); }
+
+  /* ── PROS CONS ── */
+  .pros-cons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  @media (max-width: 600px) { .pros-cons { grid-template-columns: 1fr; } }
+
+  .pros, .cons {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 16px;
+  }
+
+  .pros { border-top: 2px solid var(--green); }
+  .cons { border-top: 2px solid var(--red); }
+
+  .pros-title, .cons-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .pros-title { color: var(--green); }
+  .cons-title { color: var(--red); }
+
+  .pros li, .cons li {
+    font-size: 13px;
+    color: var(--text);
+    padding: 5px 0;
+    display: flex;
+    gap: 8px;
+  }
+
+  .pros li::before { content: '+'; color: var(--green); font-family: var(--mono); font-weight: 700; }
+  .cons li::before { content: '−'; color: var(--red); font-family: var(--mono); font-weight: 700; }
+
+  /* STATUS BAR */
+  .status-bar {
+    display: flex;
+    gap: 24px;
+    padding: 12px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
+    overflow-x: auto;
+  }
+
+  .status-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    white-space: nowrap;
+  }
+
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    animation: blink 2s ease-in-out infinite;
+  }
+
+  .status-dot.green { background: var(--green); }
+  .status-dot.yellow { background: var(--yellow); }
+
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  .tag {
+    display: inline-block;
+    border: 1px solid var(--border2);
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    padding: 2px 8px;
+    letter-spacing: 1px;
+  }
+
+  /* Spacer */
+  .spacer { height: 24px; }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<header>
+  <div class="container">
+    <div class="header-inner">
+      <div class="logo-area">
+        <div class="logo-box">G</div>
+        <div class="logo-text">
+          <h1>Graventum</h1>
+          <p>Architecture Decision Record</p>
+        </div>
+      </div>
+      <div class="header-meta">
+        <div>DOC <span>ADR-001</span></div>
+        <div>VERSION <span>1.0.0</span></div>
+        <div>DATE <span>FEV 2026</span></div>
+        <div>STATUS <span>ACTIVE</span></div>
+      </div>
+    </div>
+
+    <nav class="nav-tabs" id="nav">
+      <button class="tab-btn active" onclick="switchTab('visao')">01 · Visão Geral</button>
+      <button class="tab-btn" onclick="switchTab('arquitetura')">02 · Arquitetura</button>
+      <button class="tab-btn" onclick="switchTab('fluxo')">03 · Fluxo End-to-End</button>
+      <button class="tab-btn" onclick="switchTab('simultaneo')">04 · Execução Simultânea</button>
+      <button class="tab-btn" onclick="switchTab('isolamento')">05 · Isolamento de Dados</button>
+      <button class="tab-btn" onclick="switchTab('custos')">06 · Custos</button>
+      <button class="tab-btn" onclick="switchTab('matrix')">07 · Comparativo</button>
+      <button class="tab-btn" onclick="switchTab('hibrido')">08 · Modelo Híbrido</button>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+
+<!-- ═══════════════════════════════════════════════════
+     01 · VISÃO GERAL
+══════════════════════════════════════════════════════ -->
+<section id="visao" class="section active">
+  <div class="section-title">01 · Visão Geral</div>
+  <div class="section-heading">Duas arquiteturas.<br>Uma decisão.</div>
+
+  <div class="status-bar">
+    <div class="status-item"><div class="status-dot green"></div>Opção 1 — Servidor Dedicado por Cliente</div>
+    <div class="status-item"><div class="status-dot green"></div>Opção 2 — Servidor Único Multi-Tenant</div>
+    <div class="status-item"><div class="status-dot yellow"></div>Modelo Híbrido — Recomendado</div>
+  </div>
+
+  <div class="highlight">
+    A pergunta real não é "qual é mais segura?" — ambas podem ter isolamento completo.<br>
+    A pergunta é: <strong>qual oferece o melhor equilíbrio entre custo operacional, complexidade de manutenção e escala para seu modelo de negócio?</strong>
+  </div>
+
+  <div class="compare-grid">
+    <div class="card opt1">
+      <div class="card-label"><span class="dot"></span>Opção 1</div>
+      <h3>Servidor Dedicado<br>por Cliente</h3>
+      <p>Cada cliente tem seu próprio VPS com stack completa: n8n, API, banco, Evolution API. Infraestrutura completamente isolada no nível físico.</p>
+      <div class="pros-cons">
+        <div class="pros">
+          <div class="pros-title">Vantagens</div>
+          <ul>
+            <li>Isolamento físico total</li>
+            <li>Falha não afeta outros</li>
+            <li>Compliance simplificado</li>
+            <li>Cliente pode auditar próprio servidor</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <div class="cons-title">Problemas</div>
+          <ul>
+            <li>Custo cresce linearmente</li>
+            <li>10 clientes = 10 servidores</li>
+            <li>Manutenção multiplicada</li>
+            <li>Bug fix replicado N vezes</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card opt2">
+      <div class="card-label"><span class="dot"></span>Opção 2</div>
+      <h3>Servidor Único Graventum<br>Multi-Tenant</h3>
+      <p>Um único servidor executa todos os clientes com isolamento lógico: folders n8n separados, RLS no banco, credenciais isoladas, instâncias Evolution por cliente.</p>
+      <div class="pros-cons">
+        <div class="pros">
+          <div class="pros-title">Vantagens</div>
+          <ul>
+            <li>Custo fixo para N clientes</li>
+            <li>1 update aplica para todos</li>
+            <li>Onboarding em 30 minutos</li>
+            <li>Operação centralizada</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <div class="cons-title">Problemas</div>
+          <ul>
+            <li>Isolamento lógico (não físico)</li>
+            <li>Single point of failure</li>
+            <li>Recursos compartilhados</li>
+            <li>Compliance mais complexo</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card hybrid">
+    <div class="card-label"><span class="dot"></span>Modelo Recomendado</div>
+    <h3>Híbrido: Servidor Único como base + VPS dedicado para clientes premium</h3>
+    <p>95% dos clientes ficam no servidor Graventum (custo-eficiente). Clientes que exigem compliance específico, dados de saúde ou isolamento contratual ganham VPS dedicado — cobrado como upgrade no retainer. Você cresce sem explodir o custo operacional.</p>
+    <div class="highlight green" style="margin-top:16px">
+      Resultado: R$160/mês de infra fixa para os primeiros 8–10 clientes. VPS adicional apenas quando o retainer justifica (+R$80/mês para cliente premium a R$3.500+/mês).
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     02 · ARQUITETURA TÉCNICA
+══════════════════════════════════════════════════════ -->
+<section id="arquitetura" class="section">
+  <div class="section-title">02 · Arquitetura Técnica</div>
+  <div class="section-heading">Como cada opção<br>é montada fisicamente.</div>
+
+  <!-- OPÇÃO 1 -->
+  <div class="arch-diagram" data-label="OPÇÃO 1 — SERVIDOR DEDICADO">
+    <div class="arch-title">📦 Opção 1 — 4 VPS independentes para 4 clientes</div>
+
+    <div class="highlight yellow">
+      Cada VPS é um computador separado na nuvem. O que roda em um não interfere fisicamente no outro. Mas você precisa gerenciar 4 computadores separados.
+    </div>
+
+    <div class="vps-grid">
+      <div class="vps-box c1">
+        <div class="vps-header">🏠 VPS #1 · Imobiliária ABC</div>
+        <div class="service-row"><span class="service-icon">🔄</span>n8n :5678</div>
+        <div class="service-row"><span class="service-icon">⚙️</span>API Express :3000</div>
+        <div class="service-row"><span class="service-icon">🗄️</span>PostgreSQL :5432</div>
+        <div class="service-row"><span class="service-icon">📱</span>Evolution API :8080</div>
+        <div class="service-row"><span class="service-icon">🌐</span>nginx :443</div>
+        <div class="cost-badge">Hetzner CX21 · ~R$80/mês</div>
+      </div>
+
+      <div class="vps-box c2">
+        <div class="vps-header">🏥 VPS #2 · Clínica Saúde+</div>
+        <div class="service-row"><span class="service-icon">🔄</span>n8n :5678</div>
+        <div class="service-row"><span class="service-icon">⚙️</span>API Express :3000</div>
+        <div class="service-row"><span class="service-icon">🗄️</span>PostgreSQL :5432</div>
+        <div class="service-row"><span class="service-icon">📱</span>Evolution API :8080</div>
+        <div class="service-row"><span class="service-icon">🌐</span>nginx :443</div>
+        <div class="cost-badge">Hetzner CX21 · ~R$80/mês</div>
+      </div>
+
+      <div class="vps-box c3">
+        <div class="vps-header">✈️ VPS #3 · Turismo XYZ</div>
+        <div class="service-row"><span class="service-icon">🔄</span>n8n :5678</div>
+        <div class="service-row"><span class="service-icon">⚙️</span>API Express :3000</div>
+        <div class="service-row"><span class="service-icon">🗄️</span>PostgreSQL :5432</div>
+        <div class="service-row"><span class="service-icon">📱</span>Evolution API :8080</div>
+        <div class="service-row"><span class="service-icon">🌐</span>nginx :443</div>
+        <div class="cost-badge">Hetzner CX21 · ~R$80/mês</div>
+      </div>
+
+      <div class="vps-box c4">
+        <div class="vps-header">📊 VPS #4 · Contábil Prime</div>
+        <div class="service-row"><span class="service-icon">🔄</span>n8n :5678</div>
+        <div class="service-row"><span class="service-icon">⚙️</span>API Express :3000</div>
+        <div class="service-row"><span class="service-icon">🗄️</span>PostgreSQL :5432</div>
+        <div class="service-row"><span class="service-icon">📱</span>Evolution API :8080</div>
+        <div class="service-row"><span class="service-icon">🌐</span>nginx :443</div>
+        <div class="cost-badge">Hetzner CX21 · ~R$80/mês</div>
+      </div>
+    </div>
+
+    <div class="highlight red" style="margin-top:20px">
+      Adicionar o 5º cliente = provisionar 1 novo VPS do zero (~4h de setup). Ao 10º cliente: 10 servidores para monitorar, atualizar e manter.
+    </div>
+  </div>
+
+  <!-- OPÇÃO 2 -->
+  <div class="arch-diagram" data-label="OPÇÃO 2 — SERVIDOR ÚNICO">
+    <div class="arch-title">🏢 Opção 2 — 1 servidor, 4 projetos lógicos isolados</div>
+
+    <div class="highlight green">
+      Um único servidor executa tudo. A separação acontece dentro da aplicação: folders n8n, org_id no banco (com RLS), instâncias Evolution separadas. Adicionar cliente = criar folder + credenciais (~30 min).
+    </div>
+
+    <div class="single-server">
+      <div class="single-server-label">⚡ Servidor Graventum · 46.225.79.76 · Hetzner CX31 · R$160/mês</div>
+
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:16px 0 8px;font-family:var(--mono);font-size:10px;color:var(--text3);">
+        <div>nginx :443 (gateway único)</div>
+        <div>n8n :5678 (processo único)</div>
+        <div>API :3000 (processo único)</div>
+        <div>Evolution :8080 (process único)</div>
+      </div>
+
+      <div class="tenant-row">
+        <div class="tenant-folder c1">
+          <div class="folder-name">📁 imobiliaria-abc</div>
+          <div class="folder-services">
+            Workflows: lead-capture<br>
+            Workflows: qualification<br>
+            Workflows: follow-up<br>
+            Credenciais: WhatsApp #1<br>
+            Credenciais: Drive pasta A<br>
+            <span style="color:var(--c1)">org_id: imob-abc-001</span>
+          </div>
+        </div>
+
+        <div class="tenant-folder c2">
+          <div class="folder-name">📁 clinica-saude</div>
+          <div class="folder-services">
+            Workflows: agendamento<br>
+            Workflows: lembrete-48h<br>
+            Workflows: pos-consulta<br>
+            Credenciais: WhatsApp #2<br>
+            Credenciais: Calendar API<br>
+            <span style="color:var(--c2)">org_id: clinica-001</span>
+          </div>
+        </div>
+
+        <div class="tenant-folder c3">
+          <div class="folder-name">📁 turismo-xyz</div>
+          <div class="folder-services">
+            Workflows: cotacao-bot<br>
+            Workflows: follow-up<br>
+            Workflows: pos-venda<br>
+            Credenciais: WhatsApp #3<br>
+            Credenciais: Drive pasta C<br>
+            <span style="color:var(--c3)">org_id: turismo-001</span>
+          </div>
+        </div>
+
+        <div class="tenant-folder c4">
+          <div class="folder-name">📁 contabil-prime</div>
+          <div class="folder-services">
+            Workflows: doc-classifier<br>
+            Workflows: alertas-fiscais<br>
+            Workflows: report-mensal<br>
+            Credenciais: WhatsApp #4<br>
+            Credenciais: Drive pasta D<br>
+            <span style="color:var(--chybrid)">org_id: contabil-001</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin:8px 0 4px">
+        // CAMADAS COMPARTILHADAS — isolamento via RLS e contexto
+      </div>
+      <div class="shared-layer">
+        <div class="shared-item">
+          <div class="si-icon">🗄️</div>
+          <div>Supabase PostgreSQL<br><span style="color:var(--text3);font-size:10px">RLS por org_id</span></div>
+        </div>
+        <div class="shared-item">
+          <div class="si-icon">🤖</div>
+          <div>Claude API<br><span style="color:var(--text3);font-size:10px">Contexto isolado por chamada</span></div>
+        </div>
+        <div class="shared-item">
+          <div class="si-icon">📱</div>
+          <div>Evolution API (4 instâncias)<br><span style="color:var(--text3);font-size:10px">Número separado por cliente</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight green" style="margin-top:16px">
+      Adicionar o 5º cliente: criar folder no n8n, registrar credenciais, configurar org_id no Supabase. ~30 minutos. O servidor já existe.
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     03 · FLUXO END-TO-END
+══════════════════════════════════════════════════════ -->
+<section id="fluxo" class="section">
+  <div class="section-title">03 · Fluxo End-to-End</div>
+  <div class="section-heading">O que acontece desde<br>o WhatsApp do cliente até o banco.</div>
+
+  <div class="compare-grid">
+    <!-- OPÇÃO 1 FLOW -->
+    <div>
+      <div class="card-label" style="margin-bottom:16px"><span class="dot" style="background:var(--c1)"></span>Opção 1 — Fluxo no Servidor Dedicado</div>
+
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="step-num">01</div>
+          <div class="step-content">
+            <div class="step-label">Entrada</div>
+            <div class="step-title">Lead envia WhatsApp para imobiliária</div>
+            <div class="step-desc">Mensagem chega na instância Evolution do VPS #1. Apenas esse servidor recebe o evento.</div>
+            <div class="step-code">VPS #1: 45.123.10.01:8080/webhook</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-num">02</div>
+          <div class="step-content">
+            <div class="step-label">Roteamento</div>
+            <div class="step-title">nginx do VPS #1 encaminha para n8n local</div>
+            <div class="step-desc">O nginx no mesmo servidor redireciona para n8n rodando em localhost. Tudo acontece dentro do mesmo VPS.</div>
+            <div class="step-code">localhost:5678/webhook/lead-capture</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-num">03</div>
+          <div class="step-content">
+            <div class="step-label">Processamento</div>
+            <div class="step-title">n8n executa workflow de qualificação</div>
+            <div class="step-desc">O n8n do VPS #1 roda o workflow. Faz chamada para Claude API com system prompt da imobiliária.</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-num">04</div>
+          <div class="step-content">
+            <div class="step-label">Persistência</div>
+            <div class="step-title">Salva lead no PostgreSQL local</div>
+            <div class="step-desc">O banco está no mesmo VPS. Sem necessidade de autenticação externa. Sem RLS necessário — banco é exclusivo.</div>
+            <div class="step-code">localhost:5432/db_imobiliaria</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-num">05</div>
+          <div class="step-content">
+            <div class="step-label">Resposta</div>
+            <div class="step-title">Evolution API envia resposta ao lead</div>
+            <div class="step-desc">n8n chama Evolution local. Mensagem sai pelo número da imobiliária. Ciclo completo em um servidor.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="highlight yellow" style="margin-top:16px">
+        Se o VPS #1 cair, apenas a imobiliária é afetada. Os outros 3 clientes continuam funcionando normalmente.
+      </div>
+    </div>
+
+    <!-- OPÇÃO 2 FLOW -->
+    <div>
+      <div class="card-label" style="margin-bottom:16px"><span class="dot" style="background:var(--c2)"></span>Opção 2 — Fluxo no Servidor Único</div>
+
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="step-num">01</div>
+          <div class="step-content">
+            <div class="step-label">Entrada</div>
+            <div class="step-title">Lead envia WhatsApp para imobiliária</div>
+            <div class="step-desc">Mensagem chega na instância Evolution "imobiliaria-abc" rodando no servidor Graventum. O número é único por cliente.</div>
+            <div class="step-code">graventum:8080/instance/imobiliaria-abc</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-num">02</div>
+          <div class="step-content">
+            <div class="step-label">Roteamento</div>
+            <div class="step-title">nginx central encaminha para n8n com prefixo de tenant</div>
+            <div class="step-desc">O webhook tem o org_id na URL. n8n roteia para o folder correto do cliente.</div>
+            <div class="step-code">/webhook/imob-abc-001/lead-capture</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-num">03</div>
+          <div class="step-content">
+            <div class="step-label">Validação de Tenant</div>
+            <div class="step-title">Primeiro nó valida org_id do payload</div>
+            <div class="step-desc">Garante que o dado pertence ao tenant esperado. Se org_id divergir: workflow para, erro logado.</div>
+            <div class="step-code">assert payload.org_id === 'imob-abc-001'</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-num">04</div>
+          <div class="step-content">
+            <div class="step-label">Persistência Isolada</div>
+            <div class="step-title">Supabase com RLS ativo antes de qualquer query</div>
+            <div class="step-desc">n8n seta o tenant na sessão PostgreSQL. RLS força WHERE org_id em toda query automaticamente. Dado de outro cliente é invisível.</div>
+            <div class="step-code">SET LOCAL app.current_tenant = 'imob-abc-001'</div>
+          </div>
+        </div>
+
+        <div class="flow-step">
+          <div class="step-num">05</div>
+          <div class="step-content">
+            <div class="step-label">Resposta</div>
+            <div class="step-title">Evolution envia pela instância correta</div>
+            <div class="step-desc">n8n usa a credencial "WhatsApp — Imobiliária ABC". Impossível usar credencial de outro cliente por limitação do n8n Credentials Store.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="highlight red" style="margin-top:16px">
+        Se o servidor Graventum cair, todos os 4 clientes são afetados. Mitigação: PM2 com restart automático, backups diários, restore em novo VPS em ~30 min.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     04 · EXECUÇÃO SIMULTÂNEA
+══════════════════════════════════════════════════════ -->
+<section id="simultaneo" class="section">
+  <div class="section-title">04 · Execução Simultânea</div>
+  <div class="section-heading">Como 4 clientes são processados<br>ao mesmo tempo.</div>
+
+  <div class="highlight">
+    Esta seção é a mais importante para entender a Opção 2. Muita gente imagina que um único servidor "atende um de cada vez". Não é assim. Veja como funciona.
+  </div>
+
+  <div class="exec-container">
+    <div class="arch-title">🧠 Como o Node.js / n8n processa eventos em paralelo</div>
+
+    <div class="compare-grid">
+      <div>
+        <div style="font-family:var(--mono);font-size:12px;color:var(--text2);margin-bottom:12px">
+          O n8n usa <strong style="color:#fff">Node.js</strong>, que tem um Event Loop assíncrono.<br>
+          Isso significa: <strong style="color:#fff">não precisa terminar A para começar B.</strong>
+        </div>
+
+        <div class="flow-steps">
+          <div class="flow-step">
+            <div class="step-num" style="font-size:10px">t=0</div>
+            <div class="step-content">
+              <div class="step-title">Lead da Imobiliária chega</div>
+              <div class="step-desc">n8n inicia Execução #1. Manda request para Claude API e <strong>não espera</strong> — passa para o próximo evento.</div>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="step-num" style="font-size:10px">t=50</div>
+            <div class="step-content">
+              <div class="step-title">Paciente da Clínica quer agendar</div>
+              <div class="step-desc">n8n inicia Execução #2 enquanto #1 ainda aguarda resposta do Claude. Faz query no Supabase e não espera.</div>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="step-num" style="font-size:10px">t=500</div>
+            <div class="step-content">
+              <div class="step-title">Claude responde para #1</div>
+              <div class="step-desc">Event Loop retoma a Execução #1, processa a resposta, envia WhatsApp. #2 e #3 também recebem suas respostas.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--text3);margin-bottom:12px">
+          // ANALOGIA: garçom vs. cozinheiro
+        </div>
+        <div class="highlight">
+          <strong>Garçom (Event Loop):</strong> Anota pedido da Mesa 1, leva para cozinha, já vai anotar pedido da Mesa 2. Não fica parado esperando a cozinha terminar.<br><br>
+          <strong>Cozinha (I/O assíncrono):</strong> Claude API, Supabase, Evolution — trabalham em paralelo. Quando ficam prontos, avisam o garçom.<br><br>
+          Resultado: um processo único serve 4 mesas ao mesmo tempo.
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:32px">
+      <div style="font-family:var(--mono);font-size:11px;color:var(--text3);margin-bottom:16px">
+        // TIMELINE — 4 workflows rodando ao mesmo tempo · cada barra = uma fase do workflow
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-row">
+          <div class="timeline-label" style="color:var(--c1)">🏠 imob-abc</div>
+          <div class="timeline-bar-container">
+            <div class="timeline-bar tb1">Processa payload</div>
+            <div class="timeline-bar tb1b">⏳ aguarda Claude API...</div>
+            <div class="timeline-bar tb1c">Envia WhatsApp</div>
+          </div>
+        </div>
+
+        <div class="timeline-row">
+          <div class="timeline-label" style="color:var(--c2)">🏥 clinica</div>
+          <div class="timeline-bar-container">
+            <div class="timeline-bar tb2">Valida tenant</div>
+            <div class="timeline-bar tb2b">⏳ aguarda Supabase...</div>
+            <div class="timeline-bar tb2c">Confirma agendamento</div>
+          </div>
+        </div>
+
+        <div class="timeline-row">
+          <div class="timeline-label" style="color:var(--c3)">✈️ turismo</div>
+          <div class="timeline-bar-container">
+            <div class="timeline-bar tb3">Parse briefing</div>
+            <div class="timeline-bar tb3b">⏳ aguarda Claude API (geração de proposta)...</div>
+            <div class="timeline-bar tb3c">Envia cotação</div>
+          </div>
+        </div>
+
+        <div class="timeline-row">
+          <div class="timeline-label" style="color:var(--chybrid)">📊 contábil</div>
+          <div class="timeline-bar-container">
+            <div class="timeline-bar tb4">Classifica doc</div>
+            <div class="timeline-bar tb4b">⏳ aguarda Drive API...</div>
+            <div class="timeline-bar tb4c">Notifica cliente</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-time">
+        <span>0ms</span><span>200ms</span><span>400ms</span><span>600ms</span><span>800ms</span><span>1000ms+</span>
+      </div>
+
+      <div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:8px">
+        // As barras pontilhadas são tempo aguardando I/O externo (Claude, Supabase, Evolution). Durante esse tempo, o servidor atende outros eventos. Não há bloqueio.
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+
+    <div style="font-family:var(--mono);font-size:12px;color:var(--text2);margin-bottom:16px">
+      // LIMITES PRÁTICOS — quando o servidor começa a sobrecarregar
+    </div>
+
+    <div class="compare-grid three">
+      <div class="card neutral">
+        <h3 style="font-size:14px">CX21 · 2 vCPU / 4GB</h3>
+        <p style="font-size:12px">Até ~5 clientes leves ou 2–3 com alto volume. Seu ponto de partida ideal se quiser economizar no início.</p>
+        <div class="cost-badge">~R$45/mês</div>
+      </div>
+      <div class="card neutral" style="border-color:var(--accent)">
+        <h3 style="font-size:14px">CX31 · 2 vCPU / 8GB ← Você tem</h3>
+        <p style="font-size:12px">Até ~12 clientes leves ou 5–8 clientes com volume moderado. Confortável para a meta de 5–8 clientes.</p>
+        <div class="cost-badge">~R$80/mês</div>
+      </div>
+      <div class="card neutral">
+        <h3 style="font-size:14px">CX41 · 4 vCPU / 16GB</h3>
+        <p style="font-size:12px">Até ~25 clientes leves ou 10–15 com volume moderado. Fase de escala quando seu servidor atual saturar.</p>
+        <div class="cost-badge">~R$160/mês</div>
+      </div>
+    </div>
+
+    <div class="highlight yellow" style="margin-top:16px">
+      Sinais para fazer upgrade: CPU constantemente acima de 70%, RAM acima de 80%, latência de resposta passando de 2 segundos. Hoje, com 0–5 clientes, seu CX31 está ~20% utilizado.
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     05 · ISOLAMENTO DE DADOS
+══════════════════════════════════════════════════════ -->
+<section id="isolamento" class="section">
+  <div class="section-title">05 · Isolamento de Dados</div>
+  <div class="section-heading">Como os dados de A<br>jamais chegam em B.</div>
+
+  <div class="highlight">
+    Isolamento <strong>físico</strong> (Opção 1) = servidores separados. Impossível misturar por hardware. Mais caro.<br>
+    Isolamento <strong>lógico</strong> (Opção 2) = mesmo servidor, barreiras em software. Correto quando implementado. Mais barato.
+  </div>
+
+  <div class="isolation-visual">
+    <div class="isolation-box">
+      <div class="isolation-title">
+        <span style="color:var(--c1)">●</span>
+        Opção 1 — Camadas de Isolamento
+      </div>
+      <div class="layer-stack">
+        <div class="layer-item">
+          <div class="layer-type">Rede</div>
+          <div class="layer-desc">IPs diferentes por servidor — sem comunicação física</div>
+          <div class="layer-status physical">FÍSICO</div>
+        </div>
+        <div class="layer-item">
+          <div class="layer-type">Sistema</div>
+          <div class="layer-desc">Processos completamente separados por OS</div>
+          <div class="layer-status physical">FÍSICO</div>
+        </div>
+        <div class="layer-item">
+          <div class="layer-type">Banco</div>
+          <div class="layer-desc">PostgreSQL separado — banco exclusivo por cliente</div>
+          <div class="layer-status physical">FÍSICO</div>
+        </div>
+        <div class="layer-item">
+          <div class="layer-type">n8n</div>
+          <div class="layer-desc">Instância n8n própria — sem compartilhamento</div>
+          <div class="layer-status physical">FÍSICO</div>
+        </div>
+        <div class="layer-item">
+          <div class="layer-type">WhatsApp</div>
+          <div class="layer-desc">Evolution API exclusivo por VPS</div>
+          <div class="layer-status physical">FÍSICO</div>
+        </div>
+        <div class="layer-item">
+          <div class="layer-type">Falha</div>
+          <div class="layer-desc">VPS #1 cai → apenas cliente A afetado</div>
+          <div class="layer-status physical">FÍSICO</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="isolation-box">
+      <div class="isolation-title">
+        <span style="color:var(--c2)">●</span>
+        Opção 2 — Camadas de Isolamento
+      </div>
+      <div class="layer-stack">
+        <div class="layer-item">
+          <div class="layer-type">Webhook</div>
+          <div class="layer-desc">URL com org_id — roteamento pelo path</div>
+          <div class="layer-status logical">LÓGICO</div>
+        </div>
+        <div class="layer-item">
+          <div class="layer-type">n8n</div>
+          <div class="layer-desc">Folders + credenciais separados por tenant</div>
+          <div class="layer-status logical">LÓGICO</div>
+        </div>
+        <div class="layer-item">
+          <div class="layer-type">Banco (RLS)</div>
+          <div class="layer-desc">PostgreSQL RLS força WHERE org_id em toda query</div>
+          <div class="layer-status logical">LÓGICO</div>
+        </div>
+        <div class="layer-item">
+          <div class="layer-type">Claude API</div>
+          <div class="layer-desc">Context isolado por chamada — sem memória cross-tenant</div>
+          <div class="layer-status logical">LÓGICO</div>
+        </div>
+        <div class="layer-item">
+          <div class="layer-type">WhatsApp</div>
+          <div class="layer-desc">Instâncias Evolution separadas — número único por cliente</div>
+          <div class="layer-status logical">LÓGICO</div>
+        </div>
+        <div class="layer-item">
+          <div class="layer-type">Falha</div>
+          <div class="layer-desc">Servidor cai → todos os clientes afetados</div>
+          <div class="layer-status none">RISCO</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div style="font-family:var(--mono);font-size:12px;color:var(--text2);margin-bottom:16px">
+    // A DIFERENÇA CRÍTICA: RLS vs. filtro no código
+  </div>
+
+  <div class="compare-grid">
+    <div class="card opt1">
+      <h3 style="font-size:14px">Opção 1 — Sem necessidade de RLS</h3>
+      <p>O banco é exclusivo. Não existe dado de outro cliente no mesmo PostgreSQL. Qualquer query que rodar retorna apenas dados do cliente daquele VPS.</p>
+      <div style="background:var(--bg3);border:1px solid var(--border);padding:14px;margin-top:12px;font-family:var(--mono);font-size:11px;color:var(--text2)">
+        <div style="color:var(--text3);margin-bottom:6px">// Sem RLS necessário — banco exclusivo</div>
+        <div style="color:var(--green)">SELECT * FROM leads;</div>
+        <div style="color:var(--text3);margin-top:4px">-- Retorna apenas leads da imobiliária</div>
+        <div style="color:var(--text3)">-- porque não existe outro cliente no banco</div>
+      </div>
+    </div>
+
+    <div class="card opt2">
+      <h3 style="font-size:14px">Opção 2 — RLS como barreira inquebrável</h3>
+      <p>Mesmo banco, mas o PostgreSQL intercep toda query e adiciona o filtro de tenant automaticamente — independente do código da aplicação.</p>
+      <div style="background:var(--bg3);border:1px solid var(--border);padding:14px;margin-top:12px;font-family:var(--mono);font-size:11px;color:var(--text2)">
+        <div style="color:var(--text3);margin-bottom:6px">-- Código com bug (sem WHERE):</div>
+        <div style="color:var(--yellow)">SELECT * FROM leads;</div>
+        <div style="color:var(--text3);margin-top:4px">-- SEM RLS: retorna TODOS os leads 🚨</div>
+        <div style="color:var(--text3)">-- COM RLS: banco força automaticamente:</div>
+        <div style="color:var(--green);margin-top:4px">-- WHERE org_id = 'imob-abc-001' ✅</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     06 · CUSTOS
+══════════════════════════════════════════════════════ -->
+<section id="custos" class="section">
+  <div class="section-title">06 · Custos</div>
+  <div class="section-heading">O impacto financeiro<br>de cada decisão.</div>
+
+  <div class="cost-section">
+    <div class="cost-header">// CALCULADORA — arraste para simular diferentes quantidades de clientes</div>
+    <div class="cost-slider-row">
+      <label>Número de clientes:</label>
+      <input type="range" id="clientSlider" min="1" max="20" value="5" oninput="updateCosts()">
+      <div class="cost-display" id="clientCount">5</div>
+      <span style="font-family:var(--mono);font-size:12px;color:var(--text3)">clientes</span>
+    </div>
+
+    <div class="cost-compare">
+      <div class="cost-box opt1">
+        <div class="cost-label">Opção 1 · Dedicado</div>
+        <div class="cost-value" id="cost1">R$400</div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--text3)">infra / mês</div>
+        <div class="cost-breakdown" id="break1">
+          5 × VPS CX21<br>
+          5 × R$80 = R$400
+        </div>
+        <div class="cost-margin" id="margin1" style="color:var(--yellow);font-size:11px"></div>
+      </div>
+
+      <div class="cost-box opt2">
+        <div class="cost-label">Opção 2 · Servidor Único</div>
+        <div class="cost-value" id="cost2">R$160</div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--text3)">infra / mês</div>
+        <div class="cost-breakdown" id="break2">
+          1 × VPS CX31: R$160<br>
+          Supabase Free<br>
+          (até ~12 clientes)
+        </div>
+        <div class="cost-margin" id="margin2" style="color:var(--green);font-size:11px"></div>
+      </div>
+
+      <div class="cost-box hybrid">
+        <div class="cost-label">Híbrido · Recomendado</div>
+        <div class="cost-value" id="costh">R$160</div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--text3)">infra / mês</div>
+        <div class="cost-breakdown" id="breakH">
+          Base Graventum: R$160<br>
+          0 VPS premium<br>
+          (90% no servidor único)
+        </div>
+        <div class="cost-margin" id="marginH" style="color:var(--chybrid);font-size:11px"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="compare-grid">
+    <div class="card opt1">
+      <div class="card-label"><span class="dot"></span>Custo por cliente — Opção 1</div>
+      <h3>Custo escala linear</h3>
+      <ul>
+        <li>R$80/mês de VPS por cliente (Hetzner CX21)</li>
+        <li>~R$15/mês de backups e monitoramento</li>
+        <li>~R$67/mês em Claude API e serviços</li>
+        <li>Total por cliente: ~R$162/mês</li>
+        <li>10 clientes: R$1.620/mês só em infra</li>
+        <li>Margem em retainer de R$2.000: ~19%</li>
+      </ul>
+    </div>
+
+    <div class="card opt2">
+      <div class="card-label"><span class="dot"></span>Custo por cliente — Opção 2</div>
+      <h3>Custo fixo + escala sublinear</h3>
+      <ul>
+        <li>R$160/mês fixo para o servidor Graventum</li>
+        <li>÷ N clientes (dilui conforme escala)</li>
+        <li>~R$67/mês em Claude API por cliente</li>
+        <li>1 cliente: R$227/mês | 10 clientes: R$83/mês</li>
+        <li>10 clientes: R$830/mês total de infra</li>
+        <li>Margem em retainer de R$2.000: ~59%</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="highlight green">
+    Com 8 clientes no servidor único: infra de ~R$80/cliente. Na Opção 1: R$162/cliente. Diferença de R$82/cliente × 8 = R$656/mês de margem extra. Anualmente: R$7.872 que ficam no seu bolso.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     07 · COMPARATIVO COMPLETO
+══════════════════════════════════════════════════════ -->
+<section id="matrix" class="section">
+  <div class="section-title">07 · Comparativo</div>
+  <div class="section-heading">Todos os critérios<br>lado a lado.</div>
+
+  <table class="matrix-table">
+    <thead>
+      <tr>
+        <th>Critério</th>
+        <th>Opção 1 · Dedicado</th>
+        <th>Opção 2 · Compartilhado</th>
+        <th>Híbrido</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Isolamento de dados</td>
+        <td><span class="badge good">✓ Físico total</span></td>
+        <td><span class="badge warn">~ Lógico (RLS+código)</span></td>
+        <td><span class="badge good">✓ Físico p/ premium</span></td>
+      </tr>
+      <tr>
+        <td>Custo com 5 clientes</td>
+        <td><span class="badge bad">✗ ~R$400/mês infra</span></td>
+        <td><span class="badge good">✓ ~R$160/mês fixo</span></td>
+        <td><span class="badge good">✓ ~R$160/mês base</span></td>
+      </tr>
+      <tr>
+        <td>Custo com 20 clientes</td>
+        <td><span class="badge bad">✗ ~R$1.600/mês infra</span></td>
+        <td><span class="badge good">✓ ~R$320/mês (upgrade VPS)</span></td>
+        <td><span class="badge good">✓ ~R$500/mês estimado</span></td>
+      </tr>
+      <tr>
+        <td>Onboarding novo cliente</td>
+        <td><span class="badge bad">✗ ~4 horas de setup</span></td>
+        <td><span class="badge good">✓ ~30 minutos</span></td>
+        <td><span class="badge mid">~ 30 min ou 4h (tier)</span></td>
+      </tr>
+      <tr>
+        <td>Aplicar update/bug fix</td>
+        <td><span class="badge bad">✗ N servidores individualmente</span></td>
+        <td><span class="badge good">✓ 1 deploy para todos</span></td>
+        <td><span class="badge mid">~ 1 + VPS premium</span></td>
+      </tr>
+      <tr>
+        <td>Single point of failure</td>
+        <td><span class="badge good">✓ Não — independentes</span></td>
+        <td><span class="badge bad">✗ Sim — servidor central</span></td>
+        <td><span class="badge mid">~ Apenas clientes padrão</span></td>
+      </tr>
+      <tr>
+        <td>Compliance / LGPD saúde</td>
+        <td><span class="badge good">✓ Trivial — banco exclusivo</span></td>
+        <td><span class="badge warn">~ Possível com schema + criptografia</span></td>
+        <td><span class="badge good">✓ VPS dedicado p/ sensíveis</span></td>
+      </tr>
+      <tr>
+        <td>Escalabilidade</td>
+        <td><span class="badge bad">✗ Linear — 1 VPS por cliente</span></td>
+        <td><span class="badge good">✓ Sublinear — upgrade pontual</span></td>
+        <td><span class="badge good">✓ Melhor dos dois</span></td>
+      </tr>
+      <tr>
+        <td>Complexidade operacional</td>
+        <td><span class="badge bad">✗ Alta — N servidores</span></td>
+        <td><span class="badge good">✓ Baixa — 1 servidor</span></td>
+        <td><span class="badge mid">~ Média — 1 + alguns VPS</span></td>
+      </tr>
+      <tr>
+        <td>Velocidade de diagnóstico</td>
+        <td><span class="badge bad">✗ SSH em cada servidor</span></td>
+        <td><span class="badge good">✓ 1 dashboard centralizado</span></td>
+        <td><span class="badge mid">~ Centralizado + acesso VPS</span></td>
+      </tr>
+      <tr>
+        <td>Segurança por design</td>
+        <td><span class="badge good">✓ Isolamento é automático</span></td>
+        <td><span class="badge warn">~ Requer RLS + validação</span></td>
+        <td><span class="badge good">✓ RLS + física p/ premium</span></td>
+      </tr>
+      <tr>
+        <td>Pitch para cliente</td>
+        <td><span class="badge good">✓ "Servidor só seu"</span></td>
+        <td><span class="badge mid">~ "Isolamento garantido"</span></td>
+        <td><span class="badge good">✓ Flexível por perfil</span></td>
+      </tr>
+      <tr>
+        <td>Recomendado para</td>
+        <td>Saúde · Financeiro · Dados altamente sensíveis</td>
+        <td>SMBs padrão — imobiliária, turismo, contábil</td>
+        <td>Portfolio misto — todos os perfis</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     08 · MODELO HÍBRIDO
+══════════════════════════════════════════════════════ -->
+<section id="hibrido" class="section">
+  <div class="section-title">08 · Modelo Híbrido</div>
+  <div class="section-heading">A arquitetura que você<br>deveria adotar agora.</div>
+
+  <div class="rec-box">
+    <div class="rec-title">Comece com <span>Opção 2.</span> Adicione <span>Opção 1</span> apenas quando o cliente justifica.</div>
+    <p style="font-size:14px;color:var(--text2);line-height:1.7">
+      Seu negócio está em fase de crescimento. Complexidade operacional é seu inimigo número 1 agora — não o isolamento de dados.
+      O servidor Graventum já tem isolamento suficiente para 95% dos clientes SMB. Reserve o VPS dedicado para os que exigem e pagam por isso.
+    </p>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="compare-grid">
+    <div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--text3);margin-bottom:16px">
+        // TIER 1 — Servidor Graventum (padrão)
+      </div>
+      <div class="card opt2">
+        <div class="card-label"><span class="dot"></span>Tier 1 · Clientes padrão</div>
+        <h3>Servidor Único Graventum</h3>
+        <p>Imobiliárias, agências de turismo, escritórios contábeis, clínicas de baixo risco. Retainer típico: R$1.500–3.500/mês.</p>
+        <div class="spacer"></div>
+        <ul>
+          <li>Folder n8n separado por cliente</li>
+          <li>Credenciais isoladas no n8n</li>
+          <li>RLS ativo no Supabase</li>
+          <li>Instância Evolution exclusiva</li>
+          <li>Onboarding em 30 minutos</li>
+        </ul>
+        <div class="cost-badge" style="margin-top:12px">Custo infra: ~R$20–40/cliente/mês</div>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-family:var(--mono);font-size:11px;color:var(--text3);margin-bottom:16px">
+        // TIER 2 — VPS Dedicado (premium)
+      </div>
+      <div class="card opt1">
+        <div class="card-label"><span class="dot"></span>Tier 2 · Clientes premium</div>
+        <h3>Servidor Dedicado por Cliente</h3>
+        <p>Clínicas com dados de saúde, hospitais, escritórios contábeis grandes, qualquer cliente que exija isolamento físico em contrato. Retainer: R$3.500+/mês.</p>
+        <div class="spacer"></div>
+        <ul>
+          <li>VPS próprio do cliente (Hetzner)</li>
+          <li>Stack completa exclusiva</li>
+          <li>PostgreSQL dedicado</li>
+          <li>Você cobra o VPS no retainer</li>
+          <li>Argumento comercial: "Servidor só seu"</li>
+        </ul>
+        <div class="cost-badge" style="margin-top:12px">Custo infra: ~R$80–160/cliente/mês</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div style="font-family:var(--mono);font-size:11px;color:var(--text3);margin-bottom:16px">
+    // CRITÉRIOS DE DECISÃO — Qual tier para cada cliente?
+  </div>
+
+  <div class="decision-tree">
+    <div class="decision-node">
+      <div class="q-icon">❓</div>
+      <div class="decision-q">O cliente exige isolamento físico em contrato ou por exigência regulatória?</div>
+      <div class="decision-a tier2">→ Tier 2 (VPS)</div>
+    </div>
+
+    <div class="decision-node">
+      <div class="q-icon">❓</div>
+      <div class="decision-q">São dados de saúde (prontuários, laudos) ou financeiros de alto risco?</div>
+      <div class="decision-a tier2">→ Tier 2 (VPS)</div>
+    </div>
+
+    <div class="decision-node">
+      <div class="q-icon">❓</div>
+      <div class="decision-q">Retainer acima de R$3.500/mês? (VPS cobre ~2% do retainer)</div>
+      <div class="decision-a tier2">→ Tier 2 (VPS) se justifica</div>
+    </div>
+
+    <div class="decision-node">
+      <div class="q-icon">❓</div>
+      <div class="decision-q">Cliente exige SLA próprio e uptime garantido separadamente?</div>
+      <div class="decision-a tier2">→ Tier 2 (VPS)</div>
+    </div>
+
+    <div class="decision-node">
+      <div class="q-icon">❓</div>
+      <div class="decision-q">Nenhuma das anteriores — SMB padrão, retainer &lt; R$3.500?</div>
+      <div class="decision-a tier1">→ Tier 1 (Servidor Graventum)</div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div style="font-family:var(--mono);font-size:11px;color:var(--text3);margin-bottom:16px">
+    // ROADMAP DE ESCALA DO MODELO HÍBRIDO
+  </div>
+
+  <div class="flow-steps">
+    <div class="flow-step">
+      <div class="step-num" style="font-size:9px;padding:4px">AGORA</div>
+      <div class="step-content">
+        <div class="step-title">0–5 clientes · Tudo no servidor Graventum</div>
+        <div class="step-desc">Use Opção 2 para todos. Seu CX31 suporta confortavelmente. Foco total em vendas e onboarding, não em infra. Custo fixo: R$160/mês independente de quantos clientes.</div>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="step-num" style="font-size:9px;padding:4px">6–10</div>
+      <div class="step-content">
+        <div class="step-title">5–10 clientes · Servidor cresce, primeiros VPS premium</div>
+        <div class="step-desc">Upgrade para CX41 se necessário (~R$160/mês). Primeiro cliente premium (clínica grande, hospital) ganha VPS dedicado. VPS cobrado no retainer como "infraestrutura dedicada".</div>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="step-num" style="font-size:9px;padding:4px">10–20</div>
+      <div class="step-content">
+        <div class="step-title">10–20 clientes · Modelo híbrido maduro</div>
+        <div class="step-desc">Servidor Graventum para 80% dos clientes. 3–5 VPS premium para clientes sensíveis. Considerar segundo servidor Graventum para redundância (load balance).</div>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="step-num" style="font-size:9px;padding:4px">20+</div>
+      <div class="step-content">
+        <div class="step-title">20+ clientes · Kubernetes ou Railway namespaces</div>
+        <div class="step-desc">Nesse ponto o negócio gerou caixa suficiente para investir em orquestração de containers. Namespaces por tenant = isolamento forte com custo sub-linear. Mas isso é fase 4, não agora.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rec-box" style="margin-top:32px">
+    <div style="font-family:var(--mono);font-size:18px;font-weight:700;color:#fff;margin-bottom:12px">
+      Resposta direta: <span style="color:var(--chybrid)">Comece com Opção 2. Agora.</span>
+    </div>
+    <p style="font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:16px">
+      Você tem uma meta de 5–8 clientes em 6 meses. Com a Opção 2, o custo de infra permanece R$160/mês durante todo esse crescimento.
+      Com a Opção 1, ao chegar no 5º cliente você já estaria pagando R$400/mês só em VPS — e gerenciando 5 servidores diferentes.
+    </p>
+    <p style="font-size:14px;color:var(--text2);line-height:1.7">
+      A Opção 1 é a escolha certa <em>para clientes específicos</em>, não como arquitetura base. Use o isolamento físico como argumento comercial premium
+      — cobra R$500–1.000 a mais no retainer pelo "servidor dedicado" e o VPS custa R$80. Margem excelente.
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer class="container">
+  <p>Graventum · Architecture Decision Record <span>ADR-001</span></p>
+  <p>Gerado em <span>Fevereiro 2026</span> · Stack: n8n · Supabase · Claude · Evolution API</p>
+</footer>
+
+<script>
+function switchTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateCosts() {
+  const n = parseInt(document.getElementById('clientSlider').value);
+  document.getElementById('clientCount').textContent = n;
+
+  // Opção 1: R$80 por VPS + R$67 Claude por cliente
+  const c1 = n * 80;
+  document.getElementById('cost1').textContent = `R$${c1}`;
+  document.getElementById('break1').innerHTML = `${n} × VPS CX21<br>${n} × R$80 = R$${c1}<br>(excluindo Claude API)`;
+
+  // Opção 2: servidor fixo + upgrade se necessário
+  let server2 = 80; // CX31
+  let serverLabel = 'CX31 (atual)';
+  if (n > 12) { server2 = 160; serverLabel = 'CX41 (upgrade)'; }
+  if (n > 25) { server2 = 240; serverLabel = '2× CX41'; }
+  const c2 = server2;
+  document.getElementById('cost2').textContent = `R$${c2}`;
+  document.getElementById('break2').innerHTML = `1 × VPS ${serverLabel}: R$${server2}<br>Supabase: R$0–130<br>÷ ${n} clientes = R$${Math.round(server2/n)}/cliente`;
+
+  // Híbrido: 80% no servidor + 20% em VPS premium
+  const premiumClients = Math.floor(n * 0.2);
+  const baseClients = n - premiumClients;
+  let serverH = 80;
+  if (baseClients > 12) serverH = 160;
+  const hybridCost = serverH + (premiumClients * 80);
+  document.getElementById('costh').textContent = `R$${hybridCost}`;
+  document.getElementById('breakH').innerHTML = `Base Graventum: R$${serverH}<br>${premiumClients} VPS premium: R$${premiumClients*80}<br>${baseClients} clientes no servidor central`;
+
+  // Margins
+  const avgRetainer = 2500;
+  const totalRetainer = n * avgRetainer;
+  const m1 = Math.round((1 - c1/totalRetainer) * 100);
+  const m2 = Math.round((1 - c2/totalRetainer) * 100);
+  const mh = Math.round((1 - hybridCost/totalRetainer) * 100);
+
+  document.getElementById('margin1').textContent = `Margem em retainer R$${avgRetainer}: ~${m1}%`;
+  document.getElementById('margin2').textContent = `Margem em retainer R$${avgRetainer}: ~${m2}%`;
+  document.getElementById('marginH').textContent = `Margem em retainer R$${avgRetainer}: ~${mh}%`;
+}
+
+updateCosts();
+</script>
+
+</body>
+</html>

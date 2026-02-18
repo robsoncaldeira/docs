@@ -55,7 +55,7 @@
 - [Server](https://robsoncaldeira.github.io/docs/dashboards/server-map.html)
 - [Graventun Learning](https://robsoncaldeira.github.io/docs/dashboards/graventum_learning.html)
 - [Arquitetura Corporativa](https://robsoncaldeira.github.io/docs/dashboards/arquitetura-comparativo.html)
-- [Guia de automação Graventum](https://robsoncaldeira/docs/blob/main/dashboards/guia_automacao_graventum.html)
+- [Guia Automação Graventum](dashboards/guia_automacao_graventum.html)
 
 ## Processes
 - [Visão geral — Processes](processes/README.md)

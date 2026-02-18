@@ -52,9 +52,9 @@
 - [Leads Dashboard](dashboards/leads-dashboard.md)
 - [Pipeline Dashboard](dashboards/pipeline-dashboard.md)
 - [Project Timeline](dashboards/project-timeline.md)
-- [Server](https://github.com/robsoncaldeira/docs/blob/main/dashboards/server-map.html)
-- [Graventun Learning](https://github.com/robsoncaldeira/docs/blob/main/dashboards/graventum_learning.html)
-- [Arquitetura Corporativa](https://github.com/robsoncaldeira/docs/blob/main/dashboards/arquitetura-comparativo.html)
+- [Server](https://robsoncaldeira.github.io/docs/dashboards/server-map.html)
+- [Graventun Learning](https://robsoncaldeira.github.io/docs/dashboards/graventum_learning.html)
+- [Arquitetura Corporativa](https://robsoncaldeira.github.io/docs/dashboards/arquitetura-comparativo.html)
 
 ## Processes
 - [Visão geral — Processes](processes/README.md)
